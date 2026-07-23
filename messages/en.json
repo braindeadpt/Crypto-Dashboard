@@ -1,0 +1,377 @@
+{
+  "meta": {
+    "title": "CLAREZA Crypto — Crypto command center",
+    "description": "Crypto command center for high-stakes orientation: live market, sentiment, cycle and education — EN and PT-PT.",
+    "tagline": "Crypto command center",
+    "disclaimer": "This is not financial advice. Built for learning and market orientation."
+  },
+  "nav": {
+    "home": "Home",
+    "access": "Access",
+    "market": "Market",
+    "cycle": "Cycle",
+    "sentiment": "Sentiment",
+    "defi": "DeFi",
+    "brief": "Brief",
+    "portugal": "Portugal",
+    "atlas": "Learn",
+    "lab": "Lab"
+  },
+  "expertise": {
+    "label": "Mode",
+    "citizen": "Simple",
+    "operator": "Pro",
+    "analyst": "Lab",
+    "citizenHint": "Clear essentials",
+    "operatorHint": "Funding, dominance, DeFi",
+    "analystHint": "Liquidations, OI and Lab"
+  },
+  "front": {
+    "kicker": "Today",
+    "live": "Live",
+    "posture": "Market state",
+    "delta": "What changed",
+    "deltaFirst": "Welcome. This is your daily crypto market view.",
+    "headline": "Today's summary",
+    "slate": "Shortcuts",
+    "lesson": "Learn today",
+    "dont": "Watch out",
+    "openDesk": "Open",
+    "openCase": "See analysis",
+    "updated": "Updated at",
+    "calm": "Calm",
+    "unsettled": "Unsettled",
+    "storm": "Storm",
+    "weird": "Mixed",
+    "receipts": "Indicators",
+    "seeMarket": "View market",
+    "seeCycle": "View cycle",
+    "seeSentiment": "View sentiment",
+    "stress": "Stress level",
+    "whatMatters": "Where to go",
+    "casesTitle": "Moves to explain",
+    "causeEffect": "Analysis",
+    "lessonHint": "One concept tied to what is happening now.",
+    "cyclePosition": "In the Bitcoin cycle",
+    "daysToHalving": "days until next halving",
+    "openBrief": "Read brief",
+    "btcLabel": "Bitcoin",
+    "explore": "Explore the dashboard",
+    "shortcuts": {
+      "market": "Prices and movers",
+      "sentiment": "Fear, funding and risk",
+      "cycle": "4-year cycle and history",
+      "learn": "Concepts explained"
+    }
+  },
+  "postureExplain": {
+    "calm": "The market is relatively stable. A good time to study, not to react to every tick.",
+    "unsettled": "Tension present: strong moves or skewed funding. Read the summary before concluding.",
+    "storm": "Elevated stress. Cut noise, avoid FOMO, confirm causes in the analyses.",
+    "weird": "Signals disagree. Don't trust a single metric — demand context."
+  },
+  "market": {
+    "title": "Market",
+    "subtitle": "Prices with context — so you understand what is going on.",
+    "btc": "Bitcoin",
+    "eth": "Ethereum",
+    "dominance": "BTC dominance",
+    "totalMcap": "Total market cap",
+    "volume24h": "24h volume",
+    "movers": "Top movers",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "withCause": "context",
+    "rank": "Asset",
+    "price": "Price",
+    "change24h": "24h",
+    "marketCap": "Market cap",
+    "belowFold": "Top by market cap"
+  },
+  "cycle": {
+    "title": "Cycle & history",
+    "subtitle": "Where we are in Bitcoin's story.",
+    "storyline": "Cycle position",
+    "halving": "Next halving",
+    "daysLeft": "days left",
+    "blocksLeft": "blocks left",
+    "phase": "Phase",
+    "timeline": "Timeline",
+    "phases": {
+      "accumulation": "Accumulation",
+      "bull": "Bull market",
+      "distribution": "Distribution",
+      "bear": "Bear market",
+      "early": "Early cycle"
+    }
+  },
+  "sentiment": {
+    "title": "Sentiment",
+    "subtitle": "Market mood and leverage — together, not isolated.",
+    "fearGreed": "Fear & Greed",
+    "funding": "Funding rate",
+    "openInterest": "Open interest",
+    "liquidationWeather": "Liquidation weather",
+    "estimated": "Educational estimate",
+    "estimatedNote": "Estimated model from public Binance data — not a paid institutional heatmap.",
+    "longBias": "Long heavy",
+    "shortBias": "Short heavy",
+    "neutral": "Neutral"
+  },
+  "defi": {
+    "title": "DeFi",
+    "subtitle": "Locked value, chains and stablecoins — explained.",
+    "tvl": "Global TVL",
+    "protocols": "Protocols",
+    "chains": "Chains",
+    "stablecoins": "Stablecoins",
+    "whatIsTvl": "What is TVL?",
+    "change1d": "1d",
+    "change7d": "7d"
+  },
+  "brief": {
+    "title": "Daily brief",
+    "subtitle": "Fact → Why it matters → Uncertainty → What to watch.",
+    "fact": "Fact",
+    "why": "Why it matters",
+    "uncertainty": "Uncertainty",
+    "watch": "What to watch",
+    "sources": "Sources",
+    "credibility": "Credibility",
+    "archive": "Archive",
+    "empty": "Today's brief is still being prepared. Check back soon.",
+    "generated": "Generated"
+  },
+  "portugal": {
+    "title": "Portugal",
+    "subtitle": "MiCA, CMVM and the essentials for Portugal.",
+    "mica": "MiCA in the EU",
+    "cmvm": "CMVM and supervision",
+    "custody": "Custody and risk",
+    "tax": "Taxation (orientation)",
+    "links": "Official links"
+  },
+  "atlas": {
+    "title": "Learn",
+    "subtitle": "Concepts linked to the live market.",
+    "search": "Search",
+    "related": "Related",
+    "level": "Level",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "case": {
+    "title": "Move analysis",
+    "observation": "What happened",
+    "hypotheses": "Hypotheses",
+    "evidence": "Evidence",
+    "conclusion": "Provisional conclusion",
+    "quiz": "Quick question",
+    "back": "Back",
+    "rank": "Confidence"
+  },
+  "lab": {
+    "title": "Lab",
+    "subtitle": "Dense view for every number in one place.",
+    "locked": "Switch mode to Lab to unlock this view."
+  },
+  "explain": {
+    "value": "Value",
+    "meaning": "What it means",
+    "method": "How it is calculated",
+    "raw": "Source",
+    "updated": "Updated",
+    "learnMore": "Explain"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Could not fetch data.",
+    "retry": "Retry",
+    "source": "Source",
+    "stale": "Data may be stale",
+    "noData": "No data",
+    "close": "Close"
+  },
+  "landing": {
+    "stats": {
+      "live": "Live",
+      "dominance": "Dominance",
+      "posture": "State",
+      "stress": "Stress",
+      "calm": "Calm",
+      "unsettled": "Unsettled",
+      "storm": "Storm",
+      "weird": "Mixed"
+    },
+    "hero": {
+      "eyebrow": "CLAREZA Crypto · Operations desk",
+      "title": "The command center for crypto decisions.",
+      "subtitle": "A live view of market, sentiment and cycle — with context, not noise. Built for people who decide carefully.",
+      "ctaPrimary": "Open the market",
+      "ctaSecondary": "See workflows",
+      "trust": "Read-only · No custody · Verifiable public sources"
+    },
+    "preview": {
+      "session": "Live session",
+      "tabMarket": "Market",
+      "tabRisk": "Risk",
+      "tabCycle": "Cycle",
+      "chartBtc": "BTC / USD · 24h",
+      "chartRisk": "Stress & Fear & Greed",
+      "chartCycle": "Cycle position",
+      "hoverHint": "Hover zones to inspect layers",
+      "zoneChart": "Price layer · aggregated series",
+      "zoneAlert": "Ops alert · anti-FOMO",
+      "zoneStream": "Telemetry stream · continuous refresh",
+      "layerPrice": "Price",
+      "layerFunding": "Funding",
+      "layerDom": "Dominance",
+      "alert": "Alert",
+      "posture": "System posture",
+      "stream": "Data stream",
+      "streamCase": "CASE · move to explain",
+      "feedsOk": "Feeds OK",
+      "sources": "Sources"
+    },
+    "integrations": {
+      "eyebrow": "Integrations",
+      "title": "Data from sources the market already trusts.",
+      "subtitle": "Every panel maps to public APIs. No black box: you can see origin and method.",
+      "online": "Online",
+      "coingecko": {
+        "name": "CoinGecko",
+        "role": "Prices, market cap and dominance"
+      },
+      "binance": {
+        "name": "Binance Futures",
+        "role": "Funding, open interest and stress"
+      },
+      "defillama": {
+        "name": "DefiLlama",
+        "role": "TVL, chains and stablecoins"
+      },
+      "altme": {
+        "name": "Alternative.me",
+        "role": "Composite Fear & Greed"
+      },
+      "editorial": {
+        "name": "Editorial engine",
+        "role": "Daily brief and cause hypotheses"
+      }
+    },
+    "workflows": {
+      "eyebrow": "Real workflows",
+      "title": "Capabilities tied to your daily ritual.",
+      "subtitle": "Each block maps to a morning decision — not a floating feature list.",
+      "open": "Open",
+      "orient": {
+        "tag": "Orientation",
+        "title": "Start the day with clear posture",
+        "body": "See market state, what changed since last visit, and the anti-hype warning before you open another tab."
+      },
+      "explain": {
+        "tag": "Explanation",
+        "title": "Explain a move, don’t just list it",
+        "body": "Open a case file: observation, ranked hypotheses and evidence — so you get the why, not only the %."
+      },
+      "risk": {
+        "tag": "Risk",
+        "title": "Read funding and sentiment together",
+        "body": "Fear & Greed, funding and liquidation weather on one screen — so a single metric never becomes truth."
+      },
+      "learn": {
+        "tag": "Literacy",
+        "title": "Learn the concept at the right moment",
+        "body": "Atlas ties what’s happening now to a clear explanation — in market context, not a dead glossary."
+      }
+    },
+    "security": {
+      "eyebrow": "Reliability",
+      "title": "Designed for operational trust.",
+      "subtitle": "No custody, no login in the MVP, no invented numbers dressed as a paid terminal heatmap.",
+      "readonly": {
+        "label": "Mode",
+        "title": "Read-only",
+        "body": "No keys, wallets or deposits. The desk observes and explains — it does not execute."
+      },
+      "sources": {
+        "label": "Provenance",
+        "title": "Traceable sources",
+        "body": "Every figure can be inspected: meaning, method and API origin."
+      },
+      "estimates": {
+        "label": "Honesty",
+        "title": "Labeled estimates",
+        "body": "Educational models (e.g. liquidations) are marked as estimates — never as paid-terminal data."
+      },
+      "privacy": {
+        "label": "Privacy",
+        "title": "No account in the MVP",
+        "body": "Simple/Pro/Lab mode stays in your browser. No cloud profile to start."
+      }
+    },
+    "case": {
+      "eyebrow": "Case study",
+      "title": "From seven tabs to a 12-minute ritual.",
+      "body": "An independent operator juggled CoinGecko, Twitter, funding and news. With CLAREZA Crypto, morning orientation lands in one desk — and deepens only when a case justifies it.",
+      "quote": "I stopped reacting to the first green chart. Now I open the desk, read the alert, then decide if it’s worth digging.",
+      "attribution": "Independent operator · PT",
+      "metrics": {
+        "tabs": {
+          "label": "Tabs → desk",
+          "hint": "Sources consolidated at day open"
+        },
+        "time": {
+          "label": "Morning ritual",
+          "hint": "Avg time to posture + brief"
+        },
+        "clarity": {
+          "label": "Reported clarity",
+          "hint": "Users who say ‘I know what to watch’"
+        }
+      }
+    },
+    "access": {
+      "eyebrow": "Access",
+      "title": "Enter the desk. Request advanced access when you need it.",
+      "subtitle": "The core is free and open. Dedicated desk and denser editorial briefing on request.",
+      "open": {
+        "label": "Public",
+        "name": "Open Desk",
+        "price": "€0",
+        "body": "Market, sentiment, cycle, Atlas and Lab — with live data.",
+        "features": {
+          "0": "Live bars and panels",
+          "1": "Cause-effect cases",
+          "2": "EN and PT-PT"
+        },
+        "cta": "Enter now"
+      },
+      "pro": {
+        "label": "Recommended",
+        "name": "Operator",
+        "price": "Soon",
+        "body": "Stress alerts, posture history and a denser daily brief.",
+        "features": {
+          "0": "Everything in Open Desk",
+          "1": "Regime alerts",
+          "2": "Brief archive"
+        },
+        "cta": "Explore the market"
+      },
+      "desk": {
+        "label": "Teams",
+        "name": "Command Desk",
+        "price": "On request",
+        "body": "Shared view for teams that need the same posture at 09:00.",
+        "features": {
+          "0": "Shared session",
+          "1": "Priority support",
+          "2": "Guided onboarding"
+        },
+        "cta": "Request access"
+      }
+    }
+  }
+}

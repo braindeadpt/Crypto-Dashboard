@@ -1,0 +1,377 @@
+{
+  "meta": {
+    "title": "CLAREZA Crypto — Command center cripto",
+    "description": "Centro de comando cripto para decisões com dados ao vivo: mercado, sentimento, ciclo e educação — PT-PT e EN.",
+    "tagline": "Command center cripto",
+    "disclaimer": "Isto não é aconselhamento financeiro. Serve para aprender e acompanhar o mercado."
+  },
+  "nav": {
+    "home": "Início",
+    "access": "Acesso",
+    "market": "Mercado",
+    "cycle": "Ciclo",
+    "sentiment": "Sentimento",
+    "defi": "DeFi",
+    "brief": "Resumo",
+    "portugal": "Portugal",
+    "atlas": "Aprender",
+    "lab": "Lab"
+  },
+  "expertise": {
+    "label": "Modo",
+    "citizen": "Simples",
+    "operator": "Pro",
+    "analyst": "Lab",
+    "citizenHint": "Vista clara e essencial",
+    "operatorHint": "Funding, dominância, DeFi",
+    "analystHint": "Liquidação, OI e Lab"
+  },
+  "front": {
+    "kicker": "Hoje",
+    "live": "Ao vivo",
+    "posture": "Estado do mercado",
+    "delta": "O que mudou",
+    "deltaFirst": "Bem-vindo. Esta é a tua vista diária do mercado cripto.",
+    "headline": "Resumo do dia",
+    "slate": "Atalhos",
+    "lesson": "Aprende hoje",
+    "dont": "Atenção",
+    "openDesk": "Abrir",
+    "openCase": "Ver análise",
+    "updated": "Actualizado às",
+    "calm": "Calmo",
+    "unsettled": "Instável",
+    "storm": "Tempestade",
+    "weird": "Confuso",
+    "receipts": "Indicadores",
+    "seeMarket": "Ver mercado",
+    "seeCycle": "Ver ciclo",
+    "seeSentiment": "Ver sentimento",
+    "stress": "Nível de stress",
+    "whatMatters": "Para onde ir",
+    "casesTitle": "Movimentos a explicar",
+    "causeEffect": "Análise",
+    "lessonHint": "Um conceito ligado ao que está a acontecer agora.",
+    "cyclePosition": "No ciclo do Bitcoin",
+    "daysToHalving": "dias até ao próximo halving",
+    "openBrief": "Ler resumo",
+    "btcLabel": "Bitcoin",
+    "explore": "Explorar o dashboard",
+    "shortcuts": {
+      "market": "Preços e movimentos",
+      "sentiment": "Medo, funding e risco",
+      "cycle": "Ciclo de 4 anos e história",
+      "learn": "Conceitos em português"
+    }
+  },
+  "postureExplain": {
+    "calm": "O mercado está relativamente estável. Bom momento para estudar, não para reagir a cada variação.",
+    "unsettled": "Há tensão: movimentos fortes ou funding desequilibrado. Lê o resumo antes de conclusões.",
+    "storm": "Stress elevado. Reduz o ruído, evita FOMO e confirma as causas nas análises.",
+    "weird": "Os sinais não batem certo. Não confies numa métrica sozinha — exige contexto."
+  },
+  "market": {
+    "title": "Mercado",
+    "subtitle": "Preços com contexto — para perceberes o que se passa.",
+    "btc": "Bitcoin",
+    "eth": "Ethereum",
+    "dominance": "Dominância BTC",
+    "totalMcap": "Capitalização total",
+    "volume24h": "Volume 24h",
+    "movers": "Maiores movimentos",
+    "gainers": "Em alta",
+    "losers": "Em baixa",
+    "withCause": "contexto",
+    "rank": "Activo",
+    "price": "Preço",
+    "change24h": "24h",
+    "marketCap": "Capitalização",
+    "belowFold": "Top por capitalização"
+  },
+  "cycle": {
+    "title": "Ciclo e história",
+    "subtitle": "Onde estamos na história do Bitcoin.",
+    "storyline": "Posição no ciclo",
+    "halving": "Próximo halving",
+    "daysLeft": "dias restantes",
+    "blocksLeft": "blocos restantes",
+    "phase": "Fase",
+    "timeline": "Linha do tempo",
+    "phases": {
+      "accumulation": "Acumulação",
+      "bull": "Mercado em alta",
+      "distribution": "Distribuição",
+      "bear": "Mercado em baixa",
+      "early": "Início de ciclo"
+    }
+  },
+  "sentiment": {
+    "title": "Sentimento",
+    "subtitle": "Humor do mercado e alavancagem — juntos, não isolados.",
+    "fearGreed": "Medo e Ganância",
+    "funding": "Funding rate",
+    "openInterest": "Open interest",
+    "liquidationWeather": "Clima de liquidação",
+    "estimated": "Estimativa educativa",
+    "estimatedNote": "Modelo estimado com dados públicos da Binance — não é um heatmap profissional pago.",
+    "longBias": "Mais longs",
+    "shortBias": "Mais shorts",
+    "neutral": "Neutro"
+  },
+  "defi": {
+    "title": "DeFi",
+    "subtitle": "Valor bloqueado, cadeias e stablecoins — explicado.",
+    "tvl": "TVL global",
+    "protocols": "Protocolos",
+    "chains": "Cadeias",
+    "stablecoins": "Stablecoins",
+    "whatIsTvl": "O que é TVL?",
+    "change1d": "1d",
+    "change7d": "7d"
+  },
+  "brief": {
+    "title": "Resumo do dia",
+    "subtitle": "Facto → Porque importa → Incerteza → O que vigiar.",
+    "fact": "Facto",
+    "why": "Porque importa",
+    "uncertainty": "Incerteza",
+    "watch": "O que vigiar",
+    "sources": "Fontes",
+    "credibility": "Credibilidade",
+    "archive": "Arquivo",
+    "empty": "O resumo de hoje ainda está a ser preparado. Volta em breve.",
+    "generated": "Gerado"
+  },
+  "portugal": {
+    "title": "Portugal",
+    "subtitle": "MiCA, CMVM e o essencial para quem está em Portugal.",
+    "mica": "MiCA na UE",
+    "cmvm": "CMVM e supervisão",
+    "custody": "Custódia e risco",
+    "tax": "Fiscalidade (orientação)",
+    "links": "Ligações oficiais"
+  },
+  "atlas": {
+    "title": "Aprender",
+    "subtitle": "Conceitos em português, ligados ao mercado real.",
+    "search": "Pesquisar",
+    "related": "Relacionados",
+    "level": "Nível",
+    "beginner": "Iniciante",
+    "intermediate": "Intermédio",
+    "advanced": "Avançado"
+  },
+  "case": {
+    "title": "Análise do movimento",
+    "observation": "O que aconteceu",
+    "hypotheses": "Hipóteses",
+    "evidence": "Evidência",
+    "conclusion": "Conclusão provisória",
+    "quiz": "Pergunta rápida",
+    "back": "Voltar",
+    "rank": "Confiança"
+  },
+  "lab": {
+    "title": "Lab",
+    "subtitle": "Vista densa para quem quer todos os números.",
+    "locked": "Muda o modo para Lab para ver esta vista."
+  },
+  "explain": {
+    "value": "Valor",
+    "meaning": "O que significa",
+    "method": "Como se calcula",
+    "raw": "Fonte",
+    "updated": "Actualizado",
+    "learnMore": "Explicar"
+  },
+  "common": {
+    "loading": "A carregar…",
+    "error": "Não foi possível obter dados.",
+    "retry": "Tentar de novo",
+    "source": "Fonte",
+    "stale": "Os dados podem estar desactualizados",
+    "noData": "Sem dados",
+    "close": "Fechar"
+  },
+  "landing": {
+    "stats": {
+      "live": "Ao vivo",
+      "dominance": "Dominância",
+      "posture": "Estado",
+      "stress": "Stress",
+      "calm": "Calmo",
+      "unsettled": "Instável",
+      "storm": "Tempestade",
+      "weird": "Confuso"
+    },
+    "hero": {
+      "eyebrow": "CLAREZA Crypto · Desk operacional",
+      "title": "O centro de comando para decisões cripto.",
+      "subtitle": "Uma vista ao vivo do mercado, sentimento e ciclo — com contexto, não com ruído. Feito para quem decide com responsabilidade.",
+      "ctaPrimary": "Abrir o mercado",
+      "ctaSecondary": "Ver fluxos de trabalho",
+      "trust": "Somente leitura · Sem custódia · Fontes públicas verificáveis"
+    },
+    "preview": {
+      "session": "Sessão activa",
+      "tabMarket": "Mercado",
+      "tabRisk": "Risco",
+      "tabCycle": "Ciclo",
+      "chartBtc": "BTC / USD · 24h",
+      "chartRisk": "Stress & Fear & Greed",
+      "chartCycle": "Posição no ciclo",
+      "hoverHint": "Passa o rato nas zonas para inspeccionar",
+      "zoneChart": "Camada de preço · série agregada",
+      "zoneAlert": "Alerta operacional · anti-FOMO",
+      "zoneStream": "Fluxo de telemetria · actualização contínua",
+      "layerPrice": "Preço",
+      "layerFunding": "Funding",
+      "layerDom": "Dominância",
+      "alert": "Alerta",
+      "posture": "Postura do sistema",
+      "stream": "Fluxo de dados",
+      "streamCase": "CASO · movimento a explicar",
+      "feedsOk": "Feeds OK",
+      "sources": "Fontes"
+    },
+    "integrations": {
+      "eyebrow": "Integrações",
+      "title": "Dados de fontes que o mercado já usa.",
+      "subtitle": "Cada painel liga a APIs públicas. Sem caixa-preta: vês a origem e o método.",
+      "online": "Online",
+      "coingecko": {
+        "name": "CoinGecko",
+        "role": "Preços, capitalização e dominância"
+      },
+      "binance": {
+        "name": "Binance Futures",
+        "role": "Funding, open interest e stress"
+      },
+      "defillama": {
+        "name": "DefiLlama",
+        "role": "TVL, cadeias e stablecoins"
+      },
+      "altme": {
+        "name": "Alternative.me",
+        "role": "Fear & Greed composto"
+      },
+      "editorial": {
+        "name": "Motor editorial",
+        "role": "Resumo do dia e hipóteses de causa"
+      }
+    },
+    "workflows": {
+      "eyebrow": "Fluxos reais",
+      "title": "Capacidades ligadas ao teu ritual diário.",
+      "subtitle": "Cada bloco corresponde a uma decisão que fazes de manhã — não a uma feature solta.",
+      "open": "Abrir",
+      "orient": {
+        "tag": "Orientação",
+        "title": "Começar o dia com postura clara",
+        "body": "Vê o estado do mercado, o que mudou desde a última visita e o aviso anti-hype antes de abrir mais um separador."
+      },
+      "explain": {
+        "tag": "Explicação",
+        "title": "Explicar um movimento, não só listá-lo",
+        "body": "Abre um caso: observação, hipóteses ranqueadas e evidência — para perceberes o porquê, não só o %."
+      },
+      "risk": {
+        "tag": "Risco",
+        "title": "Ler funding e sentimento juntos",
+        "body": "Fear & Greed, funding e clima de liquidação no mesmo ecrã — para não tomares uma métrica isolada como verdade."
+      },
+      "learn": {
+        "tag": "Literacia",
+        "title": "Aprender o conceito no momento certo",
+        "body": "O Atlas liga o que está a acontecer agora a uma explicação em português — no contexto do mercado, não num glossário morto."
+      }
+    },
+    "security": {
+      "eyebrow": "Fiabilidade",
+      "title": "Desenhado para confiança operacional.",
+      "subtitle": "Sem custódia, sem login no MVP, sem números inventados a parecer heatmap profissional.",
+      "readonly": {
+        "label": "Modo",
+        "title": "Somente leitura",
+        "body": "Não pedimos chaves, wallets nem depósitos. O desk observa e explica — não executa."
+      },
+      "sources": {
+        "label": "Proveniência",
+        "title": "Fontes rastreáveis",
+        "body": "Cada número pode ser inspeccionado: significado, método e origem da API."
+      },
+      "estimates": {
+        "label": "Honestidade",
+        "title": "Estimativas etiquetadas",
+        "body": "Modelos educativos (ex.: liquidação) vêm marcados como estimativa — nunca como dados de terminal pago."
+      },
+      "privacy": {
+        "label": "Privacidade",
+        "title": "Sem conta no MVP",
+        "body": "Modo Simples/Pro/Lab fica no teu browser. Sem perfil na nuvem para começar."
+      }
+    },
+    "case": {
+      "eyebrow": "Caso de uso",
+      "title": "De sete separadores a um ritual de 12 minutos.",
+      "body": "Um operador independente usava CoinGecko, Twitter, funding e notícias em paralelo. Com a CLAREZA Crypto, concentra a orientação matinal num só desk — e só aprofunda quando o caso o justifica.",
+      "quote": "Deixei de reagir ao primeiro gráfico verde. Agora abro o desk, leio o alerta e só depois decido se vale a pena investigar.",
+      "attribution": "Operador independente · PT",
+      "metrics": {
+        "tabs": {
+          "label": "Separadores → desk",
+          "hint": "Fontes consolidadas na abertura do dia"
+        },
+        "time": {
+          "label": "Ritual matinal",
+          "hint": "Tempo médio até postura + resumo"
+        },
+        "clarity": {
+          "label": "Clareza reportada",
+          "hint": "Utilizadores que dizem ‘sei o que vigiar’"
+        }
+      }
+    },
+    "access": {
+      "eyebrow": "Acesso",
+      "title": "Entra no desk. Pede acesso avançado quando precisares.",
+      "subtitle": "O núcleo é gratuito e aberto. Desk dedicado e briefing editorial aprofundado sob pedido.",
+      "open": {
+        "label": "Público",
+        "name": "Open Desk",
+        "price": "0 €",
+        "body": "Mercado, sentimento, ciclo, Atlas e Lab — com dados ao vivo.",
+        "features": {
+          "0": "Barras e painéis ao vivo",
+          "1": "Casos causa-efeito",
+          "2": "PT-PT e EN"
+        },
+        "cta": "Entrar agora"
+      },
+      "pro": {
+        "label": "Recomendado",
+        "name": "Operator",
+        "price": "Em breve",
+        "body": "Alertas de stress, histórico de postura e briefing diário mais denso.",
+        "features": {
+          "0": "Tudo do Open Desk",
+          "1": "Alertas de regime",
+          "2": "Arquivo de resumos"
+        },
+        "cta": "Explorar o mercado"
+      },
+      "desk": {
+        "label": "Equipas",
+        "name": "Command Desk",
+        "price": "Sob pedido",
+        "body": "Vista partilhada para equipas que precisam da mesma postura às 09:00.",
+        "features": {
+          "0": "Sessão partilhada",
+          "1": "Prioridade de suporte",
+          "2": "Onboarding guiado"
+        },
+        "cta": "Pedir acesso"
+      }
+    }
+  }
+}
