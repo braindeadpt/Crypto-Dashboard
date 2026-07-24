@@ -2,6 +2,7 @@ import { DefiDesk } from "@/components/desk/DefiDesk";
 import { fetchDefiSnapshot } from "@/lib/data/defillama";
 import { setRequestLocale } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 120;
 
 export default async function DefiPage({
@@ -11,7 +12,7 @@ export default async function DefiPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const data = await fetchDefiSnapshot();
+  const data = await fetchDefiSnapshot().catch(() => null);
   if (!data) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">

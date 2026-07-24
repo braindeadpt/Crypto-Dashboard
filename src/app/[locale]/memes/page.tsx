@@ -2,6 +2,7 @@ import { MemesDesk } from "@/components/desk/MemesDesk";
 import { fetchMemeMarkets } from "@/lib/data/coingecko";
 import { setRequestLocale } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 120;
 
 export default async function MemesPage({

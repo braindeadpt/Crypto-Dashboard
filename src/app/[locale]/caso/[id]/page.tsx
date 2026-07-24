@@ -4,6 +4,7 @@ import { getRegimeBundle } from "@/lib/data/bundle";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export default async function CasoPage({
@@ -14,7 +15,9 @@ export default async function CasoPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const { market, caseContext } = await getRegimeBundle();
+  const bundle = await getRegimeBundle().catch(() => null);
+  if (!bundle) notFound();
+  const { market, caseContext } = bundle;
   const movers = [...market.movers.gainers, ...market.movers.losers];
   const cases = buildDailyCases(movers, caseContext);
 

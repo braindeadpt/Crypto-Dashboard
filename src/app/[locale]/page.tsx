@@ -10,6 +10,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import BoardLoading from "./loading";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export default async function HomePage({

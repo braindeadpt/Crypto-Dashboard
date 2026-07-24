@@ -3,6 +3,7 @@ import { getFrontPageData } from "@/lib/data/bundle";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export default async function CasoIndexPage({

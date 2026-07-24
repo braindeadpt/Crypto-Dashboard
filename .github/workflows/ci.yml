@@ -36,6 +36,9 @@ jobs:
 
       - name: Production build
         run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium

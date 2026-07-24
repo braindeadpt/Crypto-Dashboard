@@ -2,6 +2,7 @@ import { LabDesk } from "@/components/desk/LabDesk";
 import { getRegimeBundle } from "@/lib/data/bundle";
 import { setRequestLocale } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export default async function LabPage({
