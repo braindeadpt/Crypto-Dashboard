@@ -7,6 +7,7 @@ import { LanguageToggle } from "./LanguageToggle";
 
 const LINKS = [
   { href: "/", key: "board" as const },
+  { href: "/caso", key: "case" as const },
   { href: "/mercado", key: "market" as const },
   { href: "/graficos", key: "charts" as const },
   { href: "/etf", key: "etf" as const },

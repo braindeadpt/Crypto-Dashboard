@@ -1,6 +1,5 @@
-import { buildDailyCases } from "@/lib/cases/build";
+import { buildCaseFile, buildDailyCases } from "@/lib/cases/build";
 import { getRegimeBundle } from "@/lib/data/bundle";
-import { buildCaseFile } from "@/lib/cases/build";
 import { NextResponse } from "next/server";
 
 export const revalidate = 60;
@@ -9,9 +8,9 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const { market, sentiment } = await getRegimeBundle();
+    const { market, caseContext } = await getRegimeBundle();
     const movers = [...market.movers.gainers, ...market.movers.losers];
-    const cases = buildDailyCases(movers, sentiment);
+    const cases = buildDailyCases(movers, caseContext);
 
     if (id) {
       const found =
@@ -20,7 +19,7 @@ export async function GET(req: Request) {
           const m = movers.find(
             (x) => `case-${x.id}` === id || x.caseId === id || x.id === id,
           );
-          return m ? buildCaseFile(m, sentiment) : null;
+          return m ? buildCaseFile(m, caseContext) : null;
         })();
       if (!found) {
         return NextResponse.json({ error: "Not found" }, { status: 404 });

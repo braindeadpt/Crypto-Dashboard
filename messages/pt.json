@@ -7,6 +7,7 @@
   },
   "nav": {
     "board": "Board",
+    "case": "Caso & Efeito",
     "market": "Mercado",
     "charts": "Gráficos",
     "sentiment": "Sentimento",
@@ -106,14 +107,23 @@
     "advanced": "Avançado"
   },
   "case": {
-    "title": "Análise do movimento",
+    "title": "Caso & Efeito",
+    "indexTitle": "Porque é que isto se mexeu?",
+    "indexSubtitle": "Hipóteses com evidência a favor e contra — correlação de sinais, nunca causa inventada.",
     "observation": "O que aconteceu",
     "hypotheses": "Hipóteses",
-    "evidence": "Evidência",
+    "evidence": "Evidência (números)",
     "conclusion": "Conclusão provisória",
     "quiz": "Pergunta rápida",
-    "back": "Voltar",
-    "rank": "Confiança"
+    "back": "Todos os casos",
+    "rank": "Peso",
+    "for": "A favor",
+    "against": "Contra",
+    "sources": "Fontes",
+    "unclear": "Sem explicação clara",
+    "unclearHint": "Os dados disponíveis não suportam uma leitura confiável. Volta quando o movimento e a confirmação forem mais claros.",
+    "correlationNote": "Linguagem de correlação: «consistente com», nunca «causado por».",
+    "empty": "Sem casos neste momento."
   },
   "lab": {
     "title": "Lab",

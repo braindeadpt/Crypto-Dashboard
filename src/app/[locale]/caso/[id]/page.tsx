@@ -14,9 +14,9 @@ export default async function CasoPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
 
-  const { market, sentiment } = await getRegimeBundle();
+  const { market, caseContext } = await getRegimeBundle();
   const movers = [...market.movers.gainers, ...market.movers.losers];
-  const cases = buildDailyCases(movers, sentiment);
+  const cases = buildDailyCases(movers, caseContext);
 
   const found =
     cases.find((c) => c.id === id) ||
@@ -24,7 +24,7 @@ export default async function CasoPage({
       const m = movers.find(
         (x) => `case-${x.id}` === id || x.caseId === id || x.id === id,
       );
-      return m ? buildCaseFile(m, sentiment) : null;
+      return m ? buildCaseFile(m, caseContext) : null;
     })();
 
   if (!found) notFound();

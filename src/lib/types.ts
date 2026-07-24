@@ -153,11 +153,19 @@ export interface CaseFile {
   change24h: number;
   price: number;
   hypotheses: {
+    id: string;
     labelPt: string;
     labelEn: string;
     confidence: number;
+    forPt: string[];
+    forEn: string[];
+    againstPt: string[];
+    againstEn: string[];
+    sources: { title: string; url: string }[];
   }[];
   evidence: EvidenceChip[];
+  /** True when signals do not support a clear read */
+  unclear: boolean;
   conclusionPt: string;
   conclusionEn: string;
   quiz?: {

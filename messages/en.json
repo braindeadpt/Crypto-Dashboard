@@ -7,6 +7,7 @@
   },
   "nav": {
     "board": "Board",
+    "case": "Case & Effect",
     "market": "Market",
     "charts": "Charts",
     "sentiment": "Sentiment",
@@ -106,14 +107,23 @@
     "advanced": "Advanced"
   },
   "case": {
-    "title": "Move analysis",
+    "title": "Case & Effect",
+    "indexTitle": "Why did this move?",
+    "indexSubtitle": "Hypotheses with evidence for and against — signal correlation, never invented causes.",
     "observation": "What happened",
     "hypotheses": "Hypotheses",
-    "evidence": "Evidence",
+    "evidence": "Evidence (numbers)",
     "conclusion": "Provisional conclusion",
     "quiz": "Quick question",
-    "back": "Back",
-    "rank": "Confidence"
+    "back": "All cases",
+    "rank": "Weight",
+    "for": "For",
+    "against": "Against",
+    "sources": "Sources",
+    "unclear": "No clear explanation",
+    "unclearHint": "Available data does not support a reliable read. Come back when the move and confirmation are clearer.",
+    "correlationNote": "Correlation language: 'consistent with', never 'caused by'.",
+    "empty": "No cases right now."
   },
   "lab": {
     "title": "Lab",

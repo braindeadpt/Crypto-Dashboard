@@ -1,110 +1,76 @@
+import {
+  correlateBlurb,
+  correlateMove,
+  type CaseContext,
+} from "@/lib/cases/correlate";
 import type { CaseFile, Mover, SentimentSnapshot } from "@/lib/types";
+
+export type { CaseContext };
+
+/** Minimal context when only sentiment is available (API fallback). */
+export function contextFromSentiment(
+  sentiment: SentimentSnapshot,
+  extras: Partial<CaseContext> = {},
+): CaseContext {
+  return {
+    sentiment,
+    btcChange24h: extras.btcChange24h ?? 0,
+    ethChange24h: extras.ethChange24h ?? 0,
+    marketCapChange24h: extras.marketCapChange24h ?? 0,
+    breadthPct: extras.breadthPct ?? null,
+    etfCombinedUsdM: extras.etfCombinedUsdM ?? null,
+    longShortRatio: extras.longShortRatio ?? null,
+    oiChange24hPct:
+      extras.oiChange24hPct ?? sentiment.openInterest.change24hPct,
+    defiTvlChange1d: extras.defiTvlChange1d ?? null,
+    ...extras,
+  };
+}
 
 export function buildCaseFile(
   mover: Mover,
-  sentiment?: SentimentSnapshot | null,
+  ctxOrSentiment?: CaseContext | SentimentSnapshot | null,
 ): CaseFile {
-  const up = mover.change24h >= 0;
-  const abs = Math.abs(mover.change24h);
-
-  const hypotheses = up
-    ? [
-        {
-          labelPt: "Fluxo especulativo / narrativa de curto prazo",
-          labelEn: "Speculative flow / short-term narrative",
-          confidence: abs > 8 ? 0.55 : 0.4,
-        },
-        {
-          labelPt: "Short squeeze ou funding positivo extremo",
-          labelEn: "Short squeeze or extreme positive funding",
-          confidence: sentiment?.funding.bias === "long" ? 0.5 : 0.3,
-        },
-        {
-          labelPt: "Catalisador fundamental (listagem, parceria, upgrade)",
-          labelEn: "Fundamental catalyst (listing, partnership, upgrade)",
-          confidence: 0.25,
-        },
-      ]
-    : [
-        {
-          labelPt: "Risco de mercado amplo / correlação com BTC",
-          labelEn: "Broad market risk / BTC correlation",
-          confidence: 0.45,
-        },
-        {
-          labelPt: "Liquidação de longs ou funding negativo",
-          labelEn: "Long liquidations or negative funding",
-          confidence: sentiment?.funding.bias === "short" ? 0.5 : 0.35,
-        },
-        {
-          labelPt: "Evento específico (hack, unlock, regulação)",
-          labelEn: "Idiosyncratic event (hack, unlock, regulation)",
-          confidence: 0.3,
-        },
-      ];
-
-  hypotheses.sort((a, b) => b.confidence - a.confidence);
-
-  const evidence: CaseFile["evidence"] = [
-    {
-      id: "chg",
-      label: "Variação 24h",
-      labelEn: "24h change",
-      value: `${up ? "+" : ""}${mover.change24h.toFixed(2)}%`,
-      tone: up ? "up" : "down",
-    },
-    {
-      id: "vol",
-      label: "Volume 24h",
-      labelEn: "24h volume",
-      value: `$${(mover.volume24h / 1e6).toFixed(1)}M`,
-      tone: "neutral",
-    },
-  ];
-
-  if (sentiment) {
-    evidence.push({
-      id: "fng",
-      label: "Medo & Ganância",
-      labelEn: "Fear & Greed",
-      value: String(sentiment.fearGreed.value),
-      tone: "warn",
-    });
-    evidence.push({
-      id: "fund",
-      label: "Funding BTC",
-      labelEn: "BTC funding",
-      value: `${(sentiment.funding.rate * 100).toFixed(4)}%`,
-      tone: "neutral",
-    });
-  }
+  const ctx = normalizeCtx(ctxOrSentiment);
+  const corr = correlateMove(mover, ctx);
 
   return {
     id: mover.caseId ?? `case-${mover.id}`,
     assetId: mover.id,
     symbol: mover.symbol,
-    observationPt: `${mover.name} (${mover.symbol}) variou ${up ? "+" : ""}${mover.change24h.toFixed(2)}% nas últimas 24h, a ~$${mover.price.toLocaleString("en")}.`,
-    observationEn: `${mover.name} (${mover.symbol}) moved ${up ? "+" : ""}${mover.change24h.toFixed(2)}% in the last 24h, near $${mover.price.toLocaleString("en")}.`,
+    observationPt: corr.observationPt,
+    observationEn: corr.observationEn,
     change24h: mover.change24h,
     price: mover.price,
-    hypotheses,
-    evidence,
-    conclusionPt: `${hypotheses[0].labelPt} é a hipótese líder (${Math.round(hypotheses[0].confidence * 100)}%), mas permanece provisória até cruzar notícias e liquidez.`,
-    conclusionEn: `${hypotheses[0].labelEn} leads (${Math.round(hypotheses[0].confidence * 100)}%), but stays provisional until news and liquidity are cross-checked.`,
+    hypotheses: corr.hypotheses.map((h) => ({
+      id: h.id,
+      labelPt: h.labelPt,
+      labelEn: h.labelEn,
+      confidence: h.confidence,
+      forPt: h.forPt,
+      forEn: h.forEn,
+      againstPt: h.againstPt,
+      againstEn: h.againstEn,
+      sources: h.sources,
+    })),
+    evidence: corr.evidence,
+    unclear: corr.unclear,
+    conclusionPt: corr.conclusionPt,
+    conclusionEn: corr.conclusionEn,
     quiz: {
       questionPt: "O que NÃO deves fazer ao ver um movimento >8%?",
       questionEn: "What should you NOT do when seeing an >8% move?",
       optionsPt: [
-        "Abrir a análise e comparar evidências",
+        "Abrir a análise e comparar evidências a favor e contra",
         "Aumentar imediatamente a posição por FOMO",
-        "Verificar funding e volume",
-        "Ler o brief editorial do dia",
+        "Verificar funding, OI e amplitude",
+        "Aceitar «sem explicação clara» quando os dados não chegam",
       ],
       optionsEn: [
-        "Open the case analysis and compare evidence",
+        "Open the case and compare evidence for and against",
         "Immediately size up from FOMO",
-        "Check funding and volume",
-        "Read today's editorial brief",
+        "Check funding, OI and breadth",
+        "Accept 'no clear explanation' when data is thin",
       ],
       answerIndex: 1,
     },
@@ -114,10 +80,37 @@ export function buildCaseFile(
 
 export function buildDailyCases(
   movers: Mover[],
-  sentiment?: SentimentSnapshot | null,
+  ctxOrSentiment?: CaseContext | SentimentSnapshot | null,
 ): CaseFile[] {
   const pool = [...movers].sort(
     (a, b) => Math.abs(b.change24h) - Math.abs(a.change24h),
   );
-  return pool.slice(0, 3).map((m) => buildCaseFile(m, sentiment));
+  return pool.slice(0, 5).map((m) => buildCaseFile(m, ctxOrSentiment));
+}
+
+export function annotateMoverCauses(
+  movers: Mover[],
+  ctx: CaseContext,
+): Mover[] {
+  return movers.map((m) => {
+    const blurb = correlateBlurb(m, ctx);
+    return { ...m, causePt: blurb.pt, causeEn: blurb.en };
+  });
+}
+
+function normalizeCtx(
+  ctxOrSentiment?: CaseContext | SentimentSnapshot | null,
+): CaseContext {
+  if (!ctxOrSentiment) {
+    return contextFromSentiment({
+      fearGreed: { value: 50, classification: "Neutral", timestamp: "" },
+      funding: { rate: 0, annualized: 0, bias: "neutral" },
+      openInterest: { value: 0, change24hPct: null },
+      updatedAt: "",
+    });
+  }
+  if ("sentiment" in ctxOrSentiment) {
+    return ctxOrSentiment;
+  }
+  return contextFromSentiment(ctxOrSentiment);
 }

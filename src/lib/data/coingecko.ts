@@ -71,35 +71,13 @@ function toQuote(c: CgMarket): AssetQuote {
   };
 }
 
-function inferCause(m: AssetQuote): { pt: string; en: string } {
-  const abs = Math.abs(m.change24h);
-  if (abs < 2) {
-    return {
-      pt: "Movimento contido — sem catalisador óbvio no preço.",
-      en: "Contained move — no obvious price catalyst.",
-    };
-  }
-  if (m.change24h > 8) {
-    return {
-      pt: "Subida forte: confirma volume, notícias e funding antes de reagir.",
-      en: "Sharp rally: check volume, news and funding before FOMO.",
-    };
-  }
-  if (m.change24h < -8) {
-    return {
-      pt: "Queda acentuada: possível liquidação, desbloqueio (unlock) ou risco de mercado.",
-      en: "Sharp drop: possible liquidation, unlock or market-wide risk.",
-    };
-  }
-  if (m.volume24h > m.marketCap * 0.25) {
-    return {
-      pt: "Volume elevado face à capitalização — possível fluxo especulativo.",
-      en: "High volume vs market cap — watch speculative flow.",
-    };
-  }
+/** Causes are annotated later via case correlation in the bundle — no template catalysts. */
+function toMover(q: AssetQuote): Mover {
   return {
-    pt: "Variação relevante nas últimas 24h — cruzar com volume e derivados.",
-    en: "Meaningful 24h move — cross-check volume and derivatives.",
+    ...q,
+    causePt: "A cruzar com funding, OI, amplitude e ETF…",
+    causeEn: "Cross-checking funding, OI, breadth and ETF…",
+    caseId: `case-${q.id}`,
   };
 }
 
@@ -120,28 +98,12 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
       .filter((q) => q.change24h > 0)
       .sort((a, b) => b.change24h - a.change24h)
       .slice(0, 5)
-      .map((q): Mover => {
-        const cause = inferCause(q);
-        return {
-          ...q,
-          causePt: cause.pt,
-          causeEn: cause.en,
-          caseId: `case-${q.id}`,
-        };
-      });
+      .map(toMover);
     const losers = quotes
       .filter((q) => q.change24h < 0)
       .sort((a, b) => a.change24h - b.change24h)
       .slice(0, 5)
-      .map((q): Mover => {
-        const cause = inferCause(q);
-        return {
-          ...q,
-          causePt: cause.pt,
-          causeEn: cause.en,
-          caseId: `case-${q.id}`,
-        };
-      });
+      .map(toMover);
 
     return {
       btc,

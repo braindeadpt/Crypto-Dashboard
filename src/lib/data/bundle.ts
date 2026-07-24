@@ -1,4 +1,5 @@
-import { buildDailyCases } from "@/lib/cases/build";
+import { annotateMoverCauses, buildDailyCases } from "@/lib/cases/build";
+import type { CaseContext } from "@/lib/cases/correlate";
 import { fetchCycleSnapshot } from "@/lib/data/cycle";
 import { fetchDefiSnapshot } from "@/lib/data/defillama";
 import { fetchDerivativesSnapshot } from "@/lib/data/derivatives";
@@ -17,13 +18,46 @@ export async function getSentimentBundle() {
   return fetchSentimentSnapshot();
 }
 
+function buildCaseContext(input: {
+  market: Awaited<ReturnType<typeof fetchMarketSnapshot>>;
+  sentiment: Awaited<ReturnType<typeof fetchSentimentSnapshot>>;
+  etf: Awaited<ReturnType<typeof fetchEtfSnapshot>> | null;
+  derivs: Awaited<ReturnType<typeof fetchDerivativesSnapshot>> | null;
+  defi: DefiSnapshot | null;
+}): CaseContext {
+  const { market, sentiment, etf, derivs, defi } = input;
+  const btcFlow = etf?.btc?.latest?.totalUsdM ?? null;
+  const ethFlow = etf?.eth?.latest?.totalUsdM ?? null;
+  const etfCombinedUsdM =
+    btcFlow != null && ethFlow != null ? btcFlow + ethFlow : (btcFlow ?? ethFlow);
+
+  const oiChanges = [derivs?.btc, derivs?.eth, derivs?.sol]
+    .map((p) => p?.oiChange24hPct)
+    .filter((v): v is number => v != null);
+
+  return {
+    sentiment,
+    btcChange24h: market.btc.change24h,
+    ethChange24h: market.eth.change24h,
+    marketCapChange24h: market.global.marketCapChange24h,
+    breadthPct: computeBreadthPct(market.top),
+    etfCombinedUsdM,
+    longShortRatio: derivs?.btc?.longShortRatio ?? null,
+    oiChange24hPct: oiChanges.length
+      ? oiChanges.reduce((a, b) => (Math.abs(a) > Math.abs(b) ? a : b))
+      : sentiment.openInterest.change24hPct,
+    defiTvlChange1d: defi?.change1d ?? null,
+  };
+}
+
 export async function getRegimeBundle(): Promise<{
   regime: RegimeResult;
   market: Awaited<ReturnType<typeof fetchMarketSnapshot>>;
   sentiment: Awaited<ReturnType<typeof fetchSentimentSnapshot>>;
   defi: DefiSnapshot | null;
+  caseContext: CaseContext;
 }> {
-  const [market, sentiment, etf, derivs, defi] = await Promise.all([
+  const [marketRaw, sentiment, etf, derivs, defi] = await Promise.all([
     fetchMarketSnapshot(),
     fetchSentimentSnapshot(),
     fetchEtfSnapshot().catch(() => null),
@@ -31,20 +65,29 @@ export async function getRegimeBundle(): Promise<{
     fetchDefiSnapshot().catch(() => null),
   ]);
 
-  const sol = market.top.find((a) => a.id === "solana");
-  const breadthPct = computeBreadthPct(market.top);
+  const caseContext = buildCaseContext({
+    market: marketRaw,
+    sentiment,
+    etf,
+    derivs,
+    defi,
+  });
 
+  const market = {
+    ...marketRaw,
+    movers: {
+      gainers: annotateMoverCauses(marketRaw.movers.gainers, caseContext),
+      losers: annotateMoverCauses(marketRaw.movers.losers, caseContext),
+    },
+  };
+
+  const sol = market.top.find((a) => a.id === "solana");
   const oiChanges = [derivs?.btc, derivs?.eth, derivs?.sol]
     .map((p) => p?.oiChange24hPct)
     .filter((v): v is number => v != null);
   const oiChangeMaxAbsPct = oiChanges.length
     ? Math.max(...oiChanges.map((v) => Math.abs(v)))
     : sentiment.openInterest.change24hPct;
-
-  const btcFlow = etf?.btc?.latest?.totalUsdM ?? null;
-  const ethFlow = etf?.eth?.latest?.totalUsdM ?? null;
-  const etfCombinedUsdM =
-    btcFlow != null && ethFlow != null ? btcFlow + ethFlow : (btcFlow ?? ethFlow);
 
   const pegs = (defi?.pegWatch ?? [])
     .map((s) => s.pegDeviation)
@@ -58,28 +101,29 @@ export async function getRegimeBundle(): Promise<{
     btcChange24h: market.btc.change24h,
     ethChange24h: market.eth.change24h,
     solChange24h: sol?.change24h ?? null,
-    breadthPct,
+    breadthPct: caseContext.breadthPct,
     dominance: market.global.btcDominance,
     fundingRate: sentiment.funding.rate,
     marketCapChange24h: market.global.marketCapChange24h,
     oiChange24hPct: sentiment.openInterest.change24hPct,
     oiChangeMaxAbsPct,
     longShortRatio: derivs?.btc?.longShortRatio ?? null,
-    etfCombinedUsdM,
+    etfCombinedUsdM: caseContext.etfCombinedUsdM,
     maxPegDeviationPct,
   });
 
-  return { regime, market, sentiment, defi };
+  return { regime, market, sentiment, defi, caseContext };
 }
 
 export async function getFrontPageData() {
-  const { regime, market, sentiment, defi } = await getRegimeBundle();
+  const { regime, market, sentiment, defi, caseContext } =
+    await getRegimeBundle();
   const cases = buildDailyCases(
     [...market.movers.gainers, ...market.movers.losers],
-    sentiment,
+    caseContext,
   );
   const brief = buildDeterministicBrief({ market, regime, sentiment });
   const cycle = await fetchCycleSnapshot().catch(() => null);
 
-  return { regime, market, sentiment, cases, brief, cycle, defi };
+  return { regime, market, sentiment, cases, brief, cycle, defi, caseContext };
 }
