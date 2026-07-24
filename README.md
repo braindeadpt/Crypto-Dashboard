@@ -27,10 +27,25 @@ People open CoinGecko + TradingView + Fear&Greed + Coinglass + DefiLlama + X + l
 
 ```bash
 npm install
+npx playwright install chromium
 npm run dev
 ```
 
 Open [http://localhost:3000/pt](http://localhost:3000/pt) (or `/en`).
+
+### Quality gate (local)
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm run test:e2e   # sobe `next start` e corre smoke Playwright
+```
+
+Ou tudo: `npm run ci`.
+
+CI no GitHub (push/PR a `master`): lint → typecheck → build → smoke E2E.  
+PRs usam o template com **checklist de auditoria** (copy PT, estrutura, estados de erro, i18n).
 
 ### Optional LLM
 
