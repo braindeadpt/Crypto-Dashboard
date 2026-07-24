@@ -1,4 +1,5 @@
 import { cachedFetch } from "@/lib/cache";
+import { passesDexQuality } from "@/lib/data/dexFilters";
 
 export type DexHotToken = {
   id: string;
@@ -34,6 +35,7 @@ function chainLabel(chainId: string, locale: "pt" | "en"): string {
     base: { pt: "Base", en: "Base" },
     ethereum: { pt: "Ethereum", en: "Ethereum" },
     bsc: { pt: "BSC", en: "BSC" },
+    eth: { pt: "Ethereum", en: "Ethereum" },
   };
   return map[chainId]?.[locale] ?? chainId;
 }
@@ -193,9 +195,16 @@ export async function fetchDexFrenzy(): Promise<DexFrenzySnapshot> {
     const merged = [...boosts, ...sol, ...base, ...eth];
     const seen = new Set<string>();
     const items: DexHotToken[] = [];
-    for (const it of merged.sort(
-      (a, b) => (b.volume24h ?? 0) - (a.volume24h ?? 0),
-    )) {
+    for (const it of merged
+      .filter((t) =>
+        passesDexQuality({
+          symbol: t.symbol,
+          change24h: t.change24h,
+          volume24h: t.volume24h,
+          liquidityUsd: t.liquidityUsd,
+        }),
+      )
+      .sort((a, b) => (b.volume24h ?? 0) - (a.volume24h ?? 0))) {
       const key = `${it.chainId}:${it.symbol}`.toLowerCase();
       if (seen.has(key)) continue;
       seen.add(key);
@@ -213,12 +222,12 @@ export async function fetchDexFrenzy(): Promise<DexFrenzySnapshot> {
       emphasis,
       notePt:
         hot.length >= 3
-          ? `Actividade DEX elevada · ênfase em ${emphasis.labelPt} (boosts + trending). Não é a lista CoinGecko — liquidez on-chain.`
-          : `Vista multichain sem pico extremo · volume DEX com ênfase em ${emphasis.labelPt}.`,
+          ? `Actividade DEX elevada · ênfase em ${emphasis.labelPt}. Sem wrapped/stables/blue chips; outliers finos (|Δ|>500% + liq baixa) excluídos.`
+          : `Vista multichain filtrada · volume DEX com ênfase em ${emphasis.labelPt}.`,
       noteEn:
         hot.length >= 3
-          ? `Active DEX frenzy · ${emphasis.labelEn} emphasis (boosts + trending). Not CoinGecko list — on-chain liquidity.`
-          : `Multichain without extreme frenzy · showing DEX volume (${emphasis.labelEn} emphasis).`,
+          ? `Elevated DEX activity · ${emphasis.labelEn} emphasis. No wrapped/stables/blue chips; thin outliers (|Δ|>500% + low liq) dropped.`
+          : `Filtered multichain view · DEX volume with ${emphasis.labelEn} emphasis.`,
       updatedAt: new Date().toISOString(),
     };
   });

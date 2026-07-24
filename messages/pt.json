@@ -435,7 +435,8 @@
     "defiPulse": "Pulso DeFi",
     "fees24h": "Taxas 24h",
     "pegWatch": "Monitorização do peg",
-    "pegOk": "Stablecoins principais perto do peg (±0,15%)."
+    "pegOk": "Sem despegue relevante nas stables USD (±0,15%). Yield-bearing excluídos.",
+    "yieldsSortHint": "Ordenado por APY · TVL ≥ 1M · reward assinalado"
   },
   "charts": {
     "title": "Gráficos",
@@ -453,13 +454,18 @@
   },
   "yields": {
     "title": "Yields",
-    "subtitle": "Pools com TVL ≥ 1M USD e APY filtrado (0–500%). Não constitui aconselhamento.",
-    "disclaimer": "APY histórico ≠ rendimento futuro. Avalia o risco do protocolo.",
+    "subtitle": "Melhores APYs com filtros de risco — não é aconselhamento.",
+    "sortNote": "Ordenação: APY descendente (não por TVL).",
+    "filtersNote": "Filtros: TVL ≥ 1M USD · APY entre 0% e 500% · reward assinalado quando > 0.",
+    "disclaimer": "APY histórico ≠ rendimento futuro. Avalia o risco do protocolo. Reward APY é volátil.",
     "project": "Projecto",
     "symbol": "Símbolo",
     "chain": "Blockchain",
     "type": "Tipo",
-    "source": "Fonte: yields.llama.fi/pools"
+    "apyBase": "Base",
+    "apyReward": "Reward",
+    "rewardTag": "inclui reward",
+    "source": "Fonte: yields.llama.fi/pools (snapshot reduzido)"
   },
   "etf": {
     "title": "ETF spot",

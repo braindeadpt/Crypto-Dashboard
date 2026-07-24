@@ -2,6 +2,7 @@ import {
   isSnapshotStale,
   readSnapshot,
 } from "@/lib/data/snapshotStore";
+import { pegDeviationPct } from "@/lib/data/peg";
 import type { DefiSnapshot } from "@/lib/types";
 
 const STALE_MS = 15 * 60_000;
@@ -18,7 +19,6 @@ export async function fetchDefiSnapshot(): Promise<DefiSnapshot | null> {
     return snap;
   }
 
-  // Light fallback so first paint still works before cron seeds the snapshot.
   try {
     return await fetchLightDefi();
   } catch {
@@ -53,34 +53,13 @@ async function fetchLightDefi(): Promise<DefiSnapshot> {
       ? hist[hist.length - 1].tvl
       : chains.reduce((s, c) => s + (c.tvl || 0), 0);
 
-  const YIELD_BEARING = new Set([
-    "usyc",
-    "sdai",
-    "susde",
-    "susds",
-    "ousg",
-    "usd0++",
-    "wstusr",
-  ]);
-
   const stablecoins = (stables.peggedAssets || [])
-    .map((s) => {
-      const pegType = s.pegType ?? "";
-      const price = s.price ?? null;
-      const symbol = (s.symbol || "").toLowerCase();
-      const isUsd = pegType === "peggedUSD" || pegType === "";
-      const yieldBearing = YIELD_BEARING.has(symbol);
-      let pegDeviation: number | null = null;
-      if (isUsd && !yieldBearing && price != null && Number.isFinite(price)) {
-        pegDeviation = (price - 1) * 100;
-      }
-      return {
-        name: s.name,
-        symbol: s.symbol,
-        circulating: s.circulating?.peggedUSD ?? 0,
-        pegDeviation,
-      };
-    })
+    .map((s) => ({
+      name: s.name,
+      symbol: s.symbol,
+      circulating: s.circulating?.peggedUSD ?? 0,
+      pegDeviation: pegDeviationPct(s.price, s.pegType, s.symbol || ""),
+    }))
     .filter((s) => s.circulating > 0)
     .sort((a, b) => b.circulating - a.circulating)
     .slice(0, 10);

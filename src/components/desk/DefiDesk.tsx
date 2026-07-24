@@ -31,10 +31,10 @@ export function DefiDesk({ data }: { data: DefiSnapshot }) {
           }
           meaning={
             locale === "pt"
-              ? "Soma aproximada do TVL (capital depositado) nos protocolos rastreados pelo DefiLlama."
-              : "Approximate sum of value locked across DefiLlama-tracked protocols."
+              ? "TVL agregado DefiLlama (/v2/historicalChainTvl) — reduz dupla contagem vs soma de protocolos."
+              : "DefiLlama aggregate TVL (/v2/historicalChainTvl) — reduces double-counting vs summing protocols."
           }
-          method="Sum of protocol TVL from api.llama.fi/protocols"
+          method="DefiLlama /v2/historicalChainTvl last point (fallback: sum /v2/chains)"
           source="DefiLlama"
           updatedAt={data.updatedAt}
         />

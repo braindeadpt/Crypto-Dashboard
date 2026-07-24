@@ -29,6 +29,8 @@ type YieldPool = {
   symbol: string;
   tvlUsd: number;
   apy: number;
+  apyBase: number | null;
+  apyReward: number | null;
   stablecoin: boolean;
 };
 
@@ -383,6 +385,9 @@ export function OperatorBoard({
                 <p className="font-mono text-[0.62rem] text-faint">
                   {y.chain} · TVL {formatUsd(y.tvlUsd, true)}
                   {y.stablecoin ? " · stable" : ""}
+                  {y.apyReward != null && y.apyReward > 0
+                    ? ` · reward ${y.apyReward.toFixed(1)}%`
+                    : ""}
                 </p>
               </li>
             ))}
@@ -390,6 +395,9 @@ export function OperatorBoard({
               <p className="text-sm text-muted">{t("noYields")}</p>
             )}
           </ul>
+          <p className="mt-2 font-mono text-[0.58rem] text-faint">
+            {t("yieldsSortHint")}
+          </p>
         </Panel>
       </div>
 

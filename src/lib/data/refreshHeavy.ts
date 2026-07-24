@@ -1,9 +1,13 @@
+import { pegDeviationPct } from "@/lib/data/peg";
 import { writeSnapshot } from "@/lib/data/snapshotStore";
 import type { YieldPool } from "@/lib/data/yields";
 import type { DefiSnapshot } from "@/lib/types";
 
 const LLAMA = "https://api.llama.fi";
 const STABLES = "https://stablecoins.llama.fi";
+
+/** Canonical TVL: DefiLlama /v2/historicalChainTvl last point (reduces double-count). */
+export type TvlSource = "historicalChainTvl" | "chainsSum";
 
 /**
  * Heavy ingest — NEVER call from page render.
@@ -12,15 +16,19 @@ const STABLES = "https://stablecoins.llama.fi";
 export async function refreshHeavySnapshots(): Promise<{
   yieldsPools: number;
   defiProtocols: number;
+  totalTvl: number;
+  tvlSource: TvlSource;
 }> {
-  const [yields, defi] = await Promise.all([
-    ingestYields(),
-    ingestDefi(),
-  ]);
-  return { yieldsPools: yields, defiProtocols: defi };
+  const [yields, defi] = await Promise.all([ingestYields(), ingestDefi()]);
+  return {
+    yieldsPools: yields.count,
+    defiProtocols: defi.protocols,
+    totalTvl: defi.totalTvl,
+    tvlSource: defi.tvlSource,
+  };
 }
 
-async function ingestYields(): Promise<number> {
+async function ingestYields(): Promise<{ count: number }> {
   const res = await fetch("https://yields.llama.fi/pools", {
     cache: "no-store",
     headers: { Accept: "application/json" },
@@ -64,13 +72,25 @@ async function ingestYields(): Promise<number> {
 
   await writeSnapshot(
     "yields",
-    { pools },
-    "yields.llama.fi/pools (reduced)",
+    {
+      pools,
+      filters: {
+        sort: "apy_desc",
+        minTvlUsd: 1_000_000,
+        maxApy: 500,
+        minApy: 0,
+      },
+    },
+    "yields.llama.fi/pools (reduced, sorted by APY)",
   );
-  return pools.length;
+  return { count: pools.length };
 }
 
-async function ingestDefi(): Promise<number> {
+async function ingestDefi(): Promise<{
+  protocols: number;
+  totalTvl: number;
+  tvlSource: TvlSource;
+}> {
   const [protocols, chains, stables, fees, hist] = await Promise.all([
     fetchJson<Protocol[]>(`${LLAMA}/protocols`),
     fetchJson<Chain[]>(`${LLAMA}/v2/chains`),
@@ -99,10 +119,16 @@ async function ingestDefi(): Promise<number> {
     .sort((a, b) => b.tvl - a.tvl);
 
   const top = sorted.slice(0, 15);
-  const totalTvl =
-    hist && hist.length
-      ? hist[hist.length - 1].tvl
-      : chains.reduce((s, c) => s + (c.tvl || 0), 0);
+
+  let totalTvl: number;
+  let tvlSource: TvlSource;
+  if (hist && hist.length) {
+    totalTvl = hist[hist.length - 1].tvl;
+    tvlSource = "historicalChainTvl";
+  } else {
+    totalTvl = chains.reduce((s, c) => s + (c.tvl || 0), 0);
+    tvlSource = "chainsSum";
+  }
 
   const weightedChange = top.reduce(
     (acc, p) => {
@@ -115,39 +141,13 @@ async function ingestDefi(): Promise<number> {
     { sum: 0, weight: 0 },
   );
 
-  const YIELD_BEARING = new Set([
-    "usyc",
-    "sdai",
-    "susde",
-    "susds",
-    "ousg",
-    "usd0++",
-    "wstusr",
-  ]);
-
   const stablecoins = (stables.peggedAssets || [])
-    .map((s) => {
-      const pegType = s.pegType ?? "";
-      const price = s.price ?? null;
-      const symbol = (s.symbol || "").toLowerCase();
-      const isUsd = pegType === "peggedUSD" || (!pegType && true);
-      const yieldBearing = YIELD_BEARING.has(symbol);
-      let pegDeviation: number | null = null;
-      if (
-        isUsd &&
-        !yieldBearing &&
-        price != null &&
-        Number.isFinite(price)
-      ) {
-        pegDeviation = (price - 1) * 100;
-      }
-      return {
-        name: s.name,
-        symbol: s.symbol,
-        circulating: s.circulating?.peggedUSD ?? 0,
-        pegDeviation,
-      };
-    })
+    .map((s) => ({
+      name: s.name,
+      symbol: s.symbol,
+      circulating: s.circulating?.peggedUSD ?? 0,
+      pegDeviation: pegDeviationPct(s.price, s.pegType, s.symbol || ""),
+    }))
     .filter((s) => s.circulating > 0)
     .sort((a, b) => b.circulating - a.circulating)
     .slice(0, 10);
@@ -157,8 +157,9 @@ async function ingestDefi(): Promise<number> {
     .sort((a, b) => Math.abs(b.pegDeviation!) - Math.abs(a.pegDeviation!))
     .slice(0, 5);
 
-  const snapshot: Omit<DefiSnapshot, "updatedAt"> = {
+  const snapshot: Omit<DefiSnapshot, "updatedAt"> & { tvlSource: TvlSource } = {
     totalTvl,
+    tvlSource,
     change1d:
       weightedChange.weight > 0
         ? weightedChange.sum / weightedChange.weight
@@ -182,8 +183,8 @@ async function ingestDefi(): Promise<number> {
     pegWatch,
   };
 
-  await writeSnapshot("defi", snapshot, "api.llama.fi (reduced)");
-  return top.length;
+  await writeSnapshot("defi", snapshot, `api.llama.fi TVL=${tvlSource}`);
+  return { protocols: top.length, totalTvl, tvlSource };
 }
 
 type Protocol = {
