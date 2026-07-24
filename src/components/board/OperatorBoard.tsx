@@ -175,13 +175,61 @@ export function OperatorBoard({
         <TapeItem label="BREADTH" value={`${breadth}%`} />
       </div>
 
+      {/* HERO — market state now (~20% visual weight) */}
+      <section
+        className={`panel-hero mt-3 p-4 md:p-5 ${
+          regime.score >= 60 || Math.abs(btcChg) >= 4 ? "threshold-flash" : ""
+        }`}
+      >
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-label text-faint">{t("marketNow")}</p>
+            <div className="mt-2 flex flex-wrap items-baseline gap-3">
+              <h1 className="text-hero text-ink">
+                BTC{" "}
+                <span className={deltaClass(btcChg)}>{formatUsd(btcPx)}</span>
+              </h1>
+              <span
+                className={`text-data ${deltaClass(btcChg)}`}
+                aria-label={`${btcChg >= 0 ? "up" : "down"} ${formatPct(btcChg)}`}
+              >
+                {btcChg >= 0 ? "▲" : "▼"} {formatPct(btcChg)}
+              </span>
+            </div>
+            <p className="mt-2 max-w-2xl text-body text-muted">
+              {locale === "pt" ? regime.headlinePt : regime.headlineEn}
+            </p>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <span
+              className={`chip chip-${regime.posture}`}
+              title={t("postureLabel")}
+            >
+              {t(`posture.${regime.posture}`)}
+            </span>
+            <div className="text-right">
+              <p className="text-label text-faint">{t("stressLabel")}</p>
+              <p className="text-title tabular-nums text-ink">{regime.score}</p>
+            </div>
+            {topContributors[0] && (
+              <p className="max-w-[16rem] text-right text-meta text-faint">
+                {locale === "pt"
+                  ? topContributors[0].labelPt
+                  : topContributors[0].labelEn}
+                <span className="text-warn"> +{topContributors[0].points}</span>
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* SPOT VS ALAVANCA */}
-      <section className="mt-3 border border-line bg-surface p-3 md:p-4">
+      <section className="panel-secondary mt-3 p-3 md:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-faint">
+          <h2 className="text-label text-faint">
             {t("spotVsLev")}
           </h2>
-          <p className="font-mono text-[0.6rem] text-faint">{t("spotVsLevHint")}</p>
+          <p className="text-meta text-faint">{t("spotVsLevHint")}</p>
         </div>
         <div className={`mt-3 grid gap-3 ${etf ? "lg:grid-cols-2" : ""}`}>
           {etf && (
@@ -632,11 +680,11 @@ function TapeItem({
             : ""
       }`}
     >
-      <span className="font-mono text-[0.58rem] uppercase tracking-[0.1em] text-faint">
+      <span className="text-label text-faint">
         {label}
       </span>
       <span
-        className={`font-mono text-[0.8rem] font-medium tabular-nums ${
+        className={`text-data font-medium ${
           changeIsAbs && change != null
             ? change > 0
               ? "text-up"
@@ -649,7 +697,7 @@ function TapeItem({
         {value}
       </span>
       {change != null && !changeIsAbs && (
-        <span className={`font-mono text-[0.65rem] tabular-nums ${deltaClass(change)}`}>
+        <span className={`text-meta tabular-nums ${deltaClass(change)}`}>
           {formatPct(change)}
         </span>
       )}
@@ -711,14 +759,14 @@ function Panel({
 }) {
   return (
     <section
-      className={`border bg-surface p-3 ${warn ? "border-warn/30" : "border-line"}`}
+      className={`panel-secondary p-3 ${warn ? "border-warn/30" : ""}`}
     >
       <div className="mb-2 flex items-center justify-between gap-2">
-        <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-faint">
+        <h2 className="text-label text-faint">
           {title}
         </h2>
         {href && (
-          <Link href={href} className="font-mono text-[0.62rem] text-accent">
+          <Link href={href} className="text-meta text-accent">
             →
           </Link>
         )}

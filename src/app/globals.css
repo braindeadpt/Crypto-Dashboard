@@ -1,7 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  /* CLAREZA Crypto — command center palette */
+  /* CLAREZA Crypto — command center palette
+   * Token jobs (must stay distinct):
+   *   --accent  interactive / live affordance
+   *   --up      price / flow direction positive
+   *   --down    price / flow direction negative
+   *   --calm    regime posture calm
+   *   --focus   keyboard / a11y focus ring
+   */
   --bg: #070809;
   --bg-elevated: #0c0e12;
   --surface: #111318;
@@ -15,15 +22,34 @@
   --accent: #3dffa8;
   --accent-dim: rgba(61, 255, 168, 0.12);
   --accent-glow: rgba(61, 255, 168, 0.35);
-  --up: #3dffa8;
-  --down: #ff5c6a;
+  --up: #5eead4;
+  --down: #ff6b7a;
   --warn: #ffb020;
-  --calm: #3dffa8;
+  --calm: #6b8cff;
   --unsettled: #ffb020;
-  --storm: #ff5c6a;
-  --weird: #7aa2ff;
-  --focus: #3dffa8;
-  --crosshair: rgba(61, 255, 168, 0.45);
+  --storm: #ff6b7a;
+  --weird: #c084fc;
+  --focus: #dbe4ff;
+  --crosshair: rgba(219, 228, 255, 0.55);
+
+  /* Type scale — 3 data + 2 label (clear jumps, not 0.04rem noise)
+   *   label  0.625rem  mono uppercase chrome
+   *   meta   0.75rem   secondary mono / captions
+   *   data   0.875rem  tabular figures in panels
+   *   body   0.9375rem readable copy
+   *   title  1.125rem  section titles
+   *   hero   1.5rem    primary market figure
+   */
+  --text-label: 0.625rem;
+  --text-meta: 0.75rem;
+  --text-data: 0.875rem;
+  --text-body: 0.9375rem;
+  --text-title: 1.125rem;
+  --text-hero: 1.5rem;
+
+  --elev-1: 0 1px 0 rgba(255, 255, 255, 0.03);
+  --elev-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --elev-hero: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
 @theme inline {
@@ -46,6 +72,7 @@
   --color-unsettled: var(--unsettled);
   --color-storm: var(--storm);
   --color-weird: var(--weird);
+  --color-focus: var(--focus);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-display: var(--font-sans);
@@ -73,11 +100,20 @@ body {
   min-height: 100vh;
   width: 100%;
   color: var(--ink);
-  background: var(--bg);
+  background:
+    radial-gradient(1200px 600px at 12% -10%, rgba(61, 255, 168, 0.05), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(107, 140, 255, 0.06), transparent 50%),
+    var(--bg);
   font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: var(--text-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.011em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
 ::selection {
@@ -109,6 +145,45 @@ button {
   letter-spacing: -0.02em;
 }
 
+/* Type utilities — prefer these over ad-hoc rem sizes */
+.text-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-label);
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.text-meta {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+}
+.text-data {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-data);
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+.text-body {
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+.text-title {
+  font-size: var(--text-title);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+.text-hero {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-hero);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
 .delta-up {
   color: var(--up);
 }
@@ -121,6 +196,28 @@ button {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 2px;
+  box-shadow: var(--elev-1);
+}
+
+.panel-hero {
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  box-shadow: var(--elev-hero);
+}
+
+.panel-secondary {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  box-shadow: var(--elev-1);
+}
+
+.panel-tertiary {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  opacity: 0.92;
 }
 
 .card {
@@ -136,7 +233,7 @@ button {
   padding: 0.3rem 0.65rem;
   border-radius: 2px;
   font-family: var(--font-mono), monospace;
-  font-size: 0.68rem;
+  font-size: var(--text-label);
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -146,8 +243,8 @@ button {
 
 .chip-calm {
   color: var(--calm);
-  background: rgba(61, 255, 168, 0.08);
-  border-color: rgba(61, 255, 168, 0.28);
+  background: rgba(107, 140, 255, 0.1);
+  border-color: rgba(107, 140, 255, 0.32);
 }
 
 .chip-unsettled {
@@ -158,14 +255,14 @@ button {
 
 .chip-storm {
   color: var(--storm);
-  background: rgba(255, 92, 106, 0.08);
-  border-color: rgba(255, 92, 106, 0.28);
+  background: rgba(255, 107, 122, 0.1);
+  border-color: rgba(255, 107, 122, 0.32);
 }
 
 .chip-weird {
   color: var(--weird);
-  background: rgba(122, 162, 255, 0.08);
-  border-color: rgba(122, 162, 255, 0.28);
+  background: rgba(192, 132, 252, 0.1);
+  border-color: rgba(192, 132, 252, 0.32);
 }
 
 .live-dot {
@@ -230,12 +327,31 @@ button {
   animation: tape-flash-down 0.45s ease-out;
 }
 
+@keyframes threshold-call {
+  0% {
+    box-shadow: inset 0 0 0 1px transparent;
+  }
+  30% {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--warn) 70%, transparent);
+  }
+  100% {
+    box-shadow: inset 0 0 0 1px transparent;
+  }
+}
+
+.threshold-flash {
+  animation: threshold-call 0.8s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .live-dot--on {
     animation: none;
   }
   .tape-flash-up,
-  .tape-flash-down {
+  .tape-flash-down,
+  .threshold-flash,
+  .enter,
+  .stream-row {
     animation: none;
   }
 }

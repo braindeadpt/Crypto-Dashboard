@@ -26,14 +26,14 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-line bg-bg/92 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-4 section-pad py-2.5">
         <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-7 w-7 items-center justify-center border border-accent/35 bg-accent-dim font-mono text-[0.65rem] font-semibold text-accent">
+          <span className="flex h-7 w-7 items-center justify-center border border-accent/35 bg-accent-dim font-mono text-label font-semibold text-accent">
             CC
           </span>
           <span className="leading-tight">
-            <span className="block text-[0.92rem] font-semibold tracking-tight text-ink">
+            <span className="block text-title tracking-tight text-ink">
               CLAREZA <span className="text-accent">Crypto</span>
             </span>
-            <span className="block font-mono text-[0.58rem] uppercase tracking-[0.12em] text-faint">
+            <span className="block text-label text-faint">
               {meta("tagline")}
             </span>
           </span>
@@ -56,7 +56,7 @@ export function SiteHeader() {
               key={link.href}
               href={link.href}
               className={cn(
-                "shrink-0 border-b-2 px-3 py-2 font-mono text-[0.66rem] uppercase tracking-[0.08em] transition",
+                "shrink-0 border-b-2 px-3 py-2 text-label transition",
                 active
                   ? "border-accent text-accent"
                   : "border-transparent text-faint hover:text-muted",
@@ -82,7 +82,7 @@ export function SiteFooter() {
           </p>
           <p className="mt-1 max-w-xl text-sm text-muted">{meta("disclaimer")}</p>
         </div>
-        <p className="font-mono text-[0.62rem] uppercase tracking-wider text-faint">
+        <p className="text-label text-faint">
           Read-only · Sem custódia · Liquidações via stream público
         </p>
       </div>
