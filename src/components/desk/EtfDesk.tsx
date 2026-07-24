@@ -16,6 +16,22 @@ export function EtfDesk({ data }: { data: EtfSnapshot }) {
           {t("title")}
         </h1>
         <p className="mt-2 text-sm text-muted">{t("subtitle")}</p>
+        {data.stale && (
+          <p className="mt-2 font-mono text-[0.7rem] text-warn">
+            {t("staleAge", {
+              date:
+                data.btc.latest?.dateLabel ??
+                (data.ingestedAt
+                  ? new Date(data.ingestedAt).toLocaleDateString(locale)
+                  : "—"),
+            })}
+          </p>
+        )}
+        {!data.stale && data.btc.latest && (
+          <p className="mt-2 font-mono text-[0.65rem] text-faint">
+            {t("flowDate", { date: data.btc.latest.dateLabel })}
+          </p>
+        )}
         <div
           className={cn(
             "mt-4 border px-3 py-3",

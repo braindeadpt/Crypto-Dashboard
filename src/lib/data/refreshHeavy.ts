@@ -1,3 +1,4 @@
+import { ingestEtfSnapshot } from "@/lib/data/etf";
 import { pegDeviationPct } from "@/lib/data/peg";
 import { writeSnapshot } from "@/lib/data/snapshotStore";
 import type { YieldPool } from "@/lib/data/yields";
@@ -11,20 +12,31 @@ export type TvlSource = "historicalChainTvl" | "chainsSum";
 
 /**
  * Heavy ingest — NEVER call from page render.
- * Downloads large DefiLlama payloads, reduces them, writes slim snapshots.
+ * Downloads large DefiLlama payloads + Farside ETF HTML, writes slim snapshots.
  */
 export async function refreshHeavySnapshots(): Promise<{
   yieldsPools: number;
   defiProtocols: number;
   totalTvl: number;
   tvlSource: TvlSource;
+  etfOk: boolean;
 }> {
-  const [yields, defi] = await Promise.all([ingestYields(), ingestDefi()]);
+  const [yields, defi, etf] = await Promise.all([
+    ingestYields(),
+    ingestDefi(),
+    ingestEtfSnapshot()
+      .then(() => true)
+      .catch((e) => {
+        console.warn("[etf ingest]", e instanceof Error ? e.message : e);
+        return false;
+      }),
+  ]);
   return {
     yieldsPools: yields.count,
     defiProtocols: defi.protocols,
     totalTvl: defi.totalTvl,
     tvlSource: defi.tvlSource,
+    etfOk: etf,
   };
 }
 

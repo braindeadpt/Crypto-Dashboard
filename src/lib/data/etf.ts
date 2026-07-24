@@ -1,11 +1,11 @@
-import { cachedFetch } from "@/lib/cache";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-
-const execFileAsync = promisify(execFile);
+import {
+  isSnapshotStale,
+  readSnapshot,
+  writeSnapshot,
+} from "@/lib/data/snapshotStore";
 
 export type EtfDailyFlow = {
-  date: string; // ISO YYYY-MM-DD
+  date: string;
   dateLabel: string;
   totalUsdM: number;
   byTicker: Record<string, number | null>;
@@ -34,6 +34,10 @@ export type EtfSnapshot = {
     spotBidEn: string;
     tone: "up" | "down" | "neutral" | "warn";
   };
+  /** True when snapshot is older than freshness window */
+  stale: boolean;
+  /** ISO of last successful ingest */
+  ingestedAt: string;
   updatedAt: string;
 };
 
@@ -50,50 +54,37 @@ const PAGES: {
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
-/** Farside sits behind Cloudflare; Node fetch often gets 403. Prefer system curl. */
-async function fetchHtml(url: string): Promise<string> {
-  const curlBin = process.platform === "win32" ? "curl.exe" : "curl";
-  try {
-    const { stdout } = await execFileAsync(
-      curlBin,
-      [
-        "-sL",
-        "--max-time",
-        "25",
-        "-A",
-        UA,
-        "-H",
-        "Accept: text/html,application/xhtml+xml",
-        "-H",
-        "Accept-Language: en-US,en;q=0.9",
-        url,
-      ],
-      {
-        maxBuffer: 5 * 1024 * 1024,
-        windowsHide: true,
-      },
-    );
-    if (stdout && stdout.includes("<table") && !stdout.includes("Just a moment")) {
-      return stdout;
-    }
-  } catch {
-    // fall through to fetch
-  }
+const STALE_MS = 12 * 60 * 60_000; // ETF updates after US close — 12h window
 
-  const res = await fetch(url, {
-    cache: "no-store",
-    headers: {
-      "User-Agent": UA,
-      Accept: "text/html,application/xhtml+xml",
-      "Accept-Language": "en-US,en;q=0.9",
-    },
-  });
-  if (!res.ok) throw new Error(`Farside HTTP ${res.status}`);
-  const html = await res.text();
-  if (html.includes("Just a moment")) {
-    throw new Error("Farside Cloudflare challenge — tenta de novo em breve");
+/**
+ * Pure fetch — no child_process / curl. May fail behind Cloudflare;
+ * callers must fall back to last good snapshot.
+ */
+async function fetchHtml(url: string): Promise<string> {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 12_000);
+  try {
+    const res = await fetch(url, {
+      cache: "no-store",
+      signal: ctrl.signal,
+      headers: {
+        "User-Agent": UA,
+        Accept: "text/html,application/xhtml+xml",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+    });
+    if (!res.ok) throw new Error(`Farside HTTP ${res.status}`);
+    const html = await res.text();
+    if (html.includes("Just a moment")) {
+      throw new Error("Farside Cloudflare challenge");
+    }
+    if (!html.includes("<table")) {
+      throw new Error("Farside HTML sem tabela");
+    }
+    return html;
+  } finally {
+    clearTimeout(timer);
   }
-  return html;
 }
 
 function parseNumberCell(raw: string): number | null {
@@ -143,12 +134,14 @@ function stripTags(html: string): string {
     .trim();
 }
 
-function parseFarsideTable(html: string, marker: string): EtfDailyFlow[] {
+export function parseFarsideTable(html: string, marker: string): EtfDailyFlow[] {
   const tables = [...html.matchAll(/<table[\s\S]*?<\/table>/gi)].map((m) => m[0]);
   const table =
     tables.find((t) => t.includes(marker) && /Fee/i.test(t)) ??
     tables.find((t) => new RegExp(marker, "i").test(t));
-  if (!table) return [];
+  if (!table) {
+    throw new Error(`Farside: tabela com marker ${marker} não encontrada`);
+  }
 
   const rows = [...table.matchAll(/<tr[\s\S]*?<\/tr>/gi)].map((m) => m[0]);
   let tickers: string[] = [];
@@ -201,6 +194,10 @@ function parseFarsideTable(html: string, marker: string): EtfDailyFlow[] {
     });
   }
 
+  if (!flows.length) {
+    throw new Error(`Farside ${marker}: zero dias parseáveis`);
+  }
+
   return flows.sort((a, b) => a.date.localeCompare(b.date));
 }
 
@@ -223,35 +220,30 @@ function sumLast(history: EtfDailyFlow[], n: number): number | null {
   return history.slice(-n).reduce((s, d) => s + d.totalUsdM, 0);
 }
 
-async function fetchAssetFlows(
+async function scrapeAsset(
   asset: "BTC" | "ETH" | "SOL",
   url: string,
   marker: string,
 ): Promise<EtfAssetFlows> {
-  return cachedFetch(`etf:farside:${asset}`, 30 * 60_000, async () => {
-    const html = await fetchHtml(url);
-    const history = parseFarsideTable(html, marker).slice(-40);
-    const latest = history[history.length - 1] ?? null;
-    const previous = history[history.length - 2] ?? null;
+  const html = await fetchHtml(url);
+  const history = parseFarsideTable(html, marker).slice(-40);
+  const latest = history[history.length - 1] ?? null;
+  const previous = history[history.length - 2] ?? null;
+  if (!latest) throw new Error(`Farside ${asset}: sem latest`);
 
-    if (!latest) {
-      throw new Error(`Farside ${asset}: tabela sem dias parseáveis`);
-    }
-
-    return {
-      asset,
-      unit: "USDm" as const,
-      latest,
-      previous,
-      streakDays: streak(history),
-      sum5dUsdM: sumLast(history, 5),
-      sum20dUsdM: sumLast(history, 20),
-      history,
-      source: "Farside Investors",
-      sourceUrl: url,
-      updatedAt: new Date().toISOString(),
-    };
-  });
+  return {
+    asset,
+    unit: "USDm",
+    latest,
+    previous,
+    streakDays: streak(history),
+    sum5dUsdM: sumLast(history, 5),
+    sum20dUsdM: sumLast(history, 20),
+    history,
+    source: "Farside Investors",
+    sourceUrl: url,
+    updatedAt: new Date().toISOString(),
+  };
 }
 
 function buildSignal(btc: EtfAssetFlows, eth: EtfAssetFlows): EtfSnapshot["signal"] {
@@ -296,18 +288,55 @@ function buildSignal(btc: EtfAssetFlows, eth: EtfAssetFlows): EtfSnapshot["signa
   };
 }
 
-export async function fetchEtfSnapshot(): Promise<EtfSnapshot> {
-  const [btc, eth, sol] = await Promise.all([
-    fetchAssetFlows("BTC", PAGES[0].url, PAGES[0].marker),
-    fetchAssetFlows("ETH", PAGES[1].url, PAGES[1].marker),
-    fetchAssetFlows("SOL", PAGES[2].url, PAGES[2].marker).catch(() => null),
-  ]);
+/** Cron/ingest only — never call from page render. */
+export async function ingestEtfSnapshot(): Promise<EtfSnapshot> {
+  const results = await Promise.allSettled(
+    PAGES.map((p) => scrapeAsset(p.asset, p.url, p.marker)),
+  );
 
-  return {
-    btc,
-    eth,
-    sol,
-    signal: buildSignal(btc, eth),
+  const byAsset = {
+    BTC: null as EtfAssetFlows | null,
+    ETH: null as EtfAssetFlows | null,
+    SOL: null as EtfAssetFlows | null,
+  };
+  const errors: string[] = [];
+  results.forEach((r, i) => {
+    const asset = PAGES[i].asset;
+    if (r.status === "fulfilled") byAsset[asset] = r.value;
+    else errors.push(`${asset}: ${r.reason instanceof Error ? r.reason.message : r.reason}`);
+  });
+
+  if (!byAsset.BTC || !byAsset.ETH) {
+    throw new Error(
+      `ETF ingest falhou (BTC/ETH obrigatórios). ${errors.join("; ")}`,
+    );
+  }
+
+  const snap: EtfSnapshot = {
+    btc: byAsset.BTC,
+    eth: byAsset.ETH,
+    sol: byAsset.SOL,
+    signal: buildSignal(byAsset.BTC, byAsset.ETH),
+    stale: false,
+    ingestedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+  };
+
+  await writeSnapshot("etf", snap, "farside.co.uk (fetch, no curl)");
+  if (errors.length) {
+    console.warn("[etf ingest partial]", errors.join("; "));
+  }
+  return snap;
+}
+
+/**
+ * Render path: read slim snapshot only. Never scrapes Farside.
+ */
+export async function fetchEtfSnapshot(): Promise<EtfSnapshot | null> {
+  const snap = await readSnapshot<EtfSnapshot>("etf");
+  if (!snap?.btc?.latest || !snap?.eth?.latest) return null;
+  return {
+    ...snap,
+    stale: isSnapshotStale(snap.ingestedAt || snap.updatedAt, STALE_MS),
   };
 }

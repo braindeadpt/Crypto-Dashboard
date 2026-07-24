@@ -485,6 +485,8 @@
     "net": "Net",
     "source": "Source:",
     "unit": "Values in USD millions (US), Farside convention.",
-    "solUnavailable": "SOL flows unavailable or Farside table not parseable right now."
+    "solUnavailable": "SOL flows unavailable or Farside table not parseable right now.",
+    "staleAge": "Stale snapshot — last flows from {date}. Page never scrapes live.",
+    "flowDate": "Flow date: {date}"
   }
 }

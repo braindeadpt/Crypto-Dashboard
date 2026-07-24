@@ -485,6 +485,8 @@
     "net": "Líquido",
     "source": "Fonte:",
     "unit": "Valores em milhões de USD (US), convenção Farside.",
-    "solUnavailable": "Fluxos SOL indisponíveis ou tabela Farside sem dados interpretáveis neste momento."
+    "solUnavailable": "Fluxos SOL indisponíveis ou tabela Farside sem dados interpretáveis neste momento.",
+    "staleAge": "Snapshot antigo — últimos fluxos de {date}. A página não faz scrape ao vivo.",
+    "flowDate": "Fluxos do dia: {date}"
   }
 }

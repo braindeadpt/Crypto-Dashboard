@@ -36,6 +36,13 @@ export function BoardSlowExtras({
           </div>
           {etf ? (
             <>
+              {etf.stale && etf.btc.latest && (
+                <p className="mt-1 font-mono text-[0.6rem] text-warn">
+                  {locale === "pt"
+                    ? `Snapshot · fluxos de ${etf.btc.latest.dateLabel}`
+                    : `Snapshot · flows from ${etf.btc.latest.dateLabel}`}
+                </p>
+              )}
               <p className="mt-2 text-sm text-muted">
                 {locale === "pt" ? etf.signal.spotBidPt : etf.signal.spotBidEn}
               </p>
