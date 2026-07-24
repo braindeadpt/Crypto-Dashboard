@@ -24,6 +24,7 @@ import {
 } from "@/lib/hooks/useLiveTicker";
 
 type YieldPool = {
+  pool: string;
   chain: string;
   project: string;
   symbol: string;
@@ -448,7 +449,7 @@ export function OperatorBoard({
         <Panel title={t("yields")} href="/yields">
           <ul className="space-y-1.5">
             {yields.slice(0, 6).map((y) => (
-              <li key={`${y.project}-${y.symbol}-${y.chain}`} className="text-sm">
+              <li key={y.pool} className="text-sm">
                 <div className="flex justify-between gap-2">
                   <span className="truncate font-medium">
                     {y.project} · {y.symbol}

@@ -69,6 +69,7 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
   const backoffRef = useRef(1000);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stoppedRef = useRef(false);
+  const skipCloseReconnectRef = useRef(false);
 
   useEffect(() => {
     stoppedRef.current = false;
@@ -80,6 +81,23 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
       }
     };
 
+    const disposeSocket = () => {
+      const ws = wsRef.current;
+      wsRef.current = null;
+      if (!ws) return;
+      skipCloseReconnectRef.current = true;
+      ws.onopen = null;
+      ws.onmessage = null;
+      ws.onerror = null;
+      ws.onclose = null;
+      try {
+        ws.close();
+      } catch {
+        /* ignore */
+      }
+      skipCloseReconnectRef.current = false;
+    };
+
     const connect = () => {
       if (stoppedRef.current) return;
       if (typeof document !== "undefined" && document.visibilityState === "hidden") {
@@ -88,7 +106,7 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
       }
 
       clearReconnect();
-      wsRef.current?.close();
+      disposeSocket();
       setConnection(backoffRef.current > 1000 ? "reconnecting" : "connecting");
 
       const ws = new WebSocket(WS_URL);
@@ -96,7 +114,7 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
 
       ws.onopen = () => {
         if (stoppedRef.current) {
-          ws.close();
+          disposeSocket();
           return;
         }
         backoffRef.current = 1000;
@@ -142,7 +160,8 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
       };
 
       ws.onclose = () => {
-        if (stoppedRef.current) return;
+        if (skipCloseReconnectRef.current || stoppedRef.current) return;
+        wsRef.current = null;
         setConnection("reconnecting");
         const wait = backoffRef.current;
         backoffRef.current = Math.min(MAX_BACKOFF_MS, wait * 2);
@@ -153,8 +172,7 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
     const onVisibility = () => {
       if (document.visibilityState === "hidden") {
         clearReconnect();
-        wsRef.current?.close();
-        wsRef.current = null;
+        disposeSocket();
         setConnection("offline");
       } else if (!stoppedRef.current) {
         backoffRef.current = 1000;
@@ -169,8 +187,7 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
       stoppedRef.current = true;
       clearReconnect();
       document.removeEventListener("visibilitychange", onVisibility);
-      wsRef.current?.close();
-      wsRef.current = null;
+      disposeSocket();
     };
   }, []);
 

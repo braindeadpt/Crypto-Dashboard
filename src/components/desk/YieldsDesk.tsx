@@ -4,6 +4,7 @@ import { formatUsd } from "@/lib/format";
 import { useTranslations } from "next-intl";
 
 type YieldPool = {
+  pool: string;
   chain: string;
   project: string;
   symbol: string;
@@ -44,7 +45,7 @@ export function YieldsDesk({ pools }: { pools: YieldPool[] }) {
           <tbody>
             {pools.map((p) => (
               <tr
-                key={`${p.project}-${p.symbol}-${p.chain}`}
+                key={p.pool}
                 className="border-b border-line/80"
               >
                 <td className="px-3 py-2.5 font-medium">{p.project}</td>
