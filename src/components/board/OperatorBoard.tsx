@@ -180,8 +180,8 @@ export function OperatorBoard({
           </h2>
           <p className="font-mono text-[0.6rem] text-faint">{t("spotVsLevHint")}</p>
         </div>
-        <div className="mt-3 grid gap-3 lg:grid-cols-2">
-          {etf ? (
+        <div className={`mt-3 grid gap-3 ${etf ? "lg:grid-cols-2" : ""}`}>
+          {etf && (
             <div className="border border-line bg-bg-elevated p-3">
               <div className="flex items-center justify-between gap-2">
                 <p className="font-mono text-[0.62rem] uppercase text-faint">
@@ -206,10 +206,6 @@ export function OperatorBoard({
               <p className="mt-2 font-mono text-[0.58rem] text-faint">
                 {t("etfAfterClose")}
               </p>
-            </div>
-          ) : (
-            <div className="border border-line bg-bg-elevated p-3 text-sm text-muted">
-              {t("etfUnavailable")}
             </div>
           )}
 
@@ -328,7 +324,7 @@ export function OperatorBoard({
         </div>
       </div>
 
-      <div className="mt-3 grid gap-3 lg:grid-cols-3">
+      <div className={`mt-3 grid gap-3 ${dex ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}>
         <Panel title={t("movers")} href="/mercado">
           <div className="grid grid-cols-2 gap-3">
             <MoverCol title={t("gainers")} items={market.movers.gainers.slice(0, 5)} />
@@ -336,14 +332,13 @@ export function OperatorBoard({
           </div>
         </Panel>
 
+        {dex && (
         <Panel title={t("dexFrenzy")} href="/memes">
-          {dex && (
-            <p className="mb-2 border border-accent/25 bg-accent-dim px-2 py-1.5 font-mono text-[0.65rem] text-accent">
-              {locale === "pt" ? dex.notePt : dex.noteEn}
-            </p>
-          )}
+          <p className="mb-2 border border-accent/25 bg-accent-dim px-2 py-1.5 font-mono text-[0.65rem] text-accent">
+            {locale === "pt" ? dex.notePt : dex.noteEn}
+          </p>
           <ul className="space-y-1.5">
-            {(dex?.items ?? []).slice(0, 6).map((m) => (
+            {dex.items.slice(0, 6).map((m) => (
               <li key={m.id} className="flex justify-between gap-2 text-sm">
                 <a
                   href={m.url || "#"}
@@ -365,12 +360,13 @@ export function OperatorBoard({
                 </span>
               </li>
             ))}
-            {!dex?.items.length && (
+            {!dex.items.length && (
               <p className="text-sm text-muted">{t("noMemes")}</p>
             )}
           </ul>
           <p className="mt-2 font-mono text-[0.58rem] text-faint">{t("dexNotCg")}</p>
         </Panel>
+        )}
 
         <Panel title={t("yields")} href="/yields">
           <ul className="space-y-1.5">

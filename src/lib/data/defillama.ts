@@ -1,133 +1,116 @@
-import { cachedFetch } from "@/lib/cache";
+import {
+  isSnapshotStale,
+  readSnapshot,
+} from "@/lib/data/snapshotStore";
 import type { DefiSnapshot } from "@/lib/types";
 
+const STALE_MS = 15 * 60_000;
 const LLAMA = "https://api.llama.fi";
 const STABLES = "https://stablecoins.llama.fi";
 
-async function llama<T>(base: string, path: string): Promise<T> {
-  const res = await fetch(`${base}${path}`, {
-    cache: "no-store",
-    headers: { Accept: "application/json" },
-  });
-  if (!res.ok) throw new Error(`DefiLlama ${res.status}: ${path}`);
-  return res.json() as Promise<T>;
+/**
+ * Prefer slim disk snapshot (from heavy ingest). Fallback: light endpoints only
+ * (chains + stables + fees + historical TVL) — never /protocols on the render path.
+ */
+export async function fetchDefiSnapshot(): Promise<DefiSnapshot | null> {
+  const snap = await readSnapshot<DefiSnapshot>("defi");
+  if (snap && !isSnapshotStale(snap.updatedAt, STALE_MS * 4)) {
+    return snap;
+  }
+
+  // Light fallback so first paint still works before cron seeds the snapshot.
+  try {
+    return await fetchLightDefi();
+  } catch {
+    return snap ?? null;
+  }
 }
 
-type Protocol = {
-  name: string;
-  slug: string;
-  tvl: number;
-  change_1d?: number | null;
-  change_7d?: number | null;
-  category?: string;
-  chains?: string[];
-};
+async function fetchLightDefi(): Promise<DefiSnapshot> {
+  const [chains, stables, fees, hist] = await Promise.all([
+    lightJson<{ name: string; tvl: number }[]>(`${LLAMA}/v2/chains`),
+    lightJson<{
+      peggedAssets: {
+        name: string;
+        symbol: string;
+        pegType?: string;
+        circulating?: { peggedUSD?: number };
+        price?: number | null;
+      }[];
+    }>(`${STABLES}/stablecoins?includePrices=true`).catch(() => ({
+      peggedAssets: [],
+    })),
+    lightJson<{ total24h?: number; change_1d?: number | null }>(
+      `${LLAMA}/overview/fees?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true`,
+    ).catch(() => null),
+    lightJson<{ date: number; tvl: number }[]>(
+      `${LLAMA}/v2/historicalChainTvl`,
+    ).catch(() => null),
+  ]);
 
-type Chain = { name: string; tvl: number };
+  const totalTvl =
+    hist && hist.length
+      ? hist[hist.length - 1].tvl
+      : chains.reduce((s, c) => s + (c.tvl || 0), 0);
 
-type StableResponse = {
-  peggedAssets: {
-    name: string;
-    symbol: string;
-    circulating?: { peggedUSD?: number };
-    price?: number | null;
-  }[];
-};
+  const YIELD_BEARING = new Set([
+    "usyc",
+    "sdai",
+    "susde",
+    "susds",
+    "ousg",
+    "usd0++",
+    "wstusr",
+  ]);
 
-type FeesOverview = {
-  total24h?: number;
-  change_1d?: number | null;
-  protocols?: { name: string; total24h?: number }[];
-};
+  const stablecoins = (stables.peggedAssets || [])
+    .map((s) => {
+      const pegType = s.pegType ?? "";
+      const price = s.price ?? null;
+      const symbol = (s.symbol || "").toLowerCase();
+      const isUsd = pegType === "peggedUSD" || pegType === "";
+      const yieldBearing = YIELD_BEARING.has(symbol);
+      let pegDeviation: number | null = null;
+      if (isUsd && !yieldBearing && price != null && Number.isFinite(price)) {
+        pegDeviation = (price - 1) * 100;
+      }
+      return {
+        name: s.name,
+        symbol: s.symbol,
+        circulating: s.circulating?.peggedUSD ?? 0,
+        pegDeviation,
+      };
+    })
+    .filter((s) => s.circulating > 0)
+    .sort((a, b) => b.circulating - a.circulating)
+    .slice(0, 10);
 
-export async function fetchDefiSnapshot(): Promise<DefiSnapshot> {
-  return cachedFetch("defi:snapshot", 180_000, async () => {
-    const [protocols, chains, stables, fees] = await Promise.all([
-      llama<Protocol[]>(LLAMA, "/protocols"),
-      llama<Chain[]>(LLAMA, "/v2/chains"),
-      llama<StableResponse>(STABLES, "/stablecoins?includePrices=true").catch(
-        () => ({ peggedAssets: [] }),
-      ),
-      llama<FeesOverview>(
-        LLAMA,
-        "/overview/fees?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true",
-      ).catch(() => null),
-    ]);
+  const pegWatch = [...stablecoins]
+    .filter((s) => s.pegDeviation != null && Math.abs(s.pegDeviation) >= 0.15)
+    .sort((a, b) => Math.abs(b.pegDeviation!) - Math.abs(a.pegDeviation!))
+    .slice(0, 5);
 
-    const sorted = protocols
-      .map((p) => ({
-        name: p.name,
-        slug: p.slug,
-        tvl: p.tvl || 0,
-        change_1d: p.change_1d ?? null,
-        change_7d: p.change_7d ?? null,
-        category: p.category ?? "—",
-        chains: (p.chains ?? []).slice(0, 6),
-      }))
-      .filter((p) => p.tvl > 0)
-      .sort((a, b) => b.tvl - a.tvl);
+  return {
+    totalTvl,
+    change1d: null,
+    fees24h: fees?.total24h ?? null,
+    feesChange1d: fees?.change_1d ?? null,
+    protocols: [],
+    chains: [...chains]
+      .sort((a, b) => b.tvl - a.tvl)
+      .slice(0, 12)
+      .map((c) => ({ name: c.name, tvl: c.tvl })),
+    stablecoins,
+    pegWatch,
+    updatedAt: new Date().toISOString(),
+  };
+}
 
-    const totalTvl = sorted.slice(0, 200).reduce((sum, p) => sum + p.tvl, 0);
-    const top = sorted.slice(0, 15);
-
-    const weightedChange = top.reduce(
-      (acc, p) => {
-        if (p.change_1d == null) return acc;
-        return {
-          sum: acc.sum + p.change_1d * p.tvl,
-          weight: acc.weight + p.tvl,
-        };
-      },
-      { sum: 0, weight: 0 },
-    );
-
-    const stablecoins = (stables.peggedAssets || [])
-      .map((s) => {
-        const price = s.price ?? null;
-        const pegDeviation =
-          price != null && Number.isFinite(price) ? (price - 1) * 100 : null;
-        return {
-          name: s.name,
-          symbol: s.symbol,
-          circulating: s.circulating?.peggedUSD ?? 0,
-          pegDeviation,
-        };
-      })
-      .filter((s) => s.circulating > 0)
-      .sort((a, b) => b.circulating - a.circulating)
-      .slice(0, 10);
-
-    const pegWatch = [...stablecoins]
-      .filter((s) => s.pegDeviation != null && Math.abs(s.pegDeviation) >= 0.15)
-      .sort(
-        (a, b) => Math.abs(b.pegDeviation!) - Math.abs(a.pegDeviation!),
-      )
-      .slice(0, 5);
-
-    return {
-      totalTvl,
-      change1d:
-        weightedChange.weight > 0
-          ? weightedChange.sum / weightedChange.weight
-          : null,
-      fees24h: fees?.total24h ?? null,
-      feesChange1d: fees?.change_1d ?? null,
-      protocols: top.map((p) => ({
-        name: p.name,
-        slug: p.slug,
-        tvl: p.tvl,
-        change1d: p.change_1d,
-        change7d: p.change_7d,
-        category: p.category,
-        chains: p.chains,
-      })),
-      chains: [...chains]
-        .sort((a, b) => b.tvl - a.tvl)
-        .slice(0, 12)
-        .map((c) => ({ name: c.name, tvl: c.tvl })),
-      stablecoins,
-      pegWatch,
-      updatedAt: new Date().toISOString(),
-    };
+async function lightJson<T>(url: string): Promise<T> {
+  const res = await fetch(url, {
+    next: { revalidate: 300 },
+    headers: { Accept: "application/json" },
   });
+  if (!res.ok) throw new Error(`DefiLlama light ${res.status}: ${url}`);
+  return res.json() as Promise<T>;
 }

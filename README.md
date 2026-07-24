@@ -44,6 +44,16 @@ npm run test:e2e   # sobe `next start` e corre smoke Playwright
 
 Ou tudo: `npm run ci`.
 
+### Snapshots DefiLlama (pesados)
+
+`yields.llama.fi/pools` (~11MB) e `api.llama.fi/protocols` (~8MB) **não** entram no render.
+Ingestão separada escreve blobs reduzidos em `data/snapshots/`:
+
+```bash
+npm run snapshots:refresh
+# ou POST /api/cron/refresh-heavy  (Authorization: Bearer $CRON_SECRET)
+```
+
 CI no GitHub (push/PR a `master`): lint → typecheck → build → smoke E2E.  
 PRs usam o template com **checklist de auditoria** (copy PT, estrutura, estados de erro, i18n).
 

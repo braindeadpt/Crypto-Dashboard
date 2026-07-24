@@ -1,4 +1,7 @@
-import { cachedFetch } from "@/lib/cache";
+import {
+  isSnapshotStale,
+  readSnapshot,
+} from "@/lib/data/snapshotStore";
 
 export type YieldPool = {
   pool: string;
@@ -12,46 +15,37 @@ export type YieldPool = {
   stablecoin: boolean;
 };
 
+const STALE_MS = 15 * 60_000;
+
+type YieldsSnap = {
+  pools: YieldPool[];
+  updatedAt: string;
+  source: string;
+};
+
+/**
+ * Reads slim yields snapshot only — never downloads yields.llama.fi/pools.
+ * Refresh via /api/cron/refresh-heavy (or npm run snapshots:refresh).
+ */
 export async function fetchTopYieldPools(limit = 40): Promise<{
   pools: YieldPool[];
   updatedAt: string;
+  stale: boolean;
+  source: string;
 }> {
-  return cachedFetch("defi:yields:top", 180_000, async () => {
-    const res = await fetch("https://yields.llama.fi/pools", {
-      cache: "no-store",
-      headers: { Accept: "application/json" },
-    });
-    if (!res.ok) throw new Error(`Yields ${res.status}`);
-    const json = (await res.json()) as {
-      data: {
-        pool: string;
-        chain: string;
-        project: string;
-        symbol: string;
-        tvlUsd: number;
-        apy: number;
-        apyBase?: number;
-        apyReward?: number;
-        stablecoin?: boolean;
-      }[];
+  const snap = await readSnapshot<YieldsSnap>("yields");
+  if (!snap?.pools?.length) {
+    return {
+      pools: [],
+      updatedAt: "",
+      stale: true,
+      source: "snapshot-missing",
     };
-
-    const pools = (json.data ?? [])
-      .filter((p) => p.tvlUsd >= 1_000_000 && Number.isFinite(p.apy) && p.apy > 0 && p.apy < 500)
-      .sort((a, b) => b.tvlUsd - a.tvlUsd)
-      .slice(0, limit)
-      .map((p) => ({
-        pool: p.pool,
-        chain: p.chain,
-        project: p.project,
-        symbol: p.symbol,
-        tvlUsd: p.tvlUsd,
-        apy: p.apy,
-        apyBase: p.apyBase ?? null,
-        apyReward: p.apyReward ?? null,
-        stablecoin: Boolean(p.stablecoin),
-      }));
-
-    return { pools, updatedAt: new Date().toISOString() };
-  });
+  }
+  return {
+    pools: snap.pools.slice(0, limit),
+    updatedAt: snap.updatedAt,
+    stale: isSnapshotStale(snap.updatedAt, STALE_MS),
+    source: snap.source,
+  };
 }

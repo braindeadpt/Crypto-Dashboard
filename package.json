@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "snapshots:refresh": "npx --yes tsx scripts/refresh-snapshots.ts",
     "ci": "npm run lint && npm run typecheck && npm run build && npm run test:e2e"
   },
   "dependencies": {

@@ -45,13 +45,10 @@ export async function getFrontPageData() {
     sentiment,
   );
   const brief = buildDeterministicBrief({ market, regime, sentiment });
-  const cycle = await fetchCycleSnapshot().catch(() => null);
-  const defi = await fetchDefiSnapshot().catch(() => null);
+  const [cycle, defi] = await Promise.all([
+    fetchCycleSnapshot().catch(() => null),
+    fetchDefiSnapshot().catch(() => null),
+  ]);
 
   return { regime, market, sentiment, cases, brief, cycle, defi };
-}
-
-export async function getFullDesk() {
-  const front = await getFrontPageData();
-  return front;
 }
