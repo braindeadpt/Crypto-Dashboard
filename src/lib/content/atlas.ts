@@ -384,10 +384,10 @@ export const ATLAS: AtlasConcept[] = [
     level: "beginner",
     titlePt: "DYOR",
     titleEn: "DYOR",
-    summaryPt: "Do Your Own Research — e o Case File é o método.",
+    summaryPt: "Do Your Own Research — e a análise estruturada é o método.",
     summaryEn: "Do Your Own Research — and the Case File is the method.",
     bodyPt:
-      "DYOR sem método é scroll. O padrão Causa & Efeito força hipóteses, evidência e incerteza — a literacia que os feeds não ensinam.",
+      "DYOR sem método é scroll. O padrão causa e efeito força hipóteses, evidência e incerteza — a literacia que os feeds não ensinam.",
     bodyEn:
       "DYOR without method is scrolling. Cause & Effect forces hypotheses, evidence and uncertainty — literacy feeds don't teach.",
     relatedMetrics: [],

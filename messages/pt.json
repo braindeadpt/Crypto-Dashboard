@@ -3,7 +3,7 @@
     "title": "CLAREZA Crypto — Centro de comandos crypto",
     "description": "Centro de comandos crypto para operadores: preços, gráficos, derivados, liquidação estimada, DeFi, yields e memes — em português de Portugal.",
     "tagline": "Centro de comandos crypto",
-    "disclaimer": "Isto não é aconselhamento financeiro. Serve para aprender e acompanhar o mercado."
+    "disclaimer": "Isto não constitui aconselhamento financeiro. Dados de mercado para acompanhamento operacional."
   },
   "nav": {
     "board": "Board",
@@ -28,8 +28,8 @@
     "citizen": "Simples",
     "operator": "Pro",
     "analyst": "Lab",
-    "citizenHint": "Vista clara e essencial",
-    "operatorHint": "Funding, dominância, DeFi",
+    "citizenHint": "Vista essencial",
+    "operatorHint": "Funding, dominância e DeFi",
     "analystHint": "Liquidação, OI e Lab"
   },
   "front": {
@@ -71,14 +71,14 @@
     }
   },
   "postureExplain": {
-    "calm": "O mercado está relativamente estável. Bom momento para estudar, não para reagir a cada variação.",
-    "unsettled": "Há tensão: movimentos fortes ou funding desequilibrado. Lê o resumo antes de conclusões.",
+    "calm": "O mercado está relativamente estável. Bom momento para analisar com calma, não para reagir a cada variação.",
+    "unsettled": "Há tensão: movimentos fortes ou funding desequilibrado. Lê o resumo antes de concluir.",
     "storm": "Stress elevado. Reduz o ruído, evita FOMO e confirma as causas nas análises.",
-    "weird": "Os sinais não batem certo. Não confies numa métrica sozinha — exige contexto."
+    "weird": "Os sinais não são coerentes. Não confies numa métrica isolada — exige contexto."
   },
   "market": {
     "title": "Mercado",
-    "subtitle": "Preços com contexto — para perceberes o que se passa.",
+    "subtitle": "Preços, capitalização e movimentos — com contexto operacional.",
     "btc": "Bitcoin",
     "eth": "Ethereum",
     "dominance": "Dominância BTC",
@@ -113,23 +113,23 @@
   },
   "sentiment": {
     "title": "Sentimento",
-    "subtitle": "Humor do mercado e alavancagem — juntos, não isolados.",
+    "subtitle": "Sentimento de mercado e alavancagem — lidos em conjunto.",
     "fearGreed": "Medo e Ganância",
     "funding": "Funding rate",
     "openInterest": "Open interest",
-    "liquidationWeather": "Clima de liquidação",
-    "estimated": "Estimativa educativa",
-    "estimatedNote": "Modelo estimado com force orders e bandas de alavancagem da Binance — não é um heatmap profissional pago. Usa como orientação, não como verdade absoluta.",
+    "liquidationWeather": "Pressão de liquidação",
+    "estimated": "Estimativa orientativa",
+    "estimatedNote": "Modelo estimado com force orders e bandas de alavancagem da Binance — não substitui um heatmap profissional. Serve como orientação, não como verdade absoluta.",
     "longBias": "Mais longs",
     "shortBias": "Mais shorts",
     "neutral": "Neutro"
   },
   "defi": {
     "title": "DeFi",
-    "subtitle": "Valor bloqueado, cadeias e stablecoins — explicado.",
+    "subtitle": "TVL, blockchains e stablecoins — com contexto operacional.",
     "tvl": "TVL global",
     "protocols": "Protocolos",
-    "chains": "Cadeias",
+    "chains": "Blockchains",
     "stablecoins": "Stablecoins",
     "whatIsTvl": "O que é TVL?",
     "change1d": "1d",
@@ -180,20 +180,20 @@
   "lab": {
     "title": "Lab",
     "subtitle": "Grelha densa de métricas operacionais.",
-    "locked": "Lab aberto para todos os operadores."
+    "locked": "Lab disponível para todos os operadores."
   },
   "explain": {
     "value": "Valor",
-    "meaning": "O que significa",
-    "method": "Como se calcula",
+    "meaning": "Significado",
+    "method": "Método de cálculo",
     "raw": "Fonte",
     "updated": "Actualizado",
     "learnMore": "Explicar"
   },
   "common": {
     "loading": "A carregar…",
-    "error": "Não foi possível obter dados.",
-    "retry": "Tentar de novo",
+    "error": "Não foi possível obter os dados.",
+    "retry": "Tentar novamente",
     "source": "Fonte",
     "stale": "Os dados podem estar desactualizados",
     "noData": "Sem dados",
@@ -213,7 +213,7 @@
     "hero": {
       "eyebrow": "CLAREZA Crypto · Desk operacional",
       "title": "O centro de comandos crypto para decisões no mercado.",
-      "subtitle": "Uma vista ao vivo do mercado, sentimento e ciclo — com contexto, não com ruído. Feito para quem decide com responsabilidade.",
+      "subtitle": "Uma vista ao vivo do mercado, sentimento e ciclo — com contexto, sem ruído. Para quem decide com responsabilidade.",
       "ctaPrimary": "Abrir o mercado",
       "ctaSecondary": "Ver fluxos de trabalho",
       "trust": "Somente leitura · Sem custódia · Fontes públicas verificáveis"
@@ -255,7 +255,7 @@
       },
       "defillama": {
         "name": "DefiLlama",
-        "role": "TVL, cadeias e stablecoins"
+        "role": "TVL, blockchains e stablecoins"
       },
       "altme": {
         "name": "Alternative.me",
@@ -390,54 +390,54 @@
     "estimatedModel": "Modelo estimado · não é heatmap Coinglass",
     "biasLabel": "Viés",
     "intensity": "Intensidade",
-    "movers": "Movers 24h",
-    "gainers": "Alta",
-    "losers": "Baixa",
+    "movers": "Maiores movimentos 24h",
+    "gainers": "Em alta",
+    "losers": "Em baixa",
     "memes": "Memes",
     "yields": "Yields",
     "noMemes": "Sem dados de memes neste momento.",
     "noYields": "Sem pools de yield neste momento.",
     "defiTvl": "TVL DeFi",
-    "topProtocols": "Top protocolos",
+    "topProtocols": "Principais protocolos",
     "stables": "Stablecoins",
     "posture": {
       "calm": "Calmo",
       "unsettled": "Instável",
       "storm": "Tempestade",
-      "weird": "Confuso"
+      "weird": "Misto"
     },
     "bias": {
       "long": "Longs sob pressão",
       "short": "Shorts sob pressão",
       "neutral": "Neutro"
     },
-    "etfSpot": "ETF spot · força de compra institucional",
+    "etfSpot": "ETF spot · procura institucional",
     "openEtf": "Abrir ETF",
     "etfUnit": "US",
-    "spotVsLev": "Spot vs alavanca",
-    "spotVsLevHint": "ETF spot (institucional) vs funding / OI / L:S (perp)",
+    "spotVsLev": "Spot vs alavancagem",
+    "spotVsLevHint": "ETF spot (institucional) vs funding / OI / L:S (perpétuos)",
     "leverageBlock": "Derivados Binance",
     "lsHint": "L/S > 1 = mais contas long. OI Δ = variação ~24h do open interest.",
-    "etfAfterClose": "ETF: valores em US · actualização após fecho US",
+    "etfAfterClose": "ETF: valores em US · actualização após o fecho do mercado dos EUA",
     "etfUnavailable": "Fluxos ETF indisponíveis neste momento.",
-    "dexFrenzy": "Frenzy DEX",
-    "dexNotCg": "Fonte: DexScreener + GeckoTerminal · não é categoria CoinGecko",
-    "trendingRetail": "Trending retail",
-    "trendingHint": "Atenção ≠ liquidez. CoinGecko /search/trending.",
-    "noTrending": "Sem trending neste momento.",
-    "defiPulse": "DeFi pulse",
-    "fees24h": "Fees 24h",
-    "pegWatch": "Peg watch",
-    "pegOk": "Stables principais perto do peg (±0.15%)."
+    "dexFrenzy": "Actividade DEX",
+    "dexNotCg": "Fonte: DexScreener + GeckoTerminal · não é a categoria CoinGecko",
+    "trendingRetail": "Tendências retail",
+    "trendingHint": "Atenção ≠ liquidez. Fonte: CoinGecko /search/trending.",
+    "noTrending": "Sem tendências neste momento.",
+    "defiPulse": "Pulso DeFi",
+    "fees24h": "Taxas 24h",
+    "pegWatch": "Monitorização do peg",
+    "pegOk": "Stablecoins principais perto do peg (±0,15%)."
   },
   "charts": {
     "title": "Gráficos",
-    "subtitle": "Candles ao vivo via Binance spot — BTC, ETH, SOL.",
+    "subtitle": "Candles ao vivo via Binance spot — BTC, ETH e SOL.",
     "source": "Fonte: api.binance.com · klines"
   },
   "memes": {
     "title": "Memes",
-    "subtitle": "Multichain inteligente: prioriza onde o volume e o frenzy estão agora.",
+    "subtitle": "Vista multichain: prioriza as blockchains com mais volume e atenção neste momento.",
     "asset": "Activo",
     "price": "Preço",
     "volume": "Volume",
@@ -446,20 +446,20 @@
   },
   "yields": {
     "title": "Yields",
-    "subtitle": "Pools com TVL ≥ 1M USD, APY filtrado (0–500%). Não é aconselhamento.",
-    "disclaimer": "APY histórico ≠ rendimento futuro. Verifica o risco do protocolo.",
+    "subtitle": "Pools com TVL ≥ 1M USD e APY filtrado (0–500%). Não constitui aconselhamento.",
+    "disclaimer": "APY histórico ≠ rendimento futuro. Avalia o risco do protocolo.",
     "project": "Projecto",
     "symbol": "Símbolo",
-    "chain": "Chain",
+    "chain": "Blockchain",
     "type": "Tipo",
     "source": "Fonte: yields.llama.fi/pools"
   },
   "etf": {
     "title": "ETF spot",
-    "subtitle": "Fluxos diários líquidos dos ETF spot EUA — proxy de procura institucional no spot.",
+    "subtitle": "Fluxos diários líquidos dos ETF spot dos EUA — proxy da procura institucional no spot.",
     "spotRead": "Leitura spot",
     "whyItMatters": "Porque importa",
-    "whyBody": "Quando um ETF spot cria shares, o emitente compra o activo no mercado spot. Quando há redemptions, vende. Por isso o fluxo líquido diário (US) ajuda a ver se há força de compra real fora do perpétuo/alavancagem.",
+    "whyBody": "Quando um ETF spot cria unidades (shares), o emitente compra o activo no mercado spot. Nos resgates (redemptions), vende. O fluxo líquido diário (US) ajuda a avaliar se existe procura real fora dos perpétuos e da alavancagem.",
     "net1d": "Fluxo líquido do dia (US)",
     "prev": "Dia anterior",
     "sum5d": "Soma 5 dias",
@@ -472,6 +472,6 @@
     "net": "Líquido",
     "source": "Fonte:",
     "unit": "Valores em milhões de USD (US), convenção Farside.",
-    "solUnavailable": "Fluxos SOL indisponíveis ou página Farside sem tabela parseável neste momento."
+    "solUnavailable": "Fluxos SOL indisponíveis ou tabela Farside sem dados interpretáveis neste momento."
   }
 }

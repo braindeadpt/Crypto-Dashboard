@@ -25,10 +25,10 @@ export default async function MemesPage({
   const frenzyNote =
     locale === "pt"
       ? solish >= 2
-        ? "Frenzy inteligente · ênfase actual em Solana (volume + nomes quentes). Multichain activo, mas o fluxo concentra-se onde há liquidez."
+        ? "Actividade elevada · ênfase actual em Solana (volume + nomes em destaque). Vista multichain activa, com fluxo concentrado onde há liquidez."
         : hot.length >= 2
-          ? "Frenzy disperso · multichain por volume. Sem cluster Solana dominante neste momento."
-          : "Sem frenzy extremo · lista ordenada por volume (categoria meme CoinGecko)."
+          ? "Actividade dispersa · ordenação multichain por volume. Sem concentração dominante em Solana neste momento."
+          : "Sem pico extremo · lista ordenada por volume (categoria meme CoinGecko)."
       : solish >= 2
         ? "Smart frenzy · current emphasis on Solana (volume + hot names). Multichain on, flow follows liquidity."
         : hot.length >= 2

@@ -213,8 +213,8 @@ export async function fetchDexFrenzy(): Promise<DexFrenzySnapshot> {
       emphasis,
       notePt:
         hot.length >= 3
-          ? `Frenzy DEX activo · ênfase ${emphasis.labelPt} (boosts + trending). Não é lista CoinGecko — liquidez on-chain.`
-          : `Multichain sem frenzy extremo · a mostrar volume DEX (ênfase ${emphasis.labelPt}).`,
+          ? `Actividade DEX elevada · ênfase em ${emphasis.labelPt} (boosts + trending). Não é a lista CoinGecko — liquidez on-chain.`
+          : `Vista multichain sem pico extremo · volume DEX com ênfase em ${emphasis.labelPt}.`,
       noteEn:
         hot.length >= 3
           ? `Active DEX frenzy · ${emphasis.labelEn} emphasis (boosts + trending). Not CoinGecko list — on-chain liquidity.`

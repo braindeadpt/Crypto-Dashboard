@@ -77,19 +77,19 @@ function inferCause(m: AssetQuote): { pt: string; en: string } {
   }
   if (m.change24h > 8) {
     return {
-      pt: "Rally forte: verificar volume, notícias e funding antes de FOMO.",
+      pt: "Subida forte: confirma volume, notícias e funding antes de reagir.",
       en: "Sharp rally: check volume, news and funding before FOMO.",
     };
   }
   if (m.change24h < -8) {
     return {
-      pt: "Queda acentuada: possível liquidação, desbloqueio ou risco de mercado.",
+      pt: "Queda acentuada: possível liquidação, desbloqueio (unlock) ou risco de mercado.",
       en: "Sharp drop: possible liquidation, unlock or market-wide risk.",
     };
   }
   if (m.volume24h > m.marketCap * 0.25) {
     return {
-      pt: "Volume elevado vs market cap — atenção a fluxo especulativo.",
+      pt: "Volume elevado face à capitalização — possível fluxo especulativo.",
       en: "High volume vs market cap — watch speculative flow.",
     };
   }

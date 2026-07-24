@@ -96,13 +96,13 @@ export function buildCaseFile(
       questionPt: "O que NÃO deves fazer ao ver um movimento >8%?",
       questionEn: "What should you NOT do when seeing an >8% move?",
       optionsPt: [
-        "Abrir o Case File e comparar evidências",
+        "Abrir a análise e comparar evidências",
         "Aumentar imediatamente a posição por FOMO",
         "Verificar funding e volume",
         "Ler o brief editorial do dia",
       ],
       optionsEn: [
-        "Open the Case File and compare evidence",
+        "Open the case analysis and compare evidence",
         "Immediately size up from FOMO",
         "Check funding and volume",
         "Read today's editorial brief",

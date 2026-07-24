@@ -88,19 +88,19 @@ export function computeRegime(input: RegimeInputs): RegimeResult {
 
   const summaries: Record<MarketPosture, { pt: string; en: string }> = {
     calm: {
-      pt: "Ambiente relativamente estável. Usa o dia para estudar, não para reagir.",
+      pt: "Ambiente relativamente estável. Prioriza leitura e contexto, não reacção impulsiva.",
       en: "Relatively stable environment. Use the day to study, not to react.",
     },
     unsettled: {
-      pt: "Há tensão no mercado. Lê a manchette e os recibos antes de qualquer conclusão.",
+      pt: "Há tensão no mercado. Lê o resumo e os indicadores antes de concluir.",
       en: "Market tension present. Read the lead and receipts before any conclusion.",
     },
     storm: {
-      pt: "Stress elevado. Reduz o ruído, evita o FOMO e confirma as causas no Case File.",
+      pt: "Stress elevado. Reduz o ruído, evita FOMO e confirma as causas na análise.",
       en: "Elevated stress. Cut noise, avoid FOMO, confirm causes in the Case File.",
     },
     weird: {
-      pt: "Sinais contraditórios. O mercado não conta uma história limpa — exige evidência.",
+      pt: "Sinais contraditórios. O mercado não apresenta uma leitura limpa — exige evidência.",
       en: "Contradictory signals. Demand evidence before trusting any single metric.",
     },
   };
@@ -117,34 +117,34 @@ export function computeRegime(input: RegimeInputs): RegimeResult {
           : `Bitcoin ${input.btcChange24h >= 0 ? "rises" : "slips"} ${Math.abs(input.btcChange24h).toFixed(1)}% without sentiment extremes.`,
     },
     unsettled: {
-      pt: `Tensão no ar: BTC ${input.btcChange24h >= 0 ? "+" : ""}${input.btcChange24h.toFixed(1)}% com Medo & Ganância em ${Math.round(fng)}.`,
+      pt: `Tensão no mercado: BTC ${input.btcChange24h >= 0 ? "+" : ""}${input.btcChange24h.toFixed(1)}% com Medo e Ganância em ${Math.round(fng)}.`,
       en: `Tension building: BTC ${input.btcChange24h >= 0 ? "+" : ""}${input.btcChange24h.toFixed(1)}% with Fear & Greed at ${Math.round(fng)}.`,
     },
     storm: {
-      pt: `Modo tempestade: stress elevado — BTC ${input.btcChange24h >= 0 ? "+" : ""}${input.btcChange24h.toFixed(1)}% e alavancagem sob pressão.`,
+      pt: `Regime de stress elevado — BTC ${input.btcChange24h >= 0 ? "+" : ""}${input.btcChange24h.toFixed(1)}% e alavancagem sob pressão.`,
       en: `Storm mode: elevated stress — BTC ${input.btcChange24h >= 0 ? "+" : ""}${input.btcChange24h.toFixed(1)}% with leverage under pressure.`,
     },
     weird: {
-      pt: "História inconsistente: preço e sentimento apontam direcções opostas.",
+      pt: "Leitura inconsistente: preço e sentimento apontam em direcções opostas.",
       en: "Inconsistent story: price and sentiment point in opposite directions.",
     },
   };
 
   const donts: Record<MarketPosture, { pt: string; en: string }> = {
     calm: {
-      pt: "Não inventes um catalisador onde não há. Aborrecimento ≠ oportunidade.",
+      pt: "Não inventes um catalisador onde não existe. Estabilidade ≠ oportunidade automática.",
       en: "Don't invent a catalyst where none exists. Boredom ≠ opportunity.",
     },
     unsettled: {
-      pt: "Não aumentes o risco só porque o gráfico «parece» decisivo. Abre o Case File.",
+      pt: "Não aumentes o risco só porque o gráfico «parece» decisivo. Abre a análise do movimento.",
       en: "Don't size up just because the chart 'looks' decisive. Open the Case File.",
     },
     storm: {
-      pt: "Não compres o pânico nem persigas o spike. Liquidez e funding mentem sob stress.",
+      pt: "Não compres o pânico nem persigas o pico. Liquidez e funding distorcem sob stress.",
       en: "Don't buy the panic or chase the spike. Liquidity and funding lie under stress.",
     },
     weird: {
-      pt: "Não confies numa métrica isolada (Fear&Greed ou funding). Exige recibos.",
+      pt: "Não confies numa métrica isolada (Medo e Ganância ou funding). Exige confirmação cruzada.",
       en: "Don't trust a single metric (Fear&Greed or funding). Demand receipts.",
     },
   };

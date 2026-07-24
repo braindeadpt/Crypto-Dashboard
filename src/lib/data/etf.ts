@@ -264,7 +264,7 @@ function buildSignal(btc: EtfAssetFlows, eth: EtfAssetFlows): EtfSnapshot["signa
     return {
       tone: "up",
       spotBidPt:
-        "Fluxos ETF spot positivos — há procura institucional via canais spot (criar shares ≈ comprar BTC/ETH).",
+        "Fluxos ETF spot positivos — procura institucional via canais spot (criar unidades ≈ comprar BTC/ETH).",
       spotBidEn:
         "Positive spot ETF flows — institutional demand via spot channels (creating shares ≈ buying BTC/ETH).",
     };
@@ -273,7 +273,7 @@ function buildSignal(btc: EtfAssetFlows, eth: EtfAssetFlows): EtfSnapshot["signa
     return {
       tone: "down",
       spotBidPt:
-        "Saídas líquidas nos ETF spot — pressão de venda no spot institucional (redeem ≈ vender underlying).",
+        "Saídas líquidas nos ETF spot — pressão de venda no spot institucional (resgatar ≈ vender o activo subjacente).",
       spotBidEn:
         "Net spot ETF outflows — institutional spot selling pressure (redeem ≈ sell underlying).",
     };
@@ -282,7 +282,7 @@ function buildSignal(btc: EtfAssetFlows, eth: EtfAssetFlows): EtfSnapshot["signa
     return {
       tone: "neutral",
       spotBidPt:
-        "Fluxos ETF perto de neutro — pouca confirmação de força spot institucional hoje.",
+        "Fluxos ETF próximos de neutro — pouca confirmação de procura spot institucional hoje.",
       spotBidEn:
         "ETF flows near flat — little confirmation of institutional spot bid today.",
     };
@@ -290,7 +290,7 @@ function buildSignal(btc: EtfAssetFlows, eth: EtfAssetFlows): EtfSnapshot["signa
   return {
     tone: "warn",
     spotBidPt:
-      "Sinal misto entre BTC e ETH ETF — lê o total e a série de 5 dias antes de concluir.",
+      "Sinal misto entre ETF de BTC e ETH — lê o total e a série de 5 dias antes de concluir.",
     spotBidEn:
       "Mixed BTC vs ETH ETF signal — read the total and 5-day series before concluding.",
   };

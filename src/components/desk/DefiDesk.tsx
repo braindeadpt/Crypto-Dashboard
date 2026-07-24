@@ -31,7 +31,7 @@ export function DefiDesk({ data }: { data: DefiSnapshot }) {
           }
           meaning={
             locale === "pt"
-              ? "Soma aproximada do valor bloqueado nos protocolos rastreados pelo DefiLlama."
+              ? "Soma aproximada do TVL (capital depositado) nos protocolos rastreados pelo DefiLlama."
               : "Approximate sum of value locked across DefiLlama-tracked protocols."
           }
           method="Sum of protocol TVL from api.llama.fi/protocols"
@@ -45,7 +45,7 @@ export function DefiDesk({ data }: { data: DefiSnapshot }) {
         )}
         {data.fees24h != null && (
           <p className="mt-3 font-mono text-sm text-muted">
-            Fees 24h:{" "}
+            {locale === "pt" ? "Taxas 24h" : "Fees 24h"}:{" "}
             <span className="text-ink">{formatUsd(data.fees24h, true)}</span>
             {data.feesChange1d != null && (
               <span className={`ml-2 ${deltaClass(data.feesChange1d)}`}>
