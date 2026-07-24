@@ -1,16 +1,12 @@
-import { CycleDesk } from "@/components/desk/CycleDesk";
-import { fetchCycleSnapshot } from "@/lib/data/cycle";
+import { redirect } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
 
-export const revalidate = 300;
-
-export default async function CicloPage({
+export default async function CicloRedirect({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const cycle = await fetchCycleSnapshot();
-  return <CycleDesk cycle={cycle} />;
+  redirect({ href: "/", locale });
 }

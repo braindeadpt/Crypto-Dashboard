@@ -1,17 +1,12 @@
-import { AtlasArticle } from "@/components/desk/AtlasArticle";
-import { ATLAS } from "@/lib/content/atlas";
+import { redirect } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
 
-export function generateStaticParams() {
-  return ATLAS.map((c) => ({ slug: c.slug }));
-}
-
-export default async function AtlasSlugPage({
+export default async function AtlasSlugRedirect({
   params,
 }: {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale, slug } = await params;
+  const { locale } = await params;
   setRequestLocale(locale);
-  return <AtlasArticle slug={slug} />;
+  redirect({ href: "/", locale });
 }

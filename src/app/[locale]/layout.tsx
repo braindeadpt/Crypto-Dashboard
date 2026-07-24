@@ -1,7 +1,7 @@
-import { SiteFooter, SiteHeader } from "@/components/layout/SiteChrome";
-import { HtmlLang } from "@/components/layout/HtmlLang";
 import { ExpertiseProvider } from "@/components/providers/ExpertiseProvider";
 import { VisitProvider } from "@/components/providers/VisitProvider";
+import { SiteFooter, SiteHeader } from "@/components/layout/SiteChrome";
+import { HtmlLang } from "@/components/layout/HtmlLang";
 import { routing } from "@/i18n/routing";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";

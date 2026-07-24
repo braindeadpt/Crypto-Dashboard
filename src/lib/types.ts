@@ -49,11 +49,22 @@ export interface AssetQuote {
   symbol: string;
   name: string;
   price: number;
+  change1h?: number | null;
   change24h: number;
+  change7d?: number | null;
   marketCap: number;
   volume24h: number;
   image?: string;
   rank?: number;
+}
+
+export interface TrendingCoin {
+  id: string;
+  name: string;
+  symbol: string;
+  rank: number | null;
+  score: number;
+  change24h: number | null;
 }
 
 export interface Mover extends AssetQuote {
@@ -92,6 +103,8 @@ export interface LiquidationWeather {
 export interface DefiSnapshot {
   totalTvl: number;
   change1d: number | null;
+  fees24h: number | null;
+  feesChange1d: number | null;
   protocols: {
     name: string;
     slug: string;
@@ -103,6 +116,12 @@ export interface DefiSnapshot {
   }[];
   chains: { name: string; tvl: number }[];
   stablecoins: {
+    name: string;
+    symbol: string;
+    circulating: number;
+    pegDeviation?: number | null;
+  }[];
+  pegWatch: {
     name: string;
     symbol: string;
     circulating: number;

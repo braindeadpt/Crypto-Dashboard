@@ -1,12 +1,12 @@
-import { PortugalDesk } from "@/components/desk/PortugalDesk";
+import { redirect } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
 
-export default async function PortugalPage({
+export default async function PortugalRedirect({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <PortugalDesk />;
+  redirect({ href: "/", locale });
 }

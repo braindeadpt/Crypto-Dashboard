@@ -2,9 +2,10 @@ import { cachedFetch } from "@/lib/cache";
 import type { DefiSnapshot } from "@/lib/types";
 
 const LLAMA = "https://api.llama.fi";
+const STABLES = "https://stablecoins.llama.fi";
 
-async function llama<T>(path: string): Promise<T> {
-  const res = await fetch(`${LLAMA}${path}`, {
+async function llama<T>(base: string, path: string): Promise<T> {
+  const res = await fetch(`${base}${path}`, {
     cache: "no-store",
     headers: { Accept: "application/json" },
   });
@@ -29,20 +30,30 @@ type StableResponse = {
     name: string;
     symbol: string;
     circulating?: { peggedUSD?: number };
+    price?: number | null;
   }[];
+};
+
+type FeesOverview = {
+  total24h?: number;
+  change_1d?: number | null;
+  protocols?: { name: string; total24h?: number }[];
 };
 
 export async function fetchDefiSnapshot(): Promise<DefiSnapshot> {
   return cachedFetch("defi:snapshot", 180_000, async () => {
-    const [protocols, chains, stables] = await Promise.all([
-      llama<Protocol[]>("/protocols"),
-      llama<Chain[]>("/v2/chains"),
-      llama<StableResponse>("/stablecoins?includePrices=true").catch(() => ({
-        peggedAssets: [],
-      })),
+    const [protocols, chains, stables, fees] = await Promise.all([
+      llama<Protocol[]>(LLAMA, "/protocols"),
+      llama<Chain[]>(LLAMA, "/v2/chains"),
+      llama<StableResponse>(STABLES, "/stablecoins?includePrices=true").catch(
+        () => ({ peggedAssets: [] }),
+      ),
+      llama<FeesOverview>(
+        LLAMA,
+        "/overview/fees?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true",
+      ).catch(() => null),
     ]);
 
-    // Slim immediately — full /protocols payload is ~11MB
     const sorted = protocols
       .map((p) => ({
         name: p.name,
@@ -70,12 +81,37 @@ export async function fetchDefiSnapshot(): Promise<DefiSnapshot> {
       { sum: 0, weight: 0 },
     );
 
+    const stablecoins = (stables.peggedAssets || [])
+      .map((s) => {
+        const price = s.price ?? null;
+        const pegDeviation =
+          price != null && Number.isFinite(price) ? (price - 1) * 100 : null;
+        return {
+          name: s.name,
+          symbol: s.symbol,
+          circulating: s.circulating?.peggedUSD ?? 0,
+          pegDeviation,
+        };
+      })
+      .filter((s) => s.circulating > 0)
+      .sort((a, b) => b.circulating - a.circulating)
+      .slice(0, 10);
+
+    const pegWatch = [...stablecoins]
+      .filter((s) => s.pegDeviation != null && Math.abs(s.pegDeviation) >= 0.15)
+      .sort(
+        (a, b) => Math.abs(b.pegDeviation!) - Math.abs(a.pegDeviation!),
+      )
+      .slice(0, 5);
+
     return {
       totalTvl,
       change1d:
         weightedChange.weight > 0
           ? weightedChange.sum / weightedChange.weight
           : null,
+      fees24h: fees?.total24h ?? null,
+      feesChange1d: fees?.change_1d ?? null,
       protocols: top.map((p) => ({
         name: p.name,
         slug: p.slug,
@@ -89,15 +125,8 @@ export async function fetchDefiSnapshot(): Promise<DefiSnapshot> {
         .sort((a, b) => b.tvl - a.tvl)
         .slice(0, 12)
         .map((c) => ({ name: c.name, tvl: c.tvl })),
-      stablecoins: (stables.peggedAssets || [])
-        .map((s) => ({
-          name: s.name,
-          symbol: s.symbol,
-          circulating: s.circulating?.peggedUSD ?? 0,
-        }))
-        .filter((s) => s.circulating > 0)
-        .sort((a, b) => b.circulating - a.circulating)
-        .slice(0, 10),
+      stablecoins,
+      pegWatch,
       updatedAt: new Date().toISOString(),
     };
   });

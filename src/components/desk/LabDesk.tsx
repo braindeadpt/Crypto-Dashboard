@@ -1,6 +1,5 @@
 "use client";
 
-import { useExpertise } from "@/components/providers/ExpertiseProvider";
 import { Link } from "@/i18n/navigation";
 import { formatPct, formatUsd } from "@/lib/format";
 import type {
@@ -20,27 +19,17 @@ export function LabDesk({
   sentiment: SentimentSnapshot;
 }) {
   const t = useTranslations("lab");
-  const { level } = useExpertise();
-
-  if (level !== "analyst") {
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-16 text-center enter">
-        <h1 className="text-3xl font-semibold">{t("title")}</h1>
-        <p className="mt-3 text-muted">{t("locked")}</p>
-      </div>
-    );
-  }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-6 enter">
+    <div className="mx-auto max-w-[1400px] section-pad pb-20 pt-6 enter">
       <header>
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
           {t("title")}
         </h1>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
       </header>
 
-      <div className="mt-8 grid gap-3 font-mono text-sm sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid gap-2 font-mono text-sm sm:grid-cols-2 lg:grid-cols-4">
         <Cell label="Posture" value={regime.posture} />
         <Cell label="Stress" value={`${regime.score}/100`} />
         <Cell label="BTC" value={formatUsd(market.btc.price)} />
@@ -70,15 +59,15 @@ export function LabDesk({
         />
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-4 text-sm font-semibold">
+      <div className="mt-8 flex flex-wrap gap-4 text-sm font-semibold">
         <Link href="/sentimento" className="text-accent">
-          Sentiment →
+          Sentimento →
         </Link>
         <Link href="/mercado" className="text-accent">
-          Market →
+          Mercado →
         </Link>
-        <Link href="/brief" className="text-accent">
-          Brief →
+        <Link href="/graficos" className="text-accent">
+          Gráficos →
         </Link>
       </div>
     </div>
@@ -87,7 +76,7 @@ export function LabDesk({
 
 function Cell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="card p-3">
+    <div className="border border-line bg-surface p-3">
       <p className="font-sans text-xs text-faint">{label}</p>
       <p className="mt-1">{value}</p>
     </div>

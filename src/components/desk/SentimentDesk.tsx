@@ -3,13 +3,11 @@
 import { ExplainThisNumber } from "@/components/explain/ExplainThisNumber";
 import { formatUsd } from "@/lib/format";
 import type { SentimentSnapshot } from "@/lib/types";
-import { useExpertise } from "@/components/providers/ExpertiseProvider";
 import { useLocale, useTranslations } from "next-intl";
 
 export function SentimentDesk({ data }: { data: SentimentSnapshot }) {
   const t = useTranslations("sentiment");
   const locale = useLocale();
-  const { level } = useExpertise();
 
   const fngColor =
     data.fearGreed.value <= 30
@@ -19,17 +17,17 @@ export function SentimentDesk({ data }: { data: SentimentSnapshot }) {
         : "text-calm";
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-6 enter">
+    <div className="mx-auto max-w-[1400px] section-pad pb-20 pt-6 enter">
       <header className="max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
           {t("title")}
         </h1>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
       </header>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
-        <div className="card p-5 md:col-span-1">
-          <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+      <div className="mt-6 grid gap-3 md:grid-cols-3">
+        <div className="border border-line bg-surface p-5">
+          <p className="font-mono text-[0.65rem] uppercase tracking-wider text-faint">
             {t("fearGreed")}
           </p>
           <ExplainThisNumber
@@ -40,18 +38,18 @@ export function SentimentDesk({ data }: { data: SentimentSnapshot }) {
             }
             meaning={
               locale === "pt"
-                ? `Classificação: ${data.fearGreed.classification}. Indicador composto de sentimento — coincidente, não preditivo.`
-                : `Classification: ${data.fearGreed.classification}. Composite sentiment gauge — coincident, not predictive.`
+                ? `Classificação: ${data.fearGreed.classification}. Indicador composto — coincidente, não preditivo.`
+                : `Classification: ${data.fearGreed.classification}. Composite gauge — coincident, not predictive.`
             }
-            method="Alternative.me composite (volatility, volume, social, surveys)"
+            method="Alternative.me composite"
             source="api.alternative.me/fng"
             updatedAt={data.fearGreed.timestamp}
           />
           <p className="mt-2 text-sm text-muted">{data.fearGreed.classification}</p>
         </div>
 
-        <div className="card p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+        <div className="border border-line bg-surface p-5">
+          <p className="font-mono text-[0.65rem] uppercase tracking-wider text-faint">
             {t("funding")}
           </p>
           <ExplainThisNumber
@@ -65,14 +63,14 @@ export function SentimentDesk({ data }: { data: SentimentSnapshot }) {
             source="fapi.binance.com"
             updatedAt={data.updatedAt}
           />
-          <p className="mt-2 text-xs text-muted">
+          <p className="mt-2 font-mono text-xs text-muted">
             ~{data.funding.annualized.toFixed(1)}%{" "}
             {locale === "pt" ? "anualizado" : "annualised"}
           </p>
         </div>
 
-        <div className="card p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+        <div className="border border-line bg-surface p-5">
+          <p className="font-mono text-[0.65rem] uppercase tracking-wider text-faint">
             {t("openInterest")}
           </p>
           <ExplainThisNumber
@@ -82,51 +80,51 @@ export function SentimentDesk({ data }: { data: SentimentSnapshot }) {
                 ? "Estimativa de nocional aberto em perpetuais BTCUSDT."
                 : "Estimated open notional on BTCUSDT perpetuals."
             }
-            method="Binance openInterest × mark price"
+            method="Binance openInterest × mark"
             source="fapi.binance.com"
             updatedAt={data.updatedAt}
           />
         </div>
       </div>
 
-      {(level === "operator" || level === "analyst") && (
-        <section className="mt-10">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-xl font-semibold">{t("liquidationWeather")}</h2>
-            <span className="chip text-warn">{t("estimated")}</span>
-          </div>
-          <p className="mt-2 max-w-2xl text-sm text-muted">{t("estimatedNote")}</p>
+      <section className="mt-6 border border-warn/35 bg-surface p-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-xl font-semibold">{t("liquidationWeather")}</h2>
+          <span className="chip text-warn border-warn/40">{t("estimated")}</span>
+        </div>
+        <p className="mt-2 max-w-3xl text-sm text-muted">{t("estimatedNote")}</p>
 
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
-            <div className="card p-4">
-              <p className="text-xs text-faint">Bias</p>
-              <p className="mt-1 text-xl font-semibold">
-                {data.liquidationWeather.bias === "long"
-                  ? t("longBias")
-                  : data.liquidationWeather.bias === "short"
-                    ? t("shortBias")
-                    : t("neutral")}
-              </p>
-            </div>
-            <div className="card p-4">
-              <p className="text-xs text-faint">Intensity</p>
-              <p className="mt-1 font-mono text-xl">
-                {data.liquidationWeather.intensity}/100
-              </p>
-            </div>
-            <div className="card p-4">
-              <p className="text-xs text-faint">Force notional</p>
-              <p className="mt-1 font-mono text-xl">
-                {formatUsd(data.liquidationWeather.recentForceNotional, true)}
-              </p>
-            </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <div className="border border-line bg-bg-elevated p-4">
+            <p className="font-mono text-[0.62rem] uppercase text-faint">Bias</p>
+            <p className="mt-1 text-xl font-semibold">
+              {data.liquidationWeather.bias === "long"
+                ? t("longBias")
+                : data.liquidationWeather.bias === "short"
+                  ? t("shortBias")
+                  : t("neutral")}
+            </p>
           </div>
+          <div className="border border-line bg-bg-elevated p-4">
+            <p className="font-mono text-[0.62rem] uppercase text-faint">
+              Intensity
+            </p>
+            <p className="mt-1 font-mono text-xl">
+              {data.liquidationWeather.intensity}/100
+            </p>
+          </div>
+          <div className="border border-line bg-bg-elevated p-4">
+            <p className="font-mono text-[0.62rem] uppercase text-faint">
+              Force notional
+            </p>
+            <p className="mt-1 font-mono text-xl">
+              {formatUsd(data.liquidationWeather.recentForceNotional, true)}
+            </p>
+          </div>
+        </div>
 
-          {level === "analyst" && (
-            <LiquidationChart zones={data.liquidationWeather.zones} />
-          )}
-        </section>
-      )}
+        <LiquidationChart zones={data.liquidationWeather.zones} />
+      </section>
     </div>
   );
 }
@@ -136,13 +134,13 @@ function LiquidationChart({
 }: {
   zones: SentimentSnapshot["liquidationWeather"]["zones"];
 }) {
-  const sample = zones.filter((_, i) => i % 2 === 0).slice(0, 24);
+  const sample = zones.filter((_, i) => i % 2 === 0).slice(0, 32);
   const maxD = Math.max(...sample.map((z) => z.density), 0.01);
 
   return (
-    <div className="card mt-4 p-5">
-      <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-faint">
-        Estimated leverage bands (model)
+    <div className="mt-4 border border-line bg-bg-elevated p-4">
+      <p className="mb-4 font-mono text-[0.62rem] uppercase tracking-wider text-faint">
+        Zonas de alavancagem estimadas (modelo)
       </p>
       <div className="flex h-40 items-end gap-1">
         {sample.map((z, i) => (

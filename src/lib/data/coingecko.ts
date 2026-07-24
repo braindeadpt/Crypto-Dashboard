@@ -1,12 +1,22 @@
 import { cachedFetch } from "@/lib/cache";
-import type { AssetQuote, MarketSnapshot, Mover } from "@/lib/types";
+import type { AssetQuote, MarketSnapshot, Mover, TrendingCoin } from "@/lib/types";
 
 const CG = "https://api.coingecko.com/api/v3";
+
+function cgHeaders(): HeadersInit {
+  const headers: Record<string, string> = { Accept: "application/json" };
+  const key =
+    process.env.COINGECKO_DEMO_API_KEY ||
+    process.env.COINGECKO_API_KEY ||
+    "";
+  if (key) headers["x-cg-demo-api-key"] = key;
+  return headers;
+}
 
 async function cg<T>(path: string): Promise<T> {
   const res = await fetch(`${CG}${path}`, {
     next: { revalidate: 60 },
-    headers: { Accept: "application/json" },
+    headers: cgHeaders(),
   });
   if (!res.ok) {
     throw new Error(`CoinGecko ${res.status}: ${path}`);
@@ -24,6 +34,9 @@ type CgMarket = {
   market_cap_rank: number;
   total_volume: number;
   price_change_percentage_24h: number | null;
+  price_change_percentage_1h_in_currency?: number | null;
+  price_change_percentage_24h_in_currency?: number | null;
+  price_change_percentage_7d_in_currency?: number | null;
 };
 
 type CgGlobal = {
@@ -41,7 +54,12 @@ function toQuote(c: CgMarket): AssetQuote {
     symbol: c.symbol.toUpperCase(),
     name: c.name,
     price: c.current_price,
-    change24h: c.price_change_percentage_24h ?? 0,
+    change1h: c.price_change_percentage_1h_in_currency ?? null,
+    change24h:
+      c.price_change_percentage_24h_in_currency ??
+      c.price_change_percentage_24h ??
+      0,
+    change7d: c.price_change_percentage_7d_in_currency ?? null,
     marketCap: c.market_cap,
     volume24h: c.total_volume,
     image: c.image,
@@ -76,8 +94,8 @@ function inferCause(m: AssetQuote): { pt: string; en: string } {
     };
   }
   return {
-    pt: "Variação relevante nas últimas 24h — abrir case file para hipóteses.",
-    en: "Meaningful 24h move — open a case file for hypotheses.",
+    pt: "Variação relevante nas últimas 24h — cruzar com volume e derivados.",
+    en: "Meaningful 24h move — cross-check volume and derivatives.",
   };
 }
 
@@ -85,7 +103,7 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
   return cachedFetch("market:snapshot", 90_000, async () => {
     const [markets, global] = await Promise.all([
       cg<CgMarket[]>(
-        "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h",
+        "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d",
       ),
       cg<CgGlobal>("/global"),
     ]);
@@ -94,9 +112,6 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
     const btc = quotes.find((q) => q.id === "bitcoin") ?? quotes[0];
     const eth = quotes.find((q) => q.id === "ethereum") ?? quotes[1];
 
-    const sorted = [...quotes].sort(
-      (a, b) => Math.abs(b.change24h) - Math.abs(a.change24h),
-    );
     const gainers = quotes
       .filter((q) => q.change24h > 0)
       .sort((a, b) => b.change24h - a.change24h)
@@ -124,9 +139,6 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
         };
       });
 
-    // Prefer absolute movers for case generation
-    void sorted;
-
     return {
       btc,
       eth,
@@ -144,11 +156,57 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
   });
 }
 
+export async function fetchTrendingCoins(): Promise<TrendingCoin[]> {
+  return cachedFetch("market:trending", 180_000, async () => {
+    try {
+      const data = await cg<{
+        coins: {
+          item: {
+            id: string;
+            name: string;
+            symbol: string;
+            market_cap_rank: number | null;
+            score: number;
+            data?: {
+              price_change_percentage_24h?: { usd?: number };
+            };
+          };
+        }[];
+      }>("/search/trending");
+
+      return (data.coins ?? []).slice(0, 8).map((c) => ({
+        id: c.item.id,
+        name: c.item.name,
+        symbol: c.item.symbol.toUpperCase(),
+        rank: c.item.market_cap_rank,
+        score: c.item.score,
+        change24h: c.item.data?.price_change_percentage_24h?.usd ?? null,
+      }));
+    } catch {
+      return [];
+    }
+  });
+}
+
 export async function fetchBtcHistoryDays(days = 365) {
   return cachedFetch(`market:btc-history:${days}`, 600_000, async () => {
     const data = await cg<{ prices: [number, number][] }>(
       `/coins/bitcoin/market_chart?vs_currency=usd&days=${days}`,
     );
     return data.prices.map(([t, p]) => ({ time: t, price: p }));
+  });
+}
+
+/** Memecoins by volume — CoinGecko category (≠ DEX liquidity). */
+export async function fetchMemeMarkets(perPage = 30): Promise<AssetQuote[]> {
+  return cachedFetch("market:memes", 150_000, async () => {
+    try {
+      const markets = await cg<CgMarket[]>(
+        `/coins/markets?vs_currency=usd&category=meme-token&order=volume_desc&per_page=${perPage}&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d`,
+      );
+      return markets.map(toQuote);
+    } catch {
+      return [];
+    }
   });
 }

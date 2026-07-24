@@ -1,12 +1,12 @@
-import { AtlasIndex } from "@/components/desk/AtlasIndex";
+import { redirect } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
 
-export default async function AtlasPage({
+export default async function AtlasRedirect({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <AtlasIndex />;
+  redirect({ href: "/", locale });
 }

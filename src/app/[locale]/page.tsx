@@ -1,5 +1,11 @@
-import { LandingPage } from "@/components/landing/LandingPage";
+import { OperatorBoard } from "@/components/board/OperatorBoard";
 import { getFrontPageData } from "@/lib/data/bundle";
+import { fetchTrendingCoins } from "@/lib/data/coingecko";
+import { fetchDerivativesSnapshot } from "@/lib/data/derivatives";
+import { fetchDexFrenzy } from "@/lib/data/dex";
+import { fetchEtfSnapshot } from "@/lib/data/etf";
+import { fetchMempoolFees } from "@/lib/data/mempool";
+import { fetchTopYieldPools } from "@/lib/data/yields";
 import { setRequestLocale } from "next-intl/server";
 
 export const revalidate = 60;
@@ -30,11 +36,27 @@ export default async function HomePage({
     );
   }
 
+  const [yieldsBundle, etf, derivs, dex, trending, mempool] = await Promise.all([
+    fetchTopYieldPools(30).catch(() => ({ pools: [], updatedAt: "" })),
+    fetchEtfSnapshot().catch(() => null),
+    fetchDerivativesSnapshot().catch(() => null),
+    fetchDexFrenzy().catch(() => null),
+    fetchTrendingCoins().catch(() => []),
+    fetchMempoolFees().catch(() => null),
+  ]);
+
   return (
-    <LandingPage
+    <OperatorBoard
       market={data.market}
       sentiment={data.sentiment}
       regime={data.regime}
+      defi={data.defi}
+      yields={yieldsBundle.pools}
+      etf={etf}
+      derivs={derivs}
+      dex={dex}
+      trending={trending}
+      mempool={mempool}
     />
   );
 }

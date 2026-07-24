@@ -1,21 +1,27 @@
 {
   "meta": {
-    "title": "CLAREZA Crypto — Command center cripto",
-    "description": "Centro de comando cripto para decisões com dados ao vivo: mercado, sentimento, ciclo e educação — PT-PT e EN.",
-    "tagline": "Command center cripto",
+    "title": "CLAREZA Crypto — Centro de comandos crypto",
+    "description": "Centro de comandos crypto para operadores: preços, gráficos, derivados, liquidação estimada, DeFi, yields e memes — em português de Portugal.",
+    "tagline": "Centro de comandos crypto",
     "disclaimer": "Isto não é aconselhamento financeiro. Serve para aprender e acompanhar o mercado."
   },
   "nav": {
-    "home": "Início",
+    "board": "Board",
+    "home": "Board",
     "access": "Acesso",
     "market": "Mercado",
+    "charts": "Gráficos",
     "cycle": "Ciclo",
     "sentiment": "Sentimento",
     "defi": "DeFi",
+    "yields": "Yields",
+    "memes": "Memes",
     "brief": "Resumo",
     "portugal": "Portugal",
     "atlas": "Aprender",
-    "lab": "Lab"
+    "lab": "Lab",
+    "operator": "Operador",
+    "etf": "ETF"
   },
   "expertise": {
     "label": "Modo",
@@ -113,7 +119,7 @@
     "openInterest": "Open interest",
     "liquidationWeather": "Clima de liquidação",
     "estimated": "Estimativa educativa",
-    "estimatedNote": "Modelo estimado com dados públicos da Binance — não é um heatmap profissional pago.",
+    "estimatedNote": "Modelo estimado com force orders e bandas de alavancagem da Binance — não é um heatmap profissional pago. Usa como orientação, não como verdade absoluta.",
     "longBias": "Mais longs",
     "shortBias": "Mais shorts",
     "neutral": "Neutro"
@@ -173,8 +179,8 @@
   },
   "lab": {
     "title": "Lab",
-    "subtitle": "Vista densa para quem quer todos os números.",
-    "locked": "Muda o modo para Lab para ver esta vista."
+    "subtitle": "Grelha densa de métricas operacionais.",
+    "locked": "Lab aberto para todos os operadores."
   },
   "explain": {
     "value": "Valor",
@@ -206,7 +212,7 @@
     },
     "hero": {
       "eyebrow": "CLAREZA Crypto · Desk operacional",
-      "title": "O centro de comando para decisões cripto.",
+      "title": "O centro de comandos crypto para decisões no mercado.",
       "subtitle": "Uma vista ao vivo do mercado, sentimento e ciclo — com contexto, não com ruído. Feito para quem decide com responsabilidade.",
       "ctaPrimary": "Abrir o mercado",
       "ctaSecondary": "Ver fluxos de trabalho",
@@ -373,5 +379,99 @@
         "cta": "Pedir acesso"
       }
     }
+  },
+  "board": {
+    "live": "Ao vivo",
+    "openCharts": "Abrir gráficos",
+    "derivatives": "Derivados BTC",
+    "forceNotional": "Force orders",
+    "postureLabel": "Postura",
+    "liquidation": "Liquidação",
+    "estimatedModel": "Modelo estimado · não é heatmap Coinglass",
+    "biasLabel": "Viés",
+    "intensity": "Intensidade",
+    "movers": "Movers 24h",
+    "gainers": "Alta",
+    "losers": "Baixa",
+    "memes": "Memes",
+    "yields": "Yields",
+    "noMemes": "Sem dados de memes neste momento.",
+    "noYields": "Sem pools de yield neste momento.",
+    "defiTvl": "TVL DeFi",
+    "topProtocols": "Top protocolos",
+    "stables": "Stablecoins",
+    "posture": {
+      "calm": "Calmo",
+      "unsettled": "Instável",
+      "storm": "Tempestade",
+      "weird": "Confuso"
+    },
+    "bias": {
+      "long": "Longs sob pressão",
+      "short": "Shorts sob pressão",
+      "neutral": "Neutro"
+    },
+    "etfSpot": "ETF spot · força de compra institucional",
+    "openEtf": "Abrir ETF",
+    "etfUnit": "US",
+    "spotVsLev": "Spot vs alavanca",
+    "spotVsLevHint": "ETF spot (institucional) vs funding / OI / L:S (perp)",
+    "leverageBlock": "Derivados Binance",
+    "lsHint": "L/S > 1 = mais contas long. OI Δ = variação ~24h do open interest.",
+    "etfAfterClose": "ETF: valores em US · actualização após fecho US",
+    "etfUnavailable": "Fluxos ETF indisponíveis neste momento.",
+    "dexFrenzy": "Frenzy DEX",
+    "dexNotCg": "Fonte: DexScreener + GeckoTerminal · não é categoria CoinGecko",
+    "trendingRetail": "Trending retail",
+    "trendingHint": "Atenção ≠ liquidez. CoinGecko /search/trending.",
+    "noTrending": "Sem trending neste momento.",
+    "defiPulse": "DeFi pulse",
+    "fees24h": "Fees 24h",
+    "pegWatch": "Peg watch",
+    "pegOk": "Stables principais perto do peg (±0.15%)."
+  },
+  "charts": {
+    "title": "Gráficos",
+    "subtitle": "Candles ao vivo via Binance spot — BTC, ETH, SOL.",
+    "source": "Fonte: api.binance.com · klines"
+  },
+  "memes": {
+    "title": "Memes",
+    "subtitle": "Multichain inteligente: prioriza onde o volume e o frenzy estão agora.",
+    "asset": "Activo",
+    "price": "Preço",
+    "volume": "Volume",
+    "mcap": "Capitalização",
+    "source": "Fonte: CoinGecko · categoria meme-token"
+  },
+  "yields": {
+    "title": "Yields",
+    "subtitle": "Pools com TVL ≥ 1M USD, APY filtrado (0–500%). Não é aconselhamento.",
+    "disclaimer": "APY histórico ≠ rendimento futuro. Verifica o risco do protocolo.",
+    "project": "Projecto",
+    "symbol": "Símbolo",
+    "chain": "Chain",
+    "type": "Tipo",
+    "source": "Fonte: yields.llama.fi/pools"
+  },
+  "etf": {
+    "title": "ETF spot",
+    "subtitle": "Fluxos diários líquidos dos ETF spot EUA — proxy de procura institucional no spot.",
+    "spotRead": "Leitura spot",
+    "whyItMatters": "Porque importa",
+    "whyBody": "Quando um ETF spot cria shares, o emitente compra o activo no mercado spot. Quando há redemptions, vende. Por isso o fluxo líquido diário (US) ajuda a ver se há força de compra real fora do perpétuo/alavancagem.",
+    "net1d": "Fluxo líquido do dia (US)",
+    "prev": "Dia anterior",
+    "sum5d": "Soma 5 dias",
+    "sum20d": "Soma 20 dias",
+    "streak": "Sequência",
+    "streakIn": "{days}d de entradas",
+    "streakOut": "{days}d de saídas",
+    "history": "Histórico recente",
+    "date": "Data",
+    "net": "Líquido",
+    "source": "Fonte:",
+    "unit": "Valores em milhões de USD (US), convenção Farside.",
+    "solUnavailable": "Fluxos SOL indisponíveis ou página Farside sem tabela parseável neste momento."
   }
 }

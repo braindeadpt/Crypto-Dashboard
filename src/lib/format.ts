@@ -35,6 +35,13 @@ export function formatPct(value: number, digits = 2): string {
   return `${sign}${value.toFixed(digits)}%`;
 }
 
+/** ETF flow amounts reported in US$ millions (Farside convention). */
+export function formatUsdMillions(m: number, digits = 1): string {
+  if (!Number.isFinite(m)) return "—";
+  const sign = m > 0 ? "+" : "";
+  return `${sign}${m.toFixed(digits)}M`;
+}
+
 export function formatNumber(value: number, digits = 2): string {
   if (!Number.isFinite(value)) return "—";
   return new Intl.NumberFormat("en", {

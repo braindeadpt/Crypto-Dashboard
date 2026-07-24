@@ -43,12 +43,17 @@ export function DefiDesk({ data }: { data: DefiSnapshot }) {
             {formatPct(data.change1d)} {t("change1d")}
           </p>
         )}
-        <Link
-          href="/atlas/tvl"
-          className="mt-3 inline-block text-sm font-semibold text-accent"
-        >
-          {t("whatIsTvl")} →
-        </Link>
+        {data.fees24h != null && (
+          <p className="mt-3 font-mono text-sm text-muted">
+            Fees 24h:{" "}
+            <span className="text-ink">{formatUsd(data.fees24h, true)}</span>
+            {data.feesChange1d != null && (
+              <span className={`ml-2 ${deltaClass(data.feesChange1d)}`}>
+                {formatPct(data.feesChange1d)}
+              </span>
+            )}
+          </p>
+        )}
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">

@@ -1,21 +1,27 @@
 {
   "meta": {
-    "title": "CLAREZA Crypto — Crypto command center",
-    "description": "Crypto command center for high-stakes orientation: live market, sentiment, cycle and education — EN and PT-PT.",
-    "tagline": "Crypto command center",
+    "title": "CLAREZA Crypto — Market terminal",
+    "description": "Crypto terminal for operators: prices, charts, derivatives, estimated liquidations, DeFi, yields and memes.",
+    "tagline": "Market terminal",
     "disclaimer": "This is not financial advice. Built for learning and market orientation."
   },
   "nav": {
-    "home": "Home",
+    "board": "Board",
+    "home": "Board",
     "access": "Access",
     "market": "Market",
+    "charts": "Charts",
     "cycle": "Cycle",
     "sentiment": "Sentiment",
     "defi": "DeFi",
+    "yields": "Yields",
+    "memes": "Memes",
     "brief": "Brief",
     "portugal": "Portugal",
     "atlas": "Learn",
-    "lab": "Lab"
+    "lab": "Lab",
+    "operator": "Operator",
+    "etf": "ETF"
   },
   "expertise": {
     "label": "Mode",
@@ -113,7 +119,7 @@
     "openInterest": "Open interest",
     "liquidationWeather": "Liquidation weather",
     "estimated": "Educational estimate",
-    "estimatedNote": "Estimated model from public Binance data — not a paid institutional heatmap.",
+    "estimatedNote": "Estimated model using Binance force orders and leverage bands — not a paid professional heatmap. Use as orientation, not absolute truth.",
     "longBias": "Long heavy",
     "shortBias": "Short heavy",
     "neutral": "Neutral"
@@ -173,8 +179,8 @@
   },
   "lab": {
     "title": "Lab",
-    "subtitle": "Dense view for every number in one place.",
-    "locked": "Switch mode to Lab to unlock this view."
+    "subtitle": "Dense grid of operational metrics.",
+    "locked": "Lab open for all operators."
   },
   "explain": {
     "value": "Value",
@@ -373,5 +379,99 @@
         "cta": "Request access"
       }
     }
+  },
+  "board": {
+    "live": "Live",
+    "openCharts": "Open charts",
+    "derivatives": "BTC derivatives",
+    "forceNotional": "Force orders",
+    "postureLabel": "Posture",
+    "liquidation": "Liquidation",
+    "estimatedModel": "Estimated model · not a Coinglass heatmap",
+    "biasLabel": "Bias",
+    "intensity": "Intensity",
+    "movers": "24h movers",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "memes": "Memes",
+    "yields": "Yields",
+    "noMemes": "No meme data right now.",
+    "noYields": "No yield pools right now.",
+    "defiTvl": "DeFi TVL",
+    "topProtocols": "Top protocols",
+    "stables": "Stablecoins",
+    "posture": {
+      "calm": "Calm",
+      "unsettled": "Unsettled",
+      "storm": "Storm",
+      "weird": "Mixed"
+    },
+    "bias": {
+      "long": "Longs under pressure",
+      "short": "Shorts under pressure",
+      "neutral": "Neutral"
+    },
+    "etfSpot": "Spot ETF · institutional bid",
+    "openEtf": "Open ETF",
+    "etfUnit": "US",
+    "spotVsLev": "Spot vs leverage",
+    "spotVsLevHint": "Spot ETFs (institutional) vs funding / OI / L:S (perps)",
+    "leverageBlock": "Binance derivatives",
+    "lsHint": "L/S > 1 = more long accounts. OI Δ ≈ 24h open-interest change.",
+    "etfAfterClose": "ETF: US · updates after US market close",
+    "etfUnavailable": "ETF flows unavailable right now.",
+    "dexFrenzy": "DEX frenzy",
+    "dexNotCg": "Source: DexScreener + GeckoTerminal · not CoinGecko category",
+    "trendingRetail": "Retail trending",
+    "trendingHint": "Attention ≠ liquidity. CoinGecko /search/trending.",
+    "noTrending": "No trending data right now.",
+    "defiPulse": "DeFi pulse",
+    "fees24h": "Fees 24h",
+    "pegWatch": "Peg watch",
+    "pegOk": "Major stables near peg (±0.15%)."
+  },
+  "charts": {
+    "title": "Charts",
+    "subtitle": "Live candles via Binance spot — BTC, ETH, SOL.",
+    "source": "Source: api.binance.com · klines"
+  },
+  "memes": {
+    "title": "Memes",
+    "subtitle": "Smart multichain: emphasize where volume and frenzy are now.",
+    "asset": "Asset",
+    "price": "Price",
+    "volume": "Volume",
+    "mcap": "Market cap",
+    "source": "Source: CoinGecko · meme-token category"
+  },
+  "yields": {
+    "title": "Yields",
+    "subtitle": "Pools with TVL ≥ , filtered APY (0–500%). Not advice.",
+    "disclaimer": "Historical APY ≠ future yield. Check protocol risk.",
+    "project": "Project",
+    "symbol": "Symbol",
+    "chain": "Chain",
+    "type": "Type",
+    "source": "Source: yields.llama.fi/pools"
+  },
+  "etf": {
+    "title": "Spot ETFs",
+    "subtitle": "Daily net flows for US spot ETFs — proxy for institutional spot demand.",
+    "spotRead": "Spot read",
+    "whyItMatters": "Why it matters",
+    "whyBody": "When a spot ETF creates shares, the issuer buys the asset in the spot market. Redemptions sell it. Daily net flow (US) helps confirm real spot bid beyond perps/leverage.",
+    "net1d": "Net flow for the day (US)",
+    "prev": "Previous day",
+    "sum5d": "5-day sum",
+    "sum20d": "20-day sum",
+    "streak": "Streak",
+    "streakIn": "{days}d inflows",
+    "streakOut": "{days}d outflows",
+    "history": "Recent history",
+    "date": "Date",
+    "net": "Net",
+    "source": "Source:",
+    "unit": "Values in USD millions (US), Farside convention.",
+    "solUnavailable": "SOL flows unavailable or Farside table not parseable right now."
   }
 }

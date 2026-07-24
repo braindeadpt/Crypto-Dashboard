@@ -67,3 +67,40 @@ export async function fetchMarkPrice(symbol = "BTCUSDT") {
   const f = await fetchFundingRate(symbol);
   return f.markPrice;
 }
+
+export type KlineBar = {
+  time: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+};
+
+/** Spot klines — good free OHLCV for charts. */
+export async function fetchKlines(
+  symbol = "BTCUSDT",
+  interval: "15m" | "1h" | "4h" | "1d" = "1h",
+  limit = 168,
+): Promise<KlineBar[]> {
+  return cachedFetch(
+    `binance:klines:${symbol}:${interval}:${limit}`,
+    60_000,
+    async () => {
+      const res = await fetch(
+        `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`,
+        { next: { revalidate: 60 }, headers: { Accept: "application/json" } },
+      );
+      if (!res.ok) throw new Error(`Binance klines ${res.status}`);
+      const raw = (await res.json()) as (string | number)[][];
+      return raw.map((k) => ({
+        time: Math.floor(Number(k[0]) / 1000),
+        open: Number(k[1]),
+        high: Number(k[2]),
+        low: Number(k[3]),
+        close: Number(k[4]),
+        volume: Number(k[5]),
+      }));
+    },
+  );
+}

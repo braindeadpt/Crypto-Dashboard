@@ -11,13 +11,13 @@ const ExpertiseContext = createContext<{
 } | null>(null);
 
 export function ExpertiseProvider({ children }: { children: ReactNode }) {
-  const [level, setLevelState] = useState<ExpertiseLevel>("citizen");
+  const [level, setLevelState] = useState<ExpertiseLevel>("analyst");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(KEY) as ExpertiseLevel | null;
     if (saved === "citizen" || saved === "operator" || saved === "analyst") {
-      setLevelState(saved);
+      setLevelState("analyst");
     }
     setReady(true);
   }, []);
@@ -29,7 +29,7 @@ export function ExpertiseProvider({ children }: { children: ReactNode }) {
 
   if (!ready) {
     return (
-      <ExpertiseContext.Provider value={{ level: "citizen", setLevel }}>
+      <ExpertiseContext.Provider value={{ level: "analyst", setLevel }}>
         {children}
       </ExpertiseContext.Provider>
     );
