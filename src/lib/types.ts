@@ -12,10 +12,20 @@ export interface EvidenceChip {
   tone: "neutral" | "up" | "down" | "warn";
 }
 
+export interface RegimeContributor {
+  id: string;
+  labelPt: string;
+  labelEn: string;
+  points: number;
+  detail: string;
+}
+
 export interface RegimeResult {
   posture: MarketPosture;
   score: number;
   receipts: EvidenceChip[];
+  /** Ranked stress contributors — why the score is what it is */
+  contributors: RegimeContributor[];
   summaryPt: string;
   summaryEn: string;
   headlinePt: string;

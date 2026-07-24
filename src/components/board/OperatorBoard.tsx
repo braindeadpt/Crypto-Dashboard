@@ -71,6 +71,7 @@ export function OperatorBoard({
   const breadth = market.top.length
     ? Math.round((green / market.top.length) * 100)
     : 0;
+  const topContributors = (regime.contributors ?? []).slice(0, 4);
 
   const btcPerp = derivs?.btc;
   const ethPerp = derivs?.eth;
@@ -320,6 +321,32 @@ export function OperatorBoard({
               />
             )}
             <Row label={t("postureLabel")} value={t(`posture.${regime.posture}`)} />
+            <Row label={t("stressLabel")} value={`${regime.score}`} />
+            {topContributors.length > 0 && (
+              <div className="mt-2 border-t border-line pt-2">
+                <p className="mb-1 font-mono text-[0.58rem] uppercase tracking-wider text-faint">
+                  {t("stressDrivers")}
+                </p>
+                <ul className="space-y-1">
+                  {topContributors.map((c) => (
+                    <li
+                      key={c.id}
+                      className="flex items-baseline justify-between gap-2 text-sm"
+                    >
+                      <span className="truncate text-muted">
+                        {locale === "pt" ? c.labelPt : c.labelEn}
+                        <span className="ml-1 font-mono text-[0.58rem] text-faint">
+                          {c.detail}
+                        </span>
+                      </span>
+                      <span className="shrink-0 font-mono tabular-nums text-warn">
+                        +{c.points}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Panel>
 
           <LiveLiquidations compact />

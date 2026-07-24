@@ -145,6 +145,8 @@
     "openCharts": "Open charts",
     "derivatives": "BTC derivatives",
     "postureLabel": "Posture",
+    "stressLabel": "Stress",
+    "stressDrivers": "Top contributors",
     "liquidation": "Liquidations",
     "biasLabel": "Bias",
     "liqLive": "Live",
