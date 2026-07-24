@@ -18,7 +18,7 @@ const mono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CLAREZA Crypto — Centro de comandos crypto",
   description:
-    "Centro de comandos crypto para operadores: preços, gráficos, derivados, liquidação estimada, DeFi, yields e memes — PT-PT.",
+    "Centro de comandos crypto para operadores: preços, gráficos, derivados, liquidações ao vivo, DeFi, yields e memes — PT-PT.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

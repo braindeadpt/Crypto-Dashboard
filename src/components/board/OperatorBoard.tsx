@@ -1,5 +1,6 @@
 "use client";
 
+import { LiveLiquidations } from "@/components/board/LiveLiquidations";
 import { PriceChart } from "@/components/charts/PriceChart";
 import { Link } from "@/i18n/navigation";
 import type { DerivativesSnapshot } from "@/lib/data/derivatives";
@@ -64,7 +65,6 @@ export function OperatorBoard({
     ? Math.round((green / market.top.length) * 100)
     : 0;
 
-  const liq = sentiment.liquidationWeather;
   const btcPerp = derivs?.btc;
   const ethPerp = derivs?.eth;
   const solPerp = derivs?.sol;
@@ -283,33 +283,10 @@ export function OperatorBoard({
                 value={formatPct(sentiment.openInterest.change24hPct)}
               />
             )}
-            <Row
-              label={t("forceNotional")}
-              value={formatUsd(liq.recentForceNotional, true)}
-            />
             <Row label={t("postureLabel")} value={t(`posture.${regime.posture}`)} />
           </Panel>
 
-          <Panel title={t("liquidation")} href="/sentimento" warn>
-            <p className="mb-2 font-mono text-[0.62rem] uppercase tracking-wider text-warn">
-              {t("estimatedModel")}
-            </p>
-            <Row label={t("biasLabel")} value={t(`bias.${liq.bias}`)} />
-            <Row label={t("intensity")} value={`${liq.intensity}/100`} />
-            <div className="mt-2 flex h-16 items-end gap-px">
-              {liq.zones
-                .filter((_, i) => i % 2 === 0)
-                .slice(0, 20)
-                .map((z, i) => (
-                  <div
-                    key={`${z.price}-${i}`}
-                    className={`flex-1 ${z.side === "long" ? "bg-down/60" : "bg-up/60"}`}
-                    style={{ height: `${Math.max(8, z.density * 100)}%` }}
-                    title={`$${z.price.toFixed(0)} ${z.side}`}
-                  />
-                ))}
-            </div>
-          </Panel>
+          <LiveLiquidations compact />
         </div>
       </div>
 

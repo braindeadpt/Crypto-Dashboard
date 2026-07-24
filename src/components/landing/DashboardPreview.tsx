@@ -256,7 +256,8 @@ export function DashboardPreview({ market, sentiment, regime }: Props) {
                 >
                   <span className="text-faint">
                     {new Date(
-                      Date.now() - (STREAM_KEYS.length - i) * 14000,
+                      // Stable demo timestamps (landing is orphan; deleted in P6)
+                      1_704_067_200_000 - (STREAM_KEYS.length - i) * 14000,
                     ).toLocaleTimeString(locale, {
                       hour: "2-digit",
                       minute: "2-digit",

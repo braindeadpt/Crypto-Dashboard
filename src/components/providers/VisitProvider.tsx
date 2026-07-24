@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 
 const KEY = "clareza-last-visit";
 const SNAP_KEY = "clareza-last-snap";
@@ -13,6 +20,43 @@ type VisitSnap = {
   at: string;
 };
 
+type VisitStore = {
+  lastVisit: string | null;
+  previousSnap: VisitSnap | null;
+};
+
+const listeners = new Set<() => void>();
+
+function emit() {
+  for (const l of listeners) l();
+}
+
+function readStore(): VisitStore {
+  if (typeof window === "undefined") {
+    return { lastVisit: null, previousSnap: null };
+  }
+  let previousSnap: VisitSnap | null = null;
+  const raw = localStorage.getItem(SNAP_KEY);
+  if (raw) {
+    try {
+      previousSnap = JSON.parse(raw) as VisitSnap;
+    } catch {
+      previousSnap = null;
+    }
+  }
+  return {
+    lastVisit: localStorage.getItem(KEY),
+    previousSnap,
+  };
+}
+
+function subscribe(onStoreChange: () => void) {
+  listeners.add(onStoreChange);
+  return () => {
+    listeners.delete(onStoreChange);
+  };
+}
+
 const VisitContext = createContext<{
   lastVisit: string | null;
   previousSnap: VisitSnap | null;
@@ -21,31 +65,25 @@ const VisitContext = createContext<{
 } | null>(null);
 
 export function VisitProvider({ children }: { children: ReactNode }) {
-  const [lastVisit, setLastVisit] = useState<string | null>(null);
-  const [previousSnap, setPreviousSnap] = useState<VisitSnap | null>(null);
+  const store = useSyncExternalStore(subscribe, readStore, () => ({
+    lastVisit: null,
+    previousSnap: null,
+  }));
 
-  useEffect(() => {
-    setLastVisit(localStorage.getItem(KEY));
-    const raw = localStorage.getItem(SNAP_KEY);
-    if (raw) {
-      try {
-        setPreviousSnap(JSON.parse(raw) as VisitSnap);
-      } catch {
-        /* ignore */
-      }
-    }
+  const recordVisit = useCallback((snap: VisitSnap) => {
+    const at = new Date().toISOString();
+    localStorage.setItem(KEY, at);
+    localStorage.setItem(SNAP_KEY, JSON.stringify(snap));
+    emit();
   }, []);
 
   const value = useMemo(
     () => ({
-      lastVisit,
-      previousSnap,
-      recordVisit(snap: VisitSnap) {
-        localStorage.setItem(KEY, new Date().toISOString());
-        localStorage.setItem(SNAP_KEY, JSON.stringify(snap));
-        setLastVisit(new Date().toISOString());
-      },
+      lastVisit: store.lastVisit,
+      previousSnap: store.previousSnap,
+      recordVisit,
       deltaSentence(locale: string, current: VisitSnap) {
+        const previousSnap = store.previousSnap;
         if (!previousSnap) {
           return locale === "pt"
             ? "Primeira visita — bem-vindo à mesa."
@@ -60,7 +98,8 @@ export function VisitProvider({ children }: { children: ReactNode }) {
           const bits = [
             `BTC ${priceDelta >= 0 ? "+" : ""}${priceDelta.toFixed(2)}% desde a última visita`,
           ];
-          if (postureChanged) bits.push(`postura ${previousSnap.posture} → ${current.posture}`);
+          if (postureChanged)
+            bits.push(`postura ${previousSnap.posture} → ${current.posture}`);
           if (Math.abs(fngDelta) >= 5)
             bits.push(`Medo & Ganância ${fngDelta >= 0 ? "+" : ""}${fngDelta}`);
           return bits.join(" · ");
@@ -68,13 +107,14 @@ export function VisitProvider({ children }: { children: ReactNode }) {
         const bits = [
           `BTC ${priceDelta >= 0 ? "+" : ""}${priceDelta.toFixed(2)}% since last visit`,
         ];
-        if (postureChanged) bits.push(`posture ${previousSnap.posture} → ${current.posture}`);
+        if (postureChanged)
+          bits.push(`posture ${previousSnap.posture} → ${current.posture}`);
         if (Math.abs(fngDelta) >= 5)
           bits.push(`Fear & Greed ${fngDelta >= 0 ? "+" : ""}${fngDelta}`);
         return bits.join(" · ");
       },
     }),
-    [lastVisit, previousSnap],
+    [store.lastVisit, store.previousSnap, recordVisit],
   );
 
   return <VisitContext.Provider value={value}>{children}</VisitContext.Provider>;

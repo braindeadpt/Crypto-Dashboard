@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import type { ExpertiseLevel } from "@/lib/types";
 
 const KEY = "clareza-expertise";
@@ -10,29 +10,17 @@ const ExpertiseContext = createContext<{
   setLevel: (l: ExpertiseLevel) => void;
 } | null>(null);
 
+/** MVP: operator board always uses full density (analyst). Dial returns in a later pass. */
 export function ExpertiseProvider({ children }: { children: ReactNode }) {
   const [level, setLevelState] = useState<ExpertiseLevel>("analyst");
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(KEY) as ExpertiseLevel | null;
-    if (saved === "citizen" || saved === "operator" || saved === "analyst") {
-      setLevelState("analyst");
-    }
-    setReady(true);
-  }, []);
 
   function setLevel(l: ExpertiseLevel) {
     setLevelState(l);
-    localStorage.setItem(KEY, l);
-  }
-
-  if (!ready) {
-    return (
-      <ExpertiseContext.Provider value={{ level: "analyst", setLevel }}>
-        {children}
-      </ExpertiseContext.Provider>
-    );
+    try {
+      localStorage.setItem(KEY, l);
+    } catch {
+      /* ignore */
+    }
   }
 
   return (

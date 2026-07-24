@@ -12,10 +12,8 @@ export default async function EtfPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  try {
-    const data = await fetchEtfSnapshot();
-    return <EtfDesk data={data} />;
-  } catch {
+  const data = await fetchEtfSnapshot().catch(() => null);
+  if (!data) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
         <h1 className="text-2xl font-semibold">ETF</h1>
@@ -27,4 +25,6 @@ export default async function EtfPage({
       </div>
     );
   }
+
+  return <EtfDesk data={data} />;
 }

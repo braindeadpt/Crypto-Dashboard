@@ -1,5 +1,6 @@
 "use client";
 
+import { LiveLiquidations } from "@/components/board/LiveLiquidations";
 import { Link } from "@/i18n/navigation";
 import { formatPct, formatUsd } from "@/lib/format";
 import type {
@@ -45,18 +46,15 @@ export function LabDesk({
           label="OI est."
           value={formatUsd(sentiment.openInterest.value, true)}
         />
+        <Cell label="Funding bias" value={sentiment.funding.bias} />
         <Cell
-          label="Liq intensity"
-          value={String(sentiment.liquidationWeather.intensity)}
+          label="F&G class"
+          value={sentiment.fearGreed.classification}
         />
-        <Cell label="Liq bias" value={sentiment.liquidationWeather.bias} />
-        <Cell
-          label="Force $"
-          value={formatUsd(
-            sentiment.liquidationWeather.recentForceNotional,
-            true,
-          )}
-        />
+      </div>
+
+      <div className="mt-8">
+        <LiveLiquidations href="/sentimento" />
       </div>
 
       <div className="mt-8 flex flex-wrap gap-4 text-sm font-semibold">

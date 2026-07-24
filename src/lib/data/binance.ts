@@ -38,31 +38,6 @@ export async function fetchOpenInterest(symbol = "BTCUSDT") {
   });
 }
 
-export async function fetchForceOrders(symbol = "BTCUSDT", limit = 50) {
-  return cachedFetch(`binance:force:${symbol}`, 60_000, async () => {
-    try {
-      const data = await binance<
-        {
-          symbol: string;
-          side: string;
-          price: string;
-          origQty: string;
-          time: number;
-        }[]
-      >(`/fapi/v1/forceOrders?symbol=${symbol}&limit=${limit}`);
-      return data.map((d) => ({
-        side: d.side as "BUY" | "SELL",
-        price: Number(d.price),
-        qty: Number(d.origQty),
-        notional: Number(d.price) * Number(d.origQty),
-        time: d.time,
-      }));
-    } catch {
-      return [];
-    }
-  });
-}
-
 export async function fetchMarkPrice(symbol = "BTCUSDT") {
   const f = await fetchFundingRate(symbol);
   return f.markPrice;

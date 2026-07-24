@@ -88,16 +88,7 @@ export interface SentimentSnapshot {
     value: number;
     change24hPct: number | null;
   };
-  liquidationWeather: LiquidationWeather;
   updatedAt: string;
-}
-
-export interface LiquidationWeather {
-  bias: "long" | "short" | "neutral";
-  intensity: number;
-  zones: { price: number; density: number; side: "long" | "short" }[];
-  recentForceNotional: number;
-  note: string;
 }
 
 export interface DefiSnapshot {

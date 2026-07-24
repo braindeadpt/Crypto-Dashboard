@@ -1,9 +1,5 @@
 import { cachedFetch } from "@/lib/cache";
-import {
-  fetchFundingRate,
-  fetchForceOrders,
-  fetchOpenInterest,
-} from "@/lib/data/binance";
+import { fetchFundingRate, fetchOpenInterest } from "@/lib/data/binance";
 
 const FAPI = "https://fapi.binance.com";
 
@@ -27,7 +23,6 @@ export type DerivativesSnapshot = {
   btc: PerpMetrics;
   eth: PerpMetrics | null;
   sol: PerpMetrics | null;
-  forceNotionalBtc: number;
   updatedAt: string;
 };
 
@@ -110,14 +105,12 @@ async function fetchPerpMetrics(symbol: PerpSymbol): Promise<PerpMetrics> {
 
 export async function fetchDerivativesSnapshot(): Promise<DerivativesSnapshot> {
   return cachedFetch("derivs:multi", 90_000, async () => {
-    const [btc, eth, sol, force] = await Promise.all([
+    const [btc, eth, sol] = await Promise.all([
       fetchPerpMetrics("BTCUSDT"),
       fetchPerpMetrics("ETHUSDT").catch(() => null),
       fetchPerpMetrics("SOLUSDT").catch(() => null),
-      fetchForceOrders("BTCUSDT", 80).catch(() => []),
     ]);
 
-    const forceNotionalBtc = force.reduce((s, f) => s + f.notional, 0);
     const perps = [btc, eth, sol].filter(Boolean) as PerpMetrics[];
 
     return {
@@ -125,7 +118,6 @@ export async function fetchDerivativesSnapshot(): Promise<DerivativesSnapshot> {
       btc,
       eth,
       sol,
-      forceNotionalBtc,
       updatedAt: new Date().toISOString(),
     };
   });

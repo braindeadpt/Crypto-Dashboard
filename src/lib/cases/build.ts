@@ -34,8 +34,7 @@ export function buildCaseFile(
         {
           labelPt: "Liquidação de longs ou funding negativo",
           labelEn: "Long liquidations or negative funding",
-          confidence:
-            sentiment?.liquidationWeather.bias === "long" ? 0.55 : 0.35,
+          confidence: sentiment?.funding.bias === "short" ? 0.5 : 0.35,
         },
         {
           labelPt: "Evento específico (hack, unlock, regulação)",
