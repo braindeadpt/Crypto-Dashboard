@@ -39,10 +39,6 @@ export function SiteHeader() {
           </span>
         </Link>
         <div className="flex items-center gap-2">
-          <span className="hidden items-center gap-1.5 font-mono text-[0.62rem] uppercase tracking-wider text-faint sm:inline-flex">
-            <span className="live-dot" />
-            {t("operator")}
-          </span>
           <LanguageToggle />
         </div>
       </div>
@@ -87,7 +83,7 @@ export function SiteFooter() {
           <p className="mt-1 max-w-xl text-sm text-muted">{meta("disclaimer")}</p>
         </div>
         <p className="font-mono text-[0.62rem] uppercase tracking-wider text-faint">
-          Read-only · Sem custódia · Modelo de liquidação estimado
+          Read-only · Sem custódia · Liquidações via stream público
         </p>
       </div>
     </footer>

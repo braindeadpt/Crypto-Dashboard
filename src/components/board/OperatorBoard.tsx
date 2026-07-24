@@ -16,7 +16,12 @@ import type {
   TrendingCoin,
 } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useBoardRefresh } from "@/lib/hooks/useBoardRefresh";
+import {
+  useLiveTicker,
+  type LiveTickerConnection,
+} from "@/lib/hooks/useLiveTicker";
 
 type YieldPool = {
   chain: string;
@@ -69,20 +74,53 @@ export function OperatorBoard({
   const ethPerp = derivs?.eth;
   const solPerp = derivs?.sol;
 
+  const live = useLiveTicker({
+    BTCUSDT: { price: market.btc.price, change24h: market.btc.change24h },
+    ETHUSDT: { price: market.eth.price, change24h: market.eth.change24h },
+    ...(sol
+      ? { SOLUSDT: { price: sol.price, change24h: sol.change24h } }
+      : {}),
+  });
+  useBoardRefresh();
+
+  const btcPx = live.quotes.BTCUSDT?.price ?? market.btc.price;
+  const btcChg = live.quotes.BTCUSDT?.change24h ?? market.btc.change24h;
+  const ethPx = live.quotes.ETHUSDT?.price ?? market.eth.price;
+  const ethChg = live.quotes.ETHUSDT?.change24h ?? market.eth.change24h;
+  const solPx = live.quotes.SOLUSDT?.price ?? sol?.price;
+  const solChg = live.quotes.SOLUSDT?.change24h ?? sol?.change24h;
+
   return (
     <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter">
       {/* TAPE */}
       <div className="flex items-center gap-0 overflow-x-auto border border-line bg-bg-elevated">
-        <div className="flex shrink-0 items-center gap-2 border-r border-line px-3 py-2">
-          <span className="live-dot" />
-          <span className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-accent">
-            {t("live")}
-          </span>
-        </div>
-        <TapeItem label="BTC" value={formatUsd(market.btc.price)} change={market.btc.change24h} />
-        <TapeItem label="ETH" value={formatUsd(market.eth.price)} change={market.eth.change24h} />
-        {sol && (
-          <TapeItem label="SOL" value={formatUsd(sol.price)} change={sol.change24h} />
+        <LiveStatus
+          connection={live.connection}
+          lastUpdate={live.lastUpdate}
+          labelLive={t("live")}
+          labelConnecting={t("liveConnecting")}
+          labelReconnecting={t("liveReconnecting")}
+          labelOffline={t("liveOffline")}
+        />
+        <TapeItem
+          label="BTC"
+          value={formatUsd(btcPx)}
+          change={btcChg}
+          flashKey={btcPx}
+        />
+        <TapeItem
+          label="ETH"
+          value={formatUsd(ethPx)}
+          change={ethChg}
+          flashKey={ethPx}
+        />
+        {solPx != null && solChg != null && (
+          <TapeItem
+            label="SOL"
+            value={formatUsd(solPx)}
+            change={solChg}
+            flashKey={solPx}
+          />
         )}
         <TapeItem
           label="MCAP"
@@ -453,19 +491,116 @@ export function OperatorBoard({
   );
 }
 
+function LiveStatus({
+  connection,
+  lastUpdate,
+  labelLive,
+  labelConnecting,
+  labelReconnecting,
+  labelOffline,
+}: {
+  connection: LiveTickerConnection;
+  lastUpdate: number | null;
+  labelLive: string;
+  labelConnecting: string;
+  labelReconnecting: string;
+  labelOffline: string;
+}) {
+  const label =
+    connection === "live"
+      ? labelLive
+      : connection === "reconnecting"
+        ? labelReconnecting
+        : connection === "offline"
+          ? labelOffline
+          : labelConnecting;
+  const tone =
+    connection === "live"
+      ? "text-accent"
+      : connection === "offline"
+        ? "text-faint"
+        : "text-warn";
+  const time =
+    lastUpdate != null
+      ? new Date(lastUpdate).toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      : null;
+
+  return (
+    <div className="flex shrink-0 items-center gap-2 border-r border-line px-3 py-2">
+      <span
+        className={`live-dot ${
+          connection === "live"
+            ? "live-dot--on"
+            : connection === "offline"
+              ? "live-dot--off"
+              : "live-dot--warn"
+        }`}
+      />
+      <span
+        className={`font-mono text-[0.62rem] uppercase tracking-[0.14em] ${tone}`}
+      >
+        {label}
+      </span>
+      {time && connection === "live" && (
+        <span className="hidden font-mono text-[0.58rem] text-faint sm:inline">
+          {time}
+        </span>
+      )}
+    </div>
+  );
+}
+
 function TapeItem({
   label,
   value,
   change,
   changeIsAbs,
+  flashKey,
 }: {
   label: string;
   value: string;
   change?: number;
   changeIsAbs?: boolean;
+  flashKey?: number | string;
 }) {
+  const [flash, setFlash] = useState<"up" | "down" | null>(null);
+  const prev = useRef<number | string | undefined>(flashKey);
+
+  useEffect(() => {
+    if (flashKey == null || prev.current == null) {
+      prev.current = flashKey;
+      return;
+    }
+    if (flashKey === prev.current) return;
+    const dir =
+      typeof flashKey === "number" && typeof prev.current === "number"
+        ? flashKey > prev.current
+          ? "up"
+          : flashKey < prev.current
+            ? "down"
+            : null
+        : "up";
+    prev.current = flashKey;
+    if (!dir) return;
+    setFlash(dir);
+    const id = window.setTimeout(() => setFlash(null), 450);
+    return () => window.clearTimeout(id);
+  }, [flashKey]);
+
   return (
-    <div className="flex min-w-[6.5rem] shrink-0 flex-col border-r border-line px-3 py-2 last:border-r-0">
+    <div
+      className={`flex min-w-[6.5rem] shrink-0 flex-col border-r border-line px-3 py-2 last:border-r-0 ${
+        flash === "up"
+          ? "tape-flash-up"
+          : flash === "down"
+            ? "tape-flash-down"
+            : ""
+      }`}
+    >
       <span className="font-mono text-[0.58rem] uppercase tracking-[0.1em] text-faint">
         {label}
       </span>

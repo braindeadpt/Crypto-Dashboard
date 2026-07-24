@@ -13,11 +13,15 @@ function cgHeaders(): HeadersInit {
   return headers;
 }
 
-async function cg<T>(path: string): Promise<T> {
+async function cg<T>(path: string, attempt = 0): Promise<T> {
   const res = await fetch(`${CG}${path}`, {
     next: { revalidate: 60 },
     headers: cgHeaders(),
   });
+  if (res.status === 429 && attempt < 3) {
+    await new Promise((r) => setTimeout(r, 1200 * (attempt + 1)));
+    return cg(path, attempt + 1);
+  }
   if (!res.ok) {
     throw new Error(`CoinGecko ${res.status}: ${path}`);
   }

@@ -172,9 +172,24 @@ button {
   width: 6px;
   height: 6px;
   border-radius: 999px;
+  background: var(--faint);
+  box-shadow: none;
+}
+
+.live-dot--on {
   background: var(--accent);
   box-shadow: 0 0 0 0 var(--accent-glow);
   animation: pulse-live 2s ease-out infinite;
+}
+
+.live-dot--warn {
+  background: var(--warn);
+  animation: none;
+}
+
+.live-dot--off {
+  background: var(--faint);
+  animation: none;
 }
 
 @keyframes pulse-live {
@@ -186,6 +201,42 @@ button {
   }
   100% {
     box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes tape-flash-up {
+  from {
+    background: color-mix(in srgb, var(--up) 22%, transparent);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+@keyframes tape-flash-down {
+  from {
+    background: color-mix(in srgb, var(--down) 22%, transparent);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+.tape-flash-up {
+  animation: tape-flash-up 0.45s ease-out;
+}
+
+.tape-flash-down {
+  animation: tape-flash-down 0.45s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot--on {
+    animation: none;
+  }
+  .tape-flash-up,
+  .tape-flash-down {
+    animation: none;
   }
 }
 

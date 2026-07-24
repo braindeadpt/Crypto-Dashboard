@@ -380,6 +380,9 @@
   },
   "board": {
     "live": "Ao vivo",
+    "liveConnecting": "A ligar…",
+    "liveReconnecting": "A reconectar…",
+    "liveOffline": "Desligado",
     "openCharts": "Abrir gráficos",
     "derivatives": "Derivados BTC",
     "postureLabel": "Postura",
