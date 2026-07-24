@@ -1,5 +1,3 @@
-import { ExpertiseProvider } from "@/components/providers/ExpertiseProvider";
-import { VisitProvider } from "@/components/providers/VisitProvider";
 import { SiteFooter, SiteHeader } from "@/components/layout/SiteChrome";
 import { HtmlLang } from "@/components/layout/HtmlLang";
 import { routing } from "@/i18n/routing";
@@ -28,16 +26,12 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <ExpertiseProvider>
-        <VisitProvider>
-          <HtmlLang />
-          <div className="flex min-h-screen w-full flex-col">
-            <SiteHeader />
-            <main className="w-full flex-1">{children}</main>
-            <SiteFooter />
-          </div>
-        </VisitProvider>
-      </ExpertiseProvider>
+      <HtmlLang />
+      <div className="flex min-h-screen w-full flex-col">
+        <SiteHeader />
+        <main className="w-full flex-1">{children}</main>
+        <SiteFooter />
+      </div>
     </NextIntlClientProvider>
   );
 }

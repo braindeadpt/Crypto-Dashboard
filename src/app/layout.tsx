@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt" suppressHydrationWarning>
+    <html lang="pt" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={`${sans.variable} ${mono.variable} antialiased`}>
         {children}
       </body>
