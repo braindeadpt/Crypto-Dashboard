@@ -119,16 +119,16 @@ export function PriceChart({
   }, [symbol, interval, height]);
 
   return (
-    <div className={className}>
+    <div className={`w-full min-w-0 ${className ?? ""}`}>
       {loading && (
-        <p className="px-1 py-2 font-mono text-[0.7rem] text-faint">
+        <p className="px-3 py-2 font-mono text-[0.7rem] text-faint">
           A carregar candles…
         </p>
       )}
       {error && (
-        <p className="px-1 py-2 font-mono text-[0.7rem] text-storm">{error}</p>
+        <p className="px-3 py-2 font-mono text-[0.7rem] text-storm">{error}</p>
       )}
-      <div ref={wrapRef} style={{ height }} />
+      <div ref={wrapRef} className="w-full" style={{ height }} />
     </div>
   );
 }

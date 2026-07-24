@@ -70,7 +70,7 @@ export function OperatorBoard({
   const solPerp = derivs?.sol;
 
   return (
-    <div className="mx-auto max-w-[1400px] section-pad pb-16 pt-3 enter">
+    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter">
       {/* TAPE */}
       <div className="flex items-center gap-0 overflow-x-auto border border-line bg-bg-elevated">
         <div className="flex shrink-0 items-center gap-2 border-r border-line px-3 py-2">
@@ -226,10 +226,10 @@ export function OperatorBoard({
         </div>
       </section>
 
-      <div className="mt-3 grid gap-3 xl:grid-cols-[1.45fr_0.9fr]">
-        <section className="border border-line bg-surface">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-3 py-2">
-            <div className="flex gap-1">
+      <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.85fr)]">
+        <section className="min-w-0 border border-line bg-surface">
+          <div className="grid grid-cols-1 items-center gap-2 border-b border-line px-3 py-2 sm:grid-cols-[1fr_auto_1fr]">
+            <div className="flex flex-wrap gap-1 sm:justify-self-start">
               {(["BTCUSDT", "ETHUSDT", "SOLUSDT"] as const).map((s) => (
                 <button
                   key={s}
@@ -245,7 +245,7 @@ export function OperatorBoard({
                 </button>
               ))}
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1 sm:justify-self-center">
               {(["15m", "1h", "4h", "1d"] as const).map((tf) => (
                 <button
                   key={tf}
@@ -263,7 +263,7 @@ export function OperatorBoard({
             </div>
             <Link
               href="/graficos"
-              className="font-mono text-[0.65rem] uppercase tracking-wider text-accent"
+              className="font-mono text-[0.65rem] uppercase tracking-wider text-accent sm:justify-self-end"
             >
               {t("openCharts")} →
             </Link>

@@ -23,8 +23,8 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/92 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 section-pad py-2.5">
+    <header className="sticky top-0 z-40 w-full border-b border-line bg-bg/92 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-4 section-pad py-2.5">
         <Link href="/" className="flex items-center gap-3">
           <span className="flex h-7 w-7 items-center justify-center border border-accent/35 bg-accent-dim font-mono text-[0.65rem] font-semibold text-accent">
             CC
@@ -47,7 +47,7 @@ export function SiteHeader() {
         </div>
       </div>
       <nav
-        className="mx-auto flex max-w-[1400px] gap-0 overflow-x-auto border-t border-line section-pad"
+        className="mx-auto flex w-full max-w-[1400px] gap-0 overflow-x-auto border-t border-line section-pad"
         aria-label="Navegação"
       >
         {LINKS.map((link) => {
@@ -78,8 +78,8 @@ export function SiteHeader() {
 export function SiteFooter() {
   const meta = useTranslations("meta");
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-2 section-pad py-8 md:flex-row md:items-end md:justify-between">
+    <footer className="w-full border-t border-line">
+      <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-2 section-pad py-8 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-semibold text-ink">
             CLAREZA <span className="text-accent">Crypto</span>

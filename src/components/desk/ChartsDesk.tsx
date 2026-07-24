@@ -12,7 +12,7 @@ export function ChartsDesk() {
   const [interval, setInterval] = useState<"15m" | "1h" | "4h" | "1d">("1h");
 
   return (
-    <div className="mx-auto max-w-[1400px] section-pad pb-20 pt-6 enter">
+    <div className="mx-auto w-full max-w-[1400px] section-pad pb-20 pt-6 enter">
       <header className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>

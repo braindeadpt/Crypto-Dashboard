@@ -31,9 +31,9 @@ export default async function LocaleLayout({
       <ExpertiseProvider>
         <VisitProvider>
           <HtmlLang />
-          <div className="flex min-h-screen flex-col">
+          <div className="flex min-h-screen w-full flex-col">
             <SiteHeader />
-            <main className="flex-1">{children}</main>
+            <main className="w-full flex-1">{children}</main>
             <SiteFooter />
           </div>
         </VisitProvider>
