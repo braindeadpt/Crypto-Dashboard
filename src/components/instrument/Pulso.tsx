@@ -184,7 +184,7 @@ export function Pulso({ regime, hist, className = "" }: Props) {
     >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-8">
         {/* SVG instrument */}
-        <div className="pulso__stage relative mx-auto w-full max-w-[320px] shrink-0 lg:mx-0">
+        <div className="pulso__stage relative mx-auto w-full max-w-[320px] shrink-0 lg:mx-0 lg:max-w-[400px]">
           <svg
             ref={svgRef}
             viewBox="0 0 320 320"
@@ -211,7 +211,59 @@ export function Pulso({ regime, hist, className = "" }: Props) {
                   strokeWidth="1"
                 />
               </pattern>
+
+              {/* Preenchimento luminoso: violeta no centro → cyan na aresta */}
+              <radialGradient id={`pulso-fill-${uid}`} cx="50%" cy="50%" r="50%">
+                <stop
+                  offset="0%"
+                  stopColor="var(--accent)"
+                  stopOpacity="0.42"
+                />
+                <stop
+                  offset="70%"
+                  stopColor="var(--accent-2)"
+                  stopOpacity="0.16"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--accent-2)"
+                  stopOpacity="0.05"
+                />
+              </radialGradient>
+
+              {/* Atmosfera — halo difuso por trás do instrumento */}
+              <radialGradient id={`pulso-air-${uid}`} cx="50%" cy="50%" r="50%">
+                <stop
+                  offset="0%"
+                  stopColor="var(--accent)"
+                  stopOpacity="0.16"
+                />
+                <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+              </radialGradient>
+
+              {/* A silhueta emite luz — é a assinatura partilhável */}
+              <filter
+                id={`pulso-glow-${uid}`}
+                x="-40%"
+                y="-40%"
+                width="180%"
+                height="180%"
+              >
+                <feGaussianBlur stdDeviation="4.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
             </defs>
+
+            {/* Atmosfera atrás de tudo */}
+            <circle
+              cx={CX}
+              cy={CY}
+              r={R_MAX + 24}
+              fill={`url(#pulso-air-${uid})`}
+            />
 
             {/* Reference rings */}
             {[0.25, 0.5, 0.75, 1].map((f) => (
@@ -265,11 +317,16 @@ export function Pulso({ regime, hist, className = "" }: Props) {
                       dim.radius == null
                         ? "var(--faint)"
                         : isOn
-                          ? "var(--accent)"
+                          ? "var(--accent-2)"
                           : "var(--ink)"
                     }
                     stroke="var(--bg)"
                     strokeWidth="1"
+                    filter={
+                      isOn && dim.radius != null
+                        ? `url(#pulso-glow-${uid})`
+                        : undefined
+                    }
                     className="pulso__node"
                   />
                   {/* Hit target */}
@@ -302,7 +359,7 @@ export function Pulso({ regime, hist, className = "" }: Props) {
                     }}
                     className="pointer-events-none select-none"
                   >
-                    {(loc === "pt" ? dim.labelPt : dim.labelEn).slice(0, 10)}
+                    {loc === "pt" ? dim.labelPt : dim.labelEn}
                   </text>
                   {dim.radius == null && (
                     <text
@@ -326,10 +383,11 @@ export function Pulso({ regime, hist, className = "" }: Props) {
               fill={
                 regime.posture === "storm"
                   ? `url(#pulso-hatch-${uid})`
-                  : "color-mix(in srgb, var(--accent) 14%, transparent)"
+                  : `url(#pulso-fill-${uid})`
               }
               stroke={`var(--${regime.posture === "calm" ? "calm" : regime.posture === "storm" ? "storm" : regime.posture === "weird" ? "weird" : "unsettled"})`}
-              strokeWidth="2"
+              strokeWidth="2.5"
+              filter={`url(#pulso-glow-${uid})`}
               className="pulso__shape"
             />
             {/* Stroke outline on top for shareable edge */}

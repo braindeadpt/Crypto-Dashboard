@@ -78,6 +78,17 @@ test.describe("polish · mobile 375", () => {
     await page.goto("/pt", { waitUntil: "domcontentloaded" });
     await assertShell(page);
 
+    // Board is SSR via live APIs with disk fallback — wait for ritual anchor
+    const ritual = page.locator("#ritual");
+    const marketError = page.getByText(
+      /Não foi possível obter dados|Could not fetch market/i,
+    );
+    await expect(ritual.or(marketError)).toBeVisible({ timeout: 45_000 });
+    await expect(
+      ritual,
+      "home must render #ritual (market snapshot fallback if APIs fail)",
+    ).toBeVisible();
+
     const overflow = await page.evaluate(() => {
       const el = document.documentElement;
       return {
@@ -90,8 +101,9 @@ test.describe("polish · mobile 375", () => {
       `horizontal overflow: scrollWidth ${overflow.scrollWidth} > client ${overflow.clientWidth}`,
     ).toBeLessThanOrEqual(overflow.clientWidth + 1);
 
-    await expect(page.locator("#ritual")).toBeVisible();
-    await expect(page.getByRole("region", { name: /Pulso|Pulse/i }).or(page.locator(".pulso"))).toBeVisible();
+    await expect(
+      page.getByRole("region", { name: /Pulso|Pulse/i }).or(page.locator(".pulso")),
+    ).toBeVisible();
   });
 });
 
@@ -110,8 +122,9 @@ test.describe("polish · a11y keyboard + reduced motion", () => {
     const dial = page.getByRole("radiogroup", { name: /Densidade|Density/i });
     await expect(dial).toBeVisible();
     const radios = dial.getByRole("radio");
+    // Default is Operador (index 1); Space selects focused radio (ARIA pattern)
     await radios.nth(0).focus();
-    await page.keyboard.press("Enter");
+    await page.keyboard.press("Space");
     await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
   });
 

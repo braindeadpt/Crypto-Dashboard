@@ -82,8 +82,10 @@ const AXIS: {
     id: "oi",
     historyId: "oi_btc",
     contributorIds: ["oi"],
-    labelPt: "Open interest",
-    labelEn: "Open interest",
+    // "OI" e não "Open interest": o rótulo vive na aresta do instrumento, e a
+    // sigla é a forma corrente no resto do produto (tape, painel de derivados).
+    labelPt: "OI",
+    labelEn: "OI",
     explainPt:
       "Contratos em aberto (BTC). OI elevado na distribuição = mais combustível de liquidação.",
     explainEn:

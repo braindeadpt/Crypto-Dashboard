@@ -11,10 +11,14 @@ export function ExpertiseDial({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("expertise");
   const { level, setLevel } = useExpertise();
 
-  const short: Record<ExpertiseLevel, string> = {
-    citizen: "E",
-    operator: "O",
-    analyst: "A",
+  /**
+   * No telemóvel o dial mostra densidade, não iniciais: mais barras = mais
+   * detalhe. "E / O / A" não diz nada a quem chega pela primeira vez.
+   */
+  const bars: Record<ExpertiseLevel, number> = {
+    citizen: 1,
+    operator: 2,
+    analyst: 3,
   };
 
   return (
@@ -34,6 +38,12 @@ export function ExpertiseDial({ compact = false }: { compact?: boolean }) {
             aria-checked={active}
             aria-label={t(`levels.${id}`)}
             onClick={() => setLevel(id as ExpertiseLevel)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setLevel(id as ExpertiseLevel);
+              }
+            }}
             className={`px-1.5 py-1 text-label transition sm:px-2 ${
               active
                 ? "bg-accent-dim text-accent"
@@ -43,7 +53,20 @@ export function ExpertiseDial({ compact = false }: { compact?: boolean }) {
             {compact ? (
               <>
                 <span className="sm:hidden" aria-hidden>
-                  {short[id]}
+                  <svg viewBox="0 0 14 12" className="h-3 w-3.5">
+                    {[0, 1, 2].map((i) => (
+                      <rect
+                        key={i}
+                        x={i * 5}
+                        y={10 - (i + 1) * 3}
+                        width="3.4"
+                        height={(i + 1) * 3}
+                        rx="0.6"
+                        fill="currentColor"
+                        opacity={i < bars[id] ? 1 : 0.22}
+                      />
+                    ))}
+                  </svg>
                 </span>
                 <span className="site-chrome__dial-label">{t(`levels.${id}`)}</span>
               </>
