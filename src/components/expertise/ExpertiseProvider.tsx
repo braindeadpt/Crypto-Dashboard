@@ -12,8 +12,9 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
-  useSyncExternalStore,
+  useState,
   type ReactNode,
 } from "react";
 
@@ -25,50 +26,27 @@ type ExpertiseContextValue = {
 
 const ExpertiseContext = createContext<ExpertiseContextValue | null>(null);
 
-let memoryLevel: ExpertiseLevel = "operator";
-const listeners = new Set<() => void>();
-
-function subscribe(cb: () => void) {
-  listeners.add(cb);
-  return () => listeners.delete(cb);
-}
-
-function getSnapshot(): ExpertiseLevel {
-  if (typeof window === "undefined") return memoryLevel;
-  try {
-    memoryLevel = parseExpertise(
-      window.localStorage.getItem(EXPERTISE_STORAGE_KEY),
-    );
-  } catch {
-    /* ignore */
-  }
-  return memoryLevel;
-}
-
-function getServerSnapshot(): ExpertiseLevel {
-  return "operator";
-}
-
-function writeLevel(level: ExpertiseLevel) {
-  memoryLevel = level;
-  try {
-    window.localStorage.setItem(EXPERTISE_STORAGE_KEY, level);
-  } catch {
-    /* ignore */
-  }
-  listeners.forEach((l) => l());
-}
-
 export function ExpertiseProvider({ children }: { children: ReactNode }) {
-  const level = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot,
-  );
+  const [level, setLevelState] = useState<ExpertiseLevel>("operator");
+
+  useEffect(() => {
+    try {
+      setLevelState(
+        parseExpertise(window.localStorage.getItem(EXPERTISE_STORAGE_KEY)),
+      );
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const setLevel = useCallback((next: ExpertiseLevel) => {
     if (!EXPERTISE_LEVELS.includes(next)) return;
-    writeLevel(next);
+    setLevelState(next);
+    try {
+      window.localStorage.setItem(EXPERTISE_STORAGE_KEY, next);
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const value = useMemo<ExpertiseContextValue>(
