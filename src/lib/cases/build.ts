@@ -41,6 +41,8 @@ export function buildCaseFile(
     observationPt: corr.observationPt,
     observationEn: corr.observationEn,
     change24h: mover.change24h,
+    change1h: mover.change1h ?? null,
+    change7d: mover.change7d ?? null,
     price: mover.price,
     hypotheses: corr.hypotheses.map((h) => ({
       id: h.id,
@@ -85,7 +87,7 @@ export function buildDailyCases(
   const pool = [...movers].sort(
     (a, b) => Math.abs(b.change24h) - Math.abs(a.change24h),
   );
-  return pool.slice(0, 5).map((m) => buildCaseFile(m, ctxOrSentiment));
+  return pool.slice(0, 8).map((m) => buildCaseFile(m, ctxOrSentiment));
 }
 
 export function annotateMoverCauses(

@@ -22,7 +22,10 @@ Um prompt de cada vez, um commit por prompt.
 > aplicam gémeos em Agora (Pulso/Régua), Mundo e Fluxos; Instrumento mantém
 > abreviaturas com `title`/caption plain.
 >
-> **Começar no E3** (ou E5 se E3 já feito). Ordem restante: E3 → E5 → E6 → E7 → E8.
+> **E5 — JÁ FEITO.** `/mundo` centrado em Caso & Efeito (`CaseEffectStage` +
+> horizonte / sinais / força das hipóteses), sectores ligados aos casos.
+>
+> **Começar no E3** (se ainda não na UI) ou **E6**. Ordem restante: E3 → E6 → E7 → E8.
 >
 > Ao chegar ao E3, importar de `@/lib/reading` e usar `buildReadingSet` — não
 > construir outro cálculo a competir com este.

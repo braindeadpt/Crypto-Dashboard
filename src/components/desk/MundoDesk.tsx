@@ -1,12 +1,14 @@
 "use client";
 
+import { ActHead } from "@/components/board/boardShared";
+import { CaseEffectStage } from "@/components/cases/CaseEffectStage";
 import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
 import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import { useWatchlist } from "@/components/watchlist/WatchlistProvider";
 import { SectorRotationChart } from "@/components/sectors/SectorRotationChart";
 import { SectorTreemap } from "@/components/sectors/SectorTreemap";
 import { Regua } from "@/components/instrument/Regua";
-import { Link } from "@/i18n/navigation";
+import { casesForSector, sectorsForAsset } from "@/lib/cases/sectorsLink";
 import type { SectorsSnapshot } from "@/lib/data/sectors";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { CaseFile, MarketSnapshot } from "@/lib/types";
@@ -30,8 +32,7 @@ type Props = {
 };
 
 /**
- * MUNDO — sectors, rotation, movers + Case & Effect.
- * Depth destination (not a thin table page).
+ * MUNDO — Case & Effect is the centrepiece; sectors answer where capital rotates.
  */
 export function MundoDesk({ sectors, market, cases }: Props) {
   const t = useTranslations("mundo");
@@ -48,6 +49,7 @@ export function MundoDesk({ sectors, market, cases }: Props) {
   const [rotWindow, setRotWindow] = useState<7 | 30>(7);
   const [coins, setCoins] = useState<CoinRow[] | null>(null);
   const [coinsLoading, setCoinsLoading] = useState(false);
+  const [focusCaseId, setFocusCaseId] = useState<string | null>(null);
 
   const selected =
     sectors.thematic.find((s) => s.id === selectedId) ??
@@ -56,6 +58,22 @@ export function MundoDesk({ sectors, market, cases }: Props) {
   const rotation = sectors.rotation.find((r) => r.id === selectedId);
   const ctx = selectedId ? sectors.changeContext[selectedId] : null;
   const reading = loc === "pt" ? sectors.readingPt : sectors.readingEn;
+
+  const orderedCases = useMemo(() => {
+    const list = [...cases].sort((a, b) => {
+      const aw = watchedIds.has(a.assetId) ? 1 : 0;
+      const bw = watchedIds.has(b.assetId) ? 1 : 0;
+      if (bw !== aw) return bw - aw;
+      return Math.abs(b.change24h) - Math.abs(a.change24h);
+    });
+    const limit = show("boardSecondary") ? 8 : 5;
+    return list.slice(0, limit);
+  }, [cases, watchedIds, show]);
+
+  const linkedCases = useMemo(() => {
+    if (!selectedId) return [];
+    return casesForSector(selectedId, sectors, orderedCases);
+  }, [selectedId, sectors, orderedCases]);
 
   const selectSector = useCallback((id: string | null) => {
     setSelectedId(id);
@@ -84,89 +102,81 @@ export function MundoDesk({ sectors, market, cases }: Props) {
         <ExpertiseGate section="readings">
           <p className="mt-2 text-body text-muted">{t("subtitle")}</p>
         </ExpertiseGate>
+        <p className="mt-3 text-meta text-faint">{tCase("correlationNote")}</p>
       </header>
 
-      <ExpertiseGate section="readings">
-        <section className="panel-hero mt-5 p-4 md:p-5">
-          <p className="text-label text-faint">{t("readingLabel")}</p>
-          <p className="mt-2 max-w-3xl text-body text-ink text-balance">{reading}</p>
-        </section>
-      </ExpertiseGate>
+      {/* —— CENTREPIECE: Caso & Efeito —— */}
+      <div className="board-act mt-8">
+        <ActHead title={t("casesTitle")} note={t("casesActNote")} />
+        <ExpertiseGate section="readings">
+          <p className="mb-4 max-w-2xl text-meta text-muted">{t("casesHint")}</p>
+        </ExpertiseGate>
 
-      {/* Case & Effect — featured; watchlist cases first when moving */}
-      <section className="mt-8">
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h2 className="font-display text-title text-ink">{t("casesTitle")}</h2>
-            <ExpertiseGate section="readings">
-              <p className="text-meta text-muted">{t("casesHint")}</p>
-            </ExpertiseGate>
-          </div>
-        </div>
-        {cases.length === 0 ? (
+        {orderedCases.length === 0 ? (
           <p className="text-muted">{tCase("empty")}</p>
         ) : (
-          <ul className="grid gap-3 md:grid-cols-2">
-            {[...cases]
-              .sort((a, b) => {
-                const aw = watchedIds.has(a.assetId) ? 1 : 0;
-                const bw = watchedIds.has(b.assetId) ? 1 : 0;
-                return bw - aw;
-              })
-              .slice(0, show("boardSecondary") ? 8 : 4)
-              .map((c) => (
-              <li key={c.id}>
-                <Link
-                  href={`/caso/${c.id}`}
-                  className={`panel-secondary flex h-full items-center justify-between gap-4 p-4 transition hover:border-accent/40 ${
-                    watchedIds.has(c.assetId) ? "border-accent/35" : ""
-                  }`}
-                >
-                  <div className="min-w-0">
-                    <p className="text-title">
-                      {c.symbol}
-                      {watchedIds.has(c.assetId) ? (
-                        <span className="ml-2 text-label text-accent">·</span>
-                      ) : null}
-                    </p>
-                    <p className="mt-1 truncate text-meta text-muted">
-                      {locale === "pt"
-                        ? c.unclear
-                          ? tCase("unclear")
-                          : c.hypotheses[0]?.labelPt
-                        : c.unclear
-                          ? tCase("unclear")
-                          : c.hypotheses[0]?.labelEn}
-                    </p>
-                  </div>
-                  <p className={`shrink-0 text-data ${deltaClass(c.change24h)}`}>
-                    {c.change24h >= 0 ? "▲" : "▼"} {formatPct(c.change24h)}
-                  </p>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <>
+            <nav
+              className="scroll-x mb-4 flex gap-2 border border-line bg-bg-elevated p-2"
+              aria-label={t("casesNav")}
+            >
+              {orderedCases.map((c) => {
+                const active = focusCaseId === c.id || (!focusCaseId && c === orderedCases[0]);
+                return (
+                  <a
+                    key={c.id}
+                    href={`#${c.id}`}
+                    onClick={() => setFocusCaseId(c.id)}
+                    className={`shrink-0 border px-3 py-2 text-label transition ${
+                      active
+                        ? "border-accent bg-accent-dim text-accent"
+                        : "border-transparent text-faint hover:text-muted"
+                    } ${watchedIds.has(c.assetId) ? "ring-1 ring-accent/40" : ""}`}
+                  >
+                    {c.symbol}{" "}
+                    <span className={deltaClass(c.change24h)}>
+                      {formatPct(c.change24h)}
+                    </span>
+                  </a>
+                );
+              })}
+            </nav>
+
+            <div className="space-y-6">
+              {orderedCases.map((c) => (
+                <CaseEffectStage
+                  key={c.id}
+                  caseFile={c}
+                  relatedSectors={sectorsForAsset(c.assetId, sectors)}
+                  onSelectSector={(id) => {
+                    selectSector(id);
+                    document
+                      .getElementById("mundo-sectores")
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                />
+              ))}
+            </div>
+          </>
         )}
-      </section>
+      </div>
 
-      {/* Market movers */}
-      <section className="mt-8 grid gap-4 md:grid-cols-2">
-        <MoverBlock
-          title={t("gainers")}
-          items={market.movers.gainers.slice(0, show("tapeExtended") ? 5 : 3)}
-        />
-        <MoverBlock
-          title={t("losers")}
-          items={market.movers.losers.slice(0, show("tapeExtended") ? 5 : 3)}
-        />
-      </section>
-
-      {/* Sectors map */}
-      <section className="mt-10">
-        <h2 className="font-display text-title text-ink">{t("sectorsTitle")}</h2>
+      {/* —— Where capital rotates — linked to cases —— */}
+      <div className="board-act mt-12" id="mundo-sectores">
+        <ActHead title={t("sectorsTitle")} note={t("sectorsActNote")} />
         <ExpertiseGate section="readings">
-          <p className="mb-3 text-meta text-muted">{t("sectorsHint")}</p>
+          <p className="mb-3 max-w-2xl text-meta text-muted">{t("sectorsHint")}</p>
         </ExpertiseGate>
+
+        <ExpertiseGate section="readings">
+          <section className="panel-secondary mb-5 p-4">
+            <p className="text-label text-faint">{t("readingLabel")}</p>
+            <p className="mt-2 max-w-3xl text-body text-ink text-balance">
+              {reading}
+            </p>
+          </section>
+        </ExpertiseGate>
+
         {sectors.mega.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-2">
             {sectors.mega.map((m) => (
@@ -194,7 +204,29 @@ export function MundoDesk({ sectors, market, cases }: Props) {
           onSelect={selectSector}
           locale={loc}
         />
-      </section>
+
+        {selectedId && linkedCases.length > 0 && (
+          <div className="mt-4 border border-accent/30 bg-accent-dim/20 p-4">
+            <p className="text-label text-accent">{t("linkedCasesTitle")}</p>
+            <p className="mt-1 text-meta text-faint">{t("linkedCasesHint")}</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {linkedCases.map((c) => (
+                <li key={c.id}>
+                  <a
+                    href={`#${c.id}`}
+                    className="border border-line bg-surface px-2.5 py-1.5 text-meta hover:border-accent"
+                  >
+                    {c.symbol}{" "}
+                    <span className={deltaClass(c.change24h)}>
+                      {formatPct(c.change24h)}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
 
       <ExpertiseGate section="rotation30d">
         <section className="mt-8">
@@ -251,7 +283,7 @@ export function MundoDesk({ sectors, market, cases }: Props) {
           </ExpertiseGate>
           {rotation && show("tapeExtended") && (
             <p className="mt-2 text-meta text-faint">
-              Δ quota 7d:{" "}
+              {t("shareDelta7d")}:{" "}
               {rotation.shareDelta7d != null
                 ? `${rotation.shareDelta7d >= 0 ? "+" : ""}${rotation.shareDelta7d.toFixed(2)} pp`
                 : "—"}
@@ -262,17 +294,30 @@ export function MundoDesk({ sectors, market, cases }: Props) {
           )}
           {coins && coins.length > 0 && (
             <ul className="mt-3 divide-y divide-line">
-              {coins.slice(0, show("sectorTable") ? 12 : 6).map((c) => (
-                <li
-                  key={c.id}
-                  className="flex justify-between gap-2 py-2 text-sm"
-                >
-                  <span className="font-medium">{c.symbol}</span>
-                  <span className={`font-mono ${deltaClass(c.change24h)}`}>
-                    {c.change24h >= 0 ? "▲" : "▼"} {formatPct(c.change24h)}
-                  </span>
-                </li>
-              ))}
+              {coins.slice(0, show("sectorTable") ? 12 : 6).map((c) => {
+                const match = orderedCases.find((x) => x.assetId === c.id);
+                return (
+                  <li
+                    key={c.id}
+                    className="flex justify-between gap-2 py-2 text-sm"
+                  >
+                    <span className="font-medium">
+                      {c.symbol}
+                      {match && (
+                        <a
+                          href={`#${match.id}`}
+                          className="ml-2 text-label text-accent"
+                        >
+                          {t("seeCase")}
+                        </a>
+                      )}
+                    </span>
+                    <span className={`font-mono ${deltaClass(c.change24h)}`}>
+                      {c.change24h >= 0 ? "▲" : "▼"} {formatPct(c.change24h)}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>
@@ -306,32 +351,15 @@ export function MundoDesk({ sectors, market, cases }: Props) {
           </table>
         </section>
       </ExpertiseGate>
-    </div>
-  );
-}
 
-function MoverBlock({
-  title,
-  items,
-}: {
-  title: string;
-  items: MarketSnapshot["movers"]["gainers"];
-}) {
-  return (
-    <div className="panel-secondary p-3">
-      <h3 className="text-label text-faint">{title}</h3>
-      <ul className="mt-2 space-y-1.5">
-        {items.map((m) => (
-          <li key={m.id} className="flex justify-between text-sm">
-            <Link href={`/caso/${m.caseId}`} className="font-medium hover:text-accent">
-              {m.symbol}
-            </Link>
-            <span className={`font-mono ${deltaClass(m.change24h)}`}>
-              {m.change24h >= 0 ? "▲" : "▼"} {formatPct(m.change24h)}
-            </span>
-          </li>
-        ))}
-      </ul>
+      {/* Quiet reference — movers without duplicating the case stage */}
+      <ExpertiseGate section="tapeExtended">
+        <p className="mt-10 text-meta text-faint">
+          {t("moversFootnote", {
+            n: market.movers.gainers.length + market.movers.losers.length,
+          })}
+        </p>
+      </ExpertiseGate>
     </div>
   );
 }

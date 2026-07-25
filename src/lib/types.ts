@@ -153,6 +153,9 @@ export interface CaseFile {
   observationPt: string;
   observationEn: string;
   change24h: number;
+  /** Optional horizon points from the mover — never invented */
+  change1h?: number | null;
+  change7d?: number | null;
   price: number;
   hypotheses: {
     id: string;
