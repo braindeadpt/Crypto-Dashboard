@@ -71,9 +71,6 @@ export function DailyRitualCard({ ritual, className = "" }: Props) {
             <span className={`chip chip-${ritual.posture}`}>
               {t(`postureLabels.${ritual.posture}`)}
             </span>
-            <span className="text-data text-muted">
-              {t("stress", { score: ritual.score })}
-            </span>
           </div>
           <p className="mt-2 font-display text-body text-ink text-balance">
             {headline}

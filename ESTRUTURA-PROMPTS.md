@@ -31,7 +31,10 @@ Um prompt de cada vez, um commit por prompt.
 > **E7 — JÁ FEITO.** Aliases legados → redirects 308 em `next.config.ts`;
 > páginas-sombra removidas. Mantidos `/atlas/[slug]`, `/caso/[id]`, `/brief`.
 >
-> Ordem restante: E8.
+> **E8 — JÁ FEITO.** Medição em `docs/e8-report.md` + `data/audit/e8-latest.json`.
+> Nível 1 passa o teste de leitura de 5s. Gates CI verdes.
+>
+> Ordem restante: nenhuma (estrutura E1–E8 completa).
 >
 > Ao chegar ao E3, importar de `@/lib/reading` e usar `buildReadingSet` — não
 > construir outro cálculo a competir com este.
