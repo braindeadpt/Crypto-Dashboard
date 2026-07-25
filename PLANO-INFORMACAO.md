@@ -20,10 +20,12 @@ Auditoria automática de todas as rotas (`/pt`, nível Operador, 1440px):
 | /estilo | 1 438 | 2 | 4 | 0 | 0 |
 
 **Aliases** (16 rotas antigas que servem as 4 novas):
-`/sectores`, `/memes`, `/caso` → **/mundo** ·
-`/liquidez`, `/sentimento`, `/defi`, `/yields` → **/fluxos** ·
+`/sectores`, `/memes`, `/caso`, `/mercado` → **/mundo** ·
+`/liquidez`, `/sentimento`, `/defi`, `/yields`, `/etf` → **/fluxos** ·
 `/lab`, `/atlas`, `/ciclo`, `/portugal` → **/contexto** ·
-`/mercado`, `/graficos`, `/etf` → (verificar destino)
+`/graficos` → **/instrumento**
+(E7: redirects permanentes 308 em `next.config.ts`.)
+
 
 ### Os cinco problemas estruturais
 

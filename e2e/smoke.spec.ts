@@ -11,9 +11,20 @@ const DESTINATIONS = [
 ] as const;
 
 const LEGACY_REDIRECTS = [
+  { from: "/pt/sectores", to: /\/pt\/mundo/ },
+  { from: "/pt/memes", to: /\/pt\/mundo/ },
+  { from: "/pt/caso", to: /\/pt\/mundo/ },
   { from: "/pt/mercado", to: /\/pt\/mundo/ },
+  { from: "/pt/liquidez", to: /\/pt\/fluxos/ },
+  { from: "/pt/sentimento", to: /\/pt\/fluxos/ },
+  { from: "/pt/defi", to: /\/pt\/fluxos/ },
+  { from: "/pt/yields", to: /\/pt\/fluxos/ },
   { from: "/pt/etf", to: /\/pt\/fluxos/ },
+  { from: "/pt/lab", to: /\/pt\/contexto/ },
+  { from: "/pt/atlas", to: /\/pt\/contexto/ },
   { from: "/pt/ciclo", to: /\/pt\/contexto/ },
+  { from: "/pt/portugal", to: /\/pt\/contexto/ },
+  { from: "/pt/graficos", to: /\/pt\/instrumento/ },
 ] as const;
 
 async function assertShell(page: Page) {
@@ -42,12 +53,30 @@ test.describe("smoke · destinations", () => {
 
 test.describe("smoke · legacy redirects", () => {
   for (const { from, to } of LEGACY_REDIRECTS) {
-    test(`${from} → consolidated`, async ({ page }) => {
+    test(`${from} → consolidated (308)`, async ({ page, request }) => {
+      const head = await request.fetch(from, {
+        method: "GET",
+        maxRedirects: 0,
+      });
+      expect(
+        head.status(),
+        `${from} should permanent-redirect`,
+      ).toBe(308);
+
       await page.goto(from, { waitUntil: "domcontentloaded" });
       await expect(page).toHaveURL(to);
       await assertShell(page);
     });
   }
+
+  test("/pt/atlas/bitcoin stays (unique article)", async ({ page }) => {
+    const response = await page.goto("/pt/atlas/bitcoin", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status() ?? 500).toBeLessThan(500);
+    await expect(page).toHaveURL(/\/pt\/atlas\/bitcoin/);
+    await assertShell(page);
+  });
 });
 
 test.describe("smoke · i18n + nav", () => {

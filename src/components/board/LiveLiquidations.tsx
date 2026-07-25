@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 
 type Props = {
   compact?: boolean;
-  href?: "/fluxos" | "/sentimento" | null;
+  href?: "/fluxos" | null;
 };
 
 function connectionLabel(

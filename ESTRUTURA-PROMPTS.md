@@ -28,7 +28,10 @@ Um prompt de cada vez, um commit por prompt.
 > **E6 — JÁ FEITO.** `/contexto` com SVGs: fase do ciclo, série histórica BTC,
 > timeline navegável, diagramas no Atlas, Portugal datado/com fonte/orientação.
 >
-> Ordem restante: E7 → E8. (E3 leituras na UI se ainda em falta.)
+> **E7 — JÁ FEITO.** Aliases legados → redirects 308 em `next.config.ts`;
+> páginas-sombra removidas. Mantidos `/atlas/[slug]`, `/caso/[id]`, `/brief`.
+>
+> Ordem restante: E8.
 >
 > Ao chegar ao E3, importar de `@/lib/reading` e usar `buildReadingSet` — não
 > construir outro cálculo a competir com este.

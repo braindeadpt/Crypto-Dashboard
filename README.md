@@ -63,18 +63,20 @@ Copy `.env.example` → `.env.local` and set `OPENAI_API_KEY` to enrich `/api/br
 
 ## Routes
 
-| Path | Desk |
+| Path | Role |
 |------|------|
-| `/[locale]` | Front Page ritual |
-| `/[locale]/mercado` | Live market |
-| `/[locale]/ciclo` | 4-year cycle + Bitcoin timeline |
-| `/[locale]/sentimento` | Fear&Greed, funding, OI, liquidation weather |
-| `/[locale]/defi` | TVL, protocols, stablecoins |
-| `/[locale]/brief` | Editorial brief |
-| `/[locale]/portugal` | MiCA / CMVM orientation |
-| `/[locale]/atlas` | Concept curriculum |
-| `/[locale]/caso/[id]` | Cause & Effect case file |
-| `/[locale]/lab` | Analyst condensed view |
+| `/[locale]` | Agora — ritual + N1/N2 |
+| `/[locale]/mundo` | Case & Effect + sectors |
+| `/[locale]/fluxos` | Liquidity, ETF, leverage pulse |
+| `/[locale]/contexto` | Cycle, atlas index, Portugal |
+| `/[locale]/instrumento` | Full tape / charts / N3 |
+| `/[locale]/caso/[id]` | Case detail |
+| `/[locale]/atlas/[slug]` | Atlas article |
+| `/[locale]/brief` | Ritual bookmark |
+| `/[locale]/estilo` | Design system |
+
+Legacy aliases (`/mercado`, `/ciclo`, `/etf`, …) **308 →** the canonicals above (see `next.config.ts`).
+
 
 ## Architecture
 
