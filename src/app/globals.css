@@ -3,90 +3,123 @@
 /*
  * CLAREZA Crypto — O Observatório
  * Tokens: papéis separados (acento ≠ direcção ≠ regime ≠ foco).
- * Tema claro (papel) é a assinatura; escuro é o modo de sessão longa.
+ * "Noite" (escuro luminoso) é a assinatura e o padrão; "Dia" é o modo claro.
  */
 
-:root,
+/*
+ * Light ("Dia") — secondary theme. Cool near-white with the same luminous
+ * accents as the signature dark theme, so switching changes brightness, not
+ * identity. Deliberately NOT paper/cream: this product is about the future,
+ * not the archive.
+ */
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces — cool ledger paper (not warm cream / terracotta cluster) */
-  --bg: #e6e9e4;
-  --bg-elevated: #f3f4f0;
-  --surface: #f7f8f5;
-  --surface-2: #ffffff;
-  --surface-3: #dfe3dc;
-  --ink: #14181c;
-  --muted: #3d4751;
-  --faint: #5a6570;
-  --line: rgba(20, 24, 28, 0.1);
-  --line-strong: rgba(20, 24, 28, 0.22);
+  --bg: #eef1f8;
+  --bg-elevated: #f6f8fc;
+  --surface: #ffffff;
+  --surface-2: #f2f5fb;
+  --surface-3: #e4e9f4;
+  --ink: #0b1020;
+  --muted: #414b63;
+  --faint: #5f6a84;
+  --line: rgba(11, 16, 32, 0.1);
+  --line-strong: rgba(11, 16, 32, 0.2);
 
-  /* Brand / interaction — calibration blue (not neon green) */
-  --accent: #1a4d8c;
-  --accent-dim: rgba(26, 77, 140, 0.1);
-  --accent-glow: rgba(26, 77, 140, 0.28);
+  /* Brand / interaction — violet, darkened for AA on white */
+  --accent: #5b2bd9;
+  --accent-dim: rgba(91, 43, 217, 0.1);
+  --accent-glow: rgba(91, 43, 217, 0.3);
+  --accent-2: #0a7ea8;
+  --accent-2-glow: rgba(10, 126, 168, 0.28);
 
-  /* Price direction — teal / amber (safer for color vision; AA on paper) */
-  --up: #0a6569;
-  --down: #8f4200;
+  /* Price direction — always paired with ▲▼ glyphs, never colour alone */
+  --up: #00705a;
+  --down: #c01046;
 
-  /* Regime states */
-  --warn: #9a6700;
-  --calm: #3d5a80;
-  --unsettled: #9a6700;
-  --storm: #9b2c2c;
-  --weird: #5b4b8a;
+  --warn: #8a5a00;
+  --calm: #0a7ea8;
+  --unsettled: #8a5a00;
+  --storm: #c01046;
+  --weird: #5b2bd9;
 
-  /* A11y focus — high-contrast ink ring, not accent */
-  --focus: #0a0c0e;
-  --crosshair: rgba(26, 77, 140, 0.45);
+  --focus: #5b2bd9;
+  --crosshair: rgba(91, 43, 217, 0.45);
+
+  /* On light, "glow" is a soft halo — restrained, still meaning-bearing */
+  --glow-accent: 0 0 18px rgba(91, 43, 217, 0.22);
+  --glow-up: 0 0 14px rgba(0, 112, 90, 0.2);
+  --glow-down: 0 0 14px rgba(192, 16, 70, 0.2);
 
   --elev-0: none;
-  --elev-1: 0 1px 0 rgba(20, 24, 28, 0.06);
-  --elev-2: 0 10px 28px rgba(20, 24, 28, 0.08);
-  --elev-hero: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 14px 36px rgba(20, 24, 28, 0.1);
+  --elev-1: 0 1px 0 rgba(11, 16, 32, 0.05);
+  --elev-2: 0 10px 28px rgba(11, 16, 32, 0.08);
+  --elev-hero:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 14px 36px rgba(11, 16, 32, 0.1);
 
-  --selection: rgba(26, 77, 140, 0.18);
+  --selection: rgba(91, 43, 217, 0.18);
 }
 
+/*
+ * "Noite" — the signature theme, and the default.
+ *
+ * Deep-space base with a blue-violet undertone, never pure #000: black kills
+ * depth and is the tell of a lazy crypto terminal. Luminosity carries meaning
+ * — a value glows because it is extreme, not for decoration. Violet is brand,
+ * cyan is emphasis, mint/coral are direction (always with ▲▼ redundancy).
+ */
+:root,
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Graphite instrument — not pure black + neon */
-  --bg: #121416;
-  --bg-elevated: #181b1f;
-  --surface: #1c2026;
-  --surface-2: #242930;
-  --surface-3: #2c323b;
-  --ink: #e8e6e1;
-  --muted: #a8b0b9;
-  --faint: #8b949e;
-  --line: rgba(232, 230, 225, 0.1);
-  --line-strong: rgba(232, 230, 225, 0.2);
+  --bg: #05070e;
+  --bg-elevated: #090d18;
+  --surface: #0e1220;
+  --surface-2: #141a2b;
+  --surface-3: #1c2438;
+  --ink: #eaf0ff;
+  --muted: #9aa8c7;
+  --faint: #6b7a9c;
+  --line: rgba(124, 156, 255, 0.12);
+  --line-strong: rgba(124, 156, 255, 0.26);
 
-  --accent: #7ba3d4;
-  --accent-dim: rgba(123, 163, 212, 0.12);
-  --accent-glow: rgba(123, 163, 212, 0.35);
+  /* Brand / interaction — electric violet */
+  --accent: #9b6cff;
+  --accent-dim: rgba(155, 108, 255, 0.14);
+  --accent-glow: rgba(155, 108, 255, 0.55);
 
-  --up: #5ec8c5;
-  --down: #e0a15a;
+  /* Emphasis — luminous cyan, pairs with violet for data gradients */
+  --accent-2: #22e6ff;
+  --accent-2-glow: rgba(34, 230, 255, 0.5);
 
-  --warn: #d4a017;
-  --calm: #8fb0d8;
-  --unsettled: #d4a017;
-  --storm: #e07a7a;
-  --weird: #b5a0e0;
+  /* Price direction */
+  --up: #00f0a8;
+  --down: #ff4d7d;
 
-  --focus: #f2f0eb;
-  --crosshair: rgba(123, 163, 212, 0.5);
+  --warn: #ffc247;
+  --calm: #22e6ff;
+  --unsettled: #ffc247;
+  --storm: #ff4d7d;
+  --weird: #b98bff;
+
+  /* A11y focus — cyan ring, distinct from the violet brand accent */
+  --focus: #7dfaff;
+  --crosshair: rgba(34, 230, 255, 0.5);
+
+  /* Light-as-meaning: attach to extremes and live values, never to chrome */
+  --glow-accent: 0 0 24px rgba(155, 108, 255, 0.45);
+  --glow-up: 0 0 20px rgba(0, 240, 168, 0.4);
+  --glow-down: 0 0 20px rgba(255, 77, 125, 0.4);
 
   --elev-0: none;
-  --elev-1: 0 1px 0 rgba(255, 255, 255, 0.04);
-  --elev-2: 0 12px 32px rgba(0, 0, 0, 0.35);
-  --elev-hero: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 16px 40px rgba(0, 0, 0, 0.4);
+  --elev-1: 0 1px 0 rgba(155, 108, 255, 0.08);
+  --elev-2:
+    0 16px 44px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(124, 156, 255, 0.06);
+  --elev-hero:
+    inset 0 1px 0 rgba(155, 108, 255, 0.14), 0 24px 64px rgba(0, 0, 0, 0.7),
+    0 0 60px rgba(155, 108, 255, 0.1);
 
-  --selection: rgba(123, 163, 212, 0.28);
+  --selection: rgba(155, 108, 255, 0.3);
 }
 
 :root {
@@ -125,6 +158,7 @@
   --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
   --color-accent-dim: var(--accent-dim);
+  --color-accent-2: var(--accent-2);
   --color-up: var(--up);
   --color-down: var(--down);
   --color-warn: var(--warn);
@@ -227,7 +261,7 @@ button {
 }
 
 .font-display {
-  font-family: var(--font-display), Fraunces, Georgia, serif;
+  font-family: var(--font-display), Sora, "IBM Plex Sans", sans-serif;
   font-optical-sizing: auto;
 }
 
@@ -268,21 +302,21 @@ button {
   line-height: 1.5;
 }
 .text-title {
-  font-family: var(--font-display), Fraunces, Georgia, serif;
+  font-family: var(--font-display), Sora, "IBM Plex Sans", sans-serif;
   font-size: var(--text-title);
   line-height: 1.2;
   letter-spacing: -0.02em;
   font-weight: 550;
 }
 .text-display {
-  font-family: var(--font-display), Fraunces, Georgia, serif;
+  font-family: var(--font-display), Sora, "IBM Plex Sans", sans-serif;
   font-size: var(--text-display);
   line-height: 1.1;
   letter-spacing: -0.03em;
   font-weight: 550;
 }
 .text-hero {
-  font-family: var(--font-display), Fraunces, Georgia, serif;
+  font-family: var(--font-display), Sora, "IBM Plex Sans", sans-serif;
   font-size: var(--text-hero);
   line-height: 0.95;
   letter-spacing: -0.04em;
@@ -413,8 +447,10 @@ button {
   box-shadow: none;
 }
 .live-dot--on {
-  background: var(--accent);
-  box-shadow: 0 0 0 0 var(--accent-glow);
+  background: var(--accent-2);
+  box-shadow:
+    0 0 0 0 var(--accent-2-glow),
+    0 0 10px var(--accent-2-glow);
   animation: pulse-live 2s var(--ease-out) infinite;
 }
 .live-dot--warn {
@@ -662,6 +698,57 @@ button {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ——————————————————————————————————————————————————————————
+ * Luminosidade = significado
+ *
+ * A luz nunca é decoração. Um valor brilha porque está vivo (a mudar agora)
+ * ou porque está num extremo da sua distribuição. Se tudo brilhasse, o brilho
+ * não diria nada — por isso estas classes são aplicadas com parcimónia.
+ * —————————————————————————————————————————————————————————— */
+
+/* Valor em direcção — halo na cor da direcção, com ▲▼ sempre presente */
+.lum-up {
+  color: var(--up);
+  text-shadow: var(--glow-up);
+}
+.lum-down {
+  color: var(--down);
+  text-shadow: var(--glow-down);
+}
+
+/* Extremo da distribuição (percentil ≥90 ou ≤10) — puxa o olho */
+.lum-extreme {
+  color: var(--accent-2);
+  text-shadow: 0 0 18px var(--accent-2-glow);
+}
+
+/* Superfície-herói: aresta luminosa violeta→cyan + elevação profunda */
+.lum-hero {
+  position: relative;
+  box-shadow: var(--elev-hero);
+}
+.lum-hero::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent) 22%,
+    var(--accent-2) 62%,
+    transparent
+  );
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Painel com profundidade real — usar em vez de mais uma borda de 1px */
+.lum-panel {
+  box-shadow: var(--elev-2);
 }
 
 /* —— A Régua —— */

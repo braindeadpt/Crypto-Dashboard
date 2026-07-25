@@ -454,7 +454,9 @@ export function OperatorBoard({
       </ExpertiseGate>
 
       <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.85fr)]">
-        <section className="min-w-0 border border-line bg-surface">
+        {/* self-start: the chart has a fixed height, so stretching to match the
+            taller sibling column left a dead black band under the candles. */}
+        <section className="min-w-0 self-start border border-line bg-surface lum-panel">
           <div className="grid grid-cols-1 items-center gap-2 border-b border-line px-3 py-2 sm:grid-cols-[1fr_auto_1fr]">
             <div className="flex flex-wrap gap-1 sm:justify-self-start">
               {(["BTCUSDT", "ETHUSDT", "SOLUSDT"] as const).map((s) => (
@@ -884,7 +886,15 @@ function TapeItem({
             : ""
       }`}
     >
-      <span className={`text-label ${watched ? "text-accent" : "text-faint"}`}>
+      <span
+        className={`text-label ${
+          historyStretched
+            ? "lum-extreme"
+            : watched
+              ? "text-accent"
+              : "text-faint"
+        }`}
+      >
         {label}
         {watched ? " ·" : ""}
       </span>
@@ -920,7 +930,9 @@ function TapeItem({
       )}
       {change != null && !changeIsAbs && (
         <span
-          className={`text-meta tabular-nums ${deltaClass(change)}`}
+          className={`text-meta tabular-nums ${
+            change > 0 ? "lum-up" : change < 0 ? "lum-down" : deltaClass(change)
+          }`}
           aria-hidden="true"
         >
           {change > 0 ? "▲ " : change < 0 ? "▼ " : ""}

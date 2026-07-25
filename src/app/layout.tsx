@@ -1,4 +1,4 @@
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Sora } from "next/font/google";
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { themeBootstrapScript } from "@/lib/theme";
@@ -7,13 +7,16 @@ import "./globals.css";
 /**
  * O Observatório — three families, three jobs (see src/app/design-system.md).
  * Loaded via next/font (self-hosted at build time; no Google runtime requests).
+ *
+ * Display is Sora: geometric, wide-aperture, forward-looking. An editorial
+ * serif here read as newspaper — wrong century for a market instrument.
  */
-const display = Fraunces({
+const display = Sora({
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
   adjustFontFallback: true,
-  axes: ["SOFT", "WONK", "opsz"],
 });
 
 const sans = IBM_Plex_Sans({
