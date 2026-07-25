@@ -4,11 +4,13 @@ import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
 import { EtfDesk } from "@/components/desk/EtfDesk";
 import { LiquidityDesk } from "@/components/liquidity/LiquidityDesk";
 import { LiveLiquidations } from "@/components/board/LiveLiquidations";
+import { TermLabel } from "@/components/jargon/TermLabel";
+import { TermTwin } from "@/components/jargon/TermTwin";
 import type { EtfSnapshot } from "@/lib/data/etf";
 import type { LiquiditySnapshot } from "@/lib/data/liquidity";
 import type { SentimentSnapshot } from "@/lib/types";
 import { formatUsd } from "@/lib/format";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 type Props = {
   liquidity: LiquiditySnapshot;
@@ -21,7 +23,6 @@ type Props = {
  */
 export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
   const t = useTranslations("fluxos");
-  const locale = useLocale();
 
   return (
     <div>
@@ -52,30 +53,32 @@ export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
             </ExpertiseGate>
             <div className="mt-4 grid gap-3 md:grid-cols-3">
               <div className="border border-line bg-surface p-4">
-                <p className="text-label text-faint">Funding BTC</p>
-                <p className="mt-1 text-data font-medium">
-                  {(sentiment.funding.rate * 100).toFixed(4)}%
-                </p>
-                <ExpertiseGate section="explanations">
-                  <p className="mt-2 text-meta text-muted">
-                    {locale === "pt"
-                      ? "Positivo = longs pagam shorts."
-                      : "Positive = longs pay shorts."}
-                  </p>
-                </ExpertiseGate>
+                <TermLabel term="funding" />
+                <TermTwin
+                  className="mt-2"
+                  term="funding"
+                  fundingRate={sentiment.funding.rate}
+                  value={`${(sentiment.funding.rate * 100).toFixed(4)}%`}
+                />
               </div>
               <div className="border border-line bg-surface p-4">
-                <p className="text-label text-faint">Open interest</p>
-                <p className="mt-1 text-data font-medium">
-                  {formatUsd(sentiment.openInterest.value, true)}
-                </p>
+                <TermLabel term="openInterest" />
+                <TermTwin
+                  className="mt-2"
+                  term="openInterest"
+                  lineValue={formatUsd(sentiment.openInterest.value, true)}
+                  value={formatUsd(sentiment.openInterest.value, true)}
+                />
               </div>
               <div className="border border-line bg-surface p-4">
-                <p className="text-label text-faint">Fear & Greed</p>
-                <p className="mt-1 text-data font-medium">
-                  {sentiment.fearGreed.value}
-                </p>
-                <p className="text-meta text-muted">
+                <TermLabel term="fearGreed" />
+                <TermTwin
+                  className="mt-2"
+                  term="fearGreed"
+                  lineValue={String(sentiment.fearGreed.value)}
+                  value={String(sentiment.fearGreed.value)}
+                />
+                <p className="mt-1 text-meta text-muted">
                   {sentiment.fearGreed.classification}
                 </p>
               </div>

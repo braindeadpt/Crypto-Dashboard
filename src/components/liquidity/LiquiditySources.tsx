@@ -2,6 +2,7 @@
 
 import type { LiquiditySnapshot } from "@/lib/data/liquidity";
 import { formatPct, formatUsd, formatUsdMillions } from "@/lib/format";
+import { useTranslations } from "next-intl";
 
 type Props = {
   data: LiquiditySnapshot;
@@ -11,7 +12,6 @@ type Props = {
 type Channel = {
   id: string;
   label: string;
-  /** Signed magnitude for divergent bar (−1…1 after normalize) */
   signed: number | null;
   valueLabel: string;
   detail: string;
@@ -21,77 +21,64 @@ type Channel = {
 /**
  * Three liquidity origins as divergent bars — not a fake stacked dollar composite.
  * Spot (ETF $), on-chain fuel (stable Δ7d $), leverage (funding / OI — state, not $ flow).
+ * Labels use jargon twins — no bare ETF / Funding / OI.
  */
 export function LiquiditySources({ data, locale }: Props) {
+  const t = useTranslations("jargon");
+  const tLiq = useTranslations("liquidity");
+
+  const etfVal =
+    data.spot.etfCombined1dUsdM != null
+      ? formatUsdMillions(data.spot.etfCombined1dUsdM, 0)
+      : "—";
+  const etf5 =
+    data.spot.etfSum5dUsdM != null
+      ? formatUsdMillions(data.spot.etfSum5dUsdM, 0)
+      : "—";
+  const oiDelta =
+    data.leverage.oiChange24hPct != null
+      ? formatPct(data.leverage.oiChange24hPct)
+      : "—";
+  const fundVal =
+    data.leverage.fundingBtc != null
+      ? `${(data.leverage.fundingBtc * 100).toFixed(4)}%`
+      : "—";
+
   const channels: Channel[] = [
     {
       id: "spot",
-      label: locale === "pt" ? "Spot institucional" : "Institutional spot",
+      label: t("spot.plain"),
       signed:
         data.spot.available && data.spot.etfCombined1dUsdM != null
           ? data.spot.etfCombined1dUsdM
           : null,
-      valueLabel:
-        data.spot.etfCombined1dUsdM != null
-          ? formatUsdMillions(data.spot.etfCombined1dUsdM, 0)
-          : "—",
-      detail:
-        locale === "pt"
-          ? `ETF BTC+ETH · 5d ${
-              data.spot.etfSum5dUsdM != null
-                ? formatUsdMillions(data.spot.etfSum5dUsdM, 0)
-                : "—"
-            }`
-          : `BTC+ETH ETF · 5d ${
-              data.spot.etfSum5dUsdM != null
-                ? formatUsdMillions(data.spot.etfSum5dUsdM, 0)
-                : "—"
-            }`,
+      valueLabel: etfVal,
+      detail: t("etf.line", { value: `5d ${etf5}` }),
       available: data.spot.available,
     },
     {
       id: "stables",
-      label: locale === "pt" ? "Stablecoins (on-chain)" : "Stablecoins (on-chain)",
+      label: tLiq("stablecoinsLabel"),
       signed: data.stables.change7dUsd,
       valueLabel:
         data.stables.change7dUsd != null
           ? `${data.stables.change7dUsd >= 0 ? "+" : "−"}${formatUsd(Math.abs(data.stables.change7dUsd), true)}`
           : "—",
-      detail:
-        locale === "pt"
-          ? `Δ7d ${
-              data.stables.change7dPct != null
-                ? formatPct(data.stables.change7dPct)
-                : "—"
-            } · nível ${formatUsd(data.stables.totalUsd, true)}`
-          : `7d Δ ${
-              data.stables.change7dPct != null
-                ? formatPct(data.stables.change7dPct)
-                : "—"
-            } · level ${formatUsd(data.stables.totalUsd, true)}`,
+      detail: tLiq("stableDetail", {
+        delta:
+          data.stables.change7dPct != null
+            ? formatPct(data.stables.change7dPct)
+            : "—",
+        level: formatUsd(data.stables.totalUsd, true),
+      }),
       available: true,
     },
     {
       id: "leverage",
-      label: locale === "pt" ? "Alavancagem" : "Leverage",
-      // Use funding bps as signed pressure (not dollars — honest)
+      label: t("leverage.plain"),
       signed: data.leverage.fundingBps,
-      valueLabel:
-        data.leverage.fundingBtc != null
-          ? `${(data.leverage.fundingBtc * 100).toFixed(4)}%`
-          : "—",
-      detail:
-        locale === "pt"
-          ? `Funding BTC · OI Δ ${
-              data.leverage.oiChange24hPct != null
-                ? formatPct(data.leverage.oiChange24hPct)
-                : "—"
-            }`
-          : `BTC funding · OI Δ ${
-              data.leverage.oiChange24hPct != null
-                ? formatPct(data.leverage.oiChange24hPct)
-                : "—"
-            }`,
+      valueLabel: fundVal,
+      detail: `${t("funding.plain")}: ${fundVal} · ${t("oi.plain")} Δ ${oiDelta}`,
       available: data.leverage.available,
     },
   ];
@@ -109,10 +96,7 @@ export function LiquiditySources({ data, locale }: Props) {
   const mid = 300;
   const barMax = 180;
 
-  const aria =
-    locale === "pt"
-      ? "Origens de liquidez: spot ETF, variação de oferta de stablecoins, e estado de alavancagem."
-      : "Liquidity origins: ETF spot, stablecoin supply change, and leverage state.";
+  const aria = tLiq("sourcesAria");
 
   return (
     <div>
@@ -162,7 +146,11 @@ export function LiquiditySources({ data, locale }: Props) {
                 x={12}
                 y={y + 14}
                 fill="var(--ink)"
-                style={{ fontSize: 12, fontFamily: "var(--font-mono)", fontWeight: 500 }}
+                style={{
+                  fontSize: 12,
+                  fontFamily: "var(--font-mono)",
+                  fontWeight: 500,
+                }}
               >
                 {ch.label}
               </text>
@@ -213,11 +201,7 @@ export function LiquiditySources({ data, locale }: Props) {
           );
         })}
       </svg>
-      <p className="mt-2 text-meta text-faint">
-        {locale === "pt"
-          ? "Barras não são comparáveis em dólares entre canais: alavancagem é estado (funding/OI), não fluxo monetário."
-          : "Bars are not dollar-comparable across channels: leverage is state (funding/OI), not a cash flow."}
-      </p>
+      <p className="mt-2 text-meta text-faint">{tLiq("sourcesFootnote")}</p>
     </div>
   );
 }

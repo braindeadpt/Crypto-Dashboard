@@ -17,7 +17,12 @@ Um prompt de cada vez, um commit por prompt.
 > para `/instrumento` ao seleccionar; Agora continua acessível na nav (o ritual
 > e o E3 N1+N2 vivem lá).
 >
-> **Começar no E3.** Ordem restante: E3 → E4 → E5 → E6 → E7 → E8.
+> **E4 — JÁ FEITO.** Dicionário central em `src/lib/jargon/` + `messages.*.json`
+> (`jargon.*`). `TermTwin` / `TermLabel` / `PercentileTwin` / `ExplainThisNumber.term`
+> aplicam gémeos em Agora (Pulso/Régua), Mundo e Fluxos; Instrumento mantém
+> abreviaturas com `title`/caption plain.
+>
+> **Começar no E3** (ou E5 se E3 já feito). Ordem restante: E3 → E5 → E6 → E7 → E8.
 >
 > Ao chegar ao E3, importar de `@/lib/reading` e usar `buildReadingSet` — não
 > construir outro cálculo a competir com este.

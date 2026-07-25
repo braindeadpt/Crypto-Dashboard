@@ -191,7 +191,117 @@
     "method": "Método de cálculo",
     "raw": "Fonte",
     "updated": "Actualizado",
-    "learnMore": "Explicar"
+    "learnMore": "Explicar",
+    "abbrHint": "Abreviatura"
+  },
+  "jargon": {
+    "oi": {
+      "abbr": "OI",
+      "plain": "Posições abertas",
+      "line": "{value} em posições abertas — o combustível de uma cascata",
+      "meaning": "Contratos de derivados ainda em aberto. Quanto mais alto, mais combustível para liquidações em cascata.",
+      "method": "Open interest Binance Futures (BTC) × preço de marca",
+      "source": "Binance Futures"
+    },
+    "openInterest": {
+      "abbr": "OI",
+      "plain": "Posições abertas",
+      "line": "{value} em posições abertas — o combustível de uma cascata",
+      "meaning": "Contratos de derivados ainda em aberto. Quanto mais alto, mais combustível para liquidações em cascata.",
+      "method": "Open interest Binance Futures × preço de marca",
+      "source": "Binance Futures"
+    },
+    "funding": {
+      "abbr": "Funding",
+      "plain": "Custo da alavancagem",
+      "line": "Custo de manter posições alavancadas: {band}",
+      "meaning": "Taxa periódica entre longs e shorts nos perpétuos. Positivo = longs pagam shorts.",
+      "method": "Taxa de funding BTCUSDT (Binance Futures)",
+      "source": "Binance Futures",
+      "band": {
+        "calm": "calmo",
+        "normal": "normal",
+        "elevated": "elevado",
+        "extreme": "extremo"
+      }
+    },
+    "etf": {
+      "abbr": "ETF",
+      "plain": "Fundos cotados",
+      "line": "Procura institucional via fundos cotados (ETF): {value}",
+      "meaning": "Fluxo líquido dos ETF spot dos EUA — proxy da procura institucional no mercado à vista.",
+      "method": "Agregação Farside dos ETF spot BTC/ETH/SOL",
+      "source": "Farside"
+    },
+    "tvl": {
+      "abbr": "TVL",
+      "plain": "Depositado on-chain",
+      "line": "{value} depositados em aplicações on-chain",
+      "meaning": "Valor bloqueado em protocolos DeFi. Não é volume nem lucro — é capital estacionado.",
+      "method": "DefiLlama historicalChainTvl (canónico)",
+      "source": "DefiLlama"
+    },
+    "ls": {
+      "abbr": "L/S",
+      "plain": "Apostas long vs short",
+      "lineLong": "quase {multiple}× mais apostas na subida do que na descida",
+      "lineShort": "quase {multiple}× mais apostas na descida do que na subida",
+      "lineFlat": "apostas na subida e na descida quase equilibradas",
+      "meaning": "Razão entre contas long e short nos perpétuos. Acima de 1 = mais contas long.",
+      "method": "Global long/short account ratio (Binance)",
+      "source": "Binance Futures"
+    },
+    "breadth": {
+      "abbr": "Amplitude",
+      "plain": "Amplitude do mercado",
+      "line": "só {n} de cada 100 moedas grandes estão a subir",
+      "meaning": "Percentagem do top de activos a subir nas últimas 24h. Amplitude estreita = movimento frágil.",
+      "method": "Contagem de variação 24h positiva no top CoinGecko",
+      "source": "CoinGecko"
+    },
+    "amplitude": {
+      "abbr": "Amplitude",
+      "plain": "Amplitude do mercado",
+      "line": "só {n} de cada 100 moedas grandes estão a subir",
+      "meaning": "Percentagem do top de activos a subir nas últimas 24h. Amplitude estreita = movimento frágil.",
+      "method": "Contagem de variação 24h positiva no top CoinGecko",
+      "source": "CoinGecko"
+    },
+    "percentile": {
+      "abbr": "p",
+      "plain": "Posição no histórico",
+      "line": "mais alto que {p}% dos últimos {days} dias",
+      "lineShort": "amostra curta — só {days} dias",
+      "lineNone": "sem histórico suficiente",
+      "tech": "p{p} · {days}d",
+      "meaning": "Onde o valor de hoje se situa face à distribuição dos últimos dias — sem inventar dados.",
+      "method": "Percentil empírico da série diária persistida",
+      "source": "Histórico CLAREZA"
+    },
+    "fearGreed": {
+      "abbr": "F&G",
+      "plain": "Medo e ganância",
+      "line": "Índice de medo e ganância: {value}",
+      "meaning": "Sentimento agregado do mercado (0–100). Extremos pesam no stress do regime.",
+      "method": "Alternative.me Fear & Greed Index",
+      "source": "Alternative.me"
+    },
+    "leverage": {
+      "abbr": "Lev.",
+      "plain": "Alavancagem",
+      "line": "Estado da alavancagem (funding e posições abertas)",
+      "meaning": "Pressão de derivados — funding e open interest — não é um fluxo de dinheiro em dólares.",
+      "method": "Funding + variação de OI (Binance)",
+      "source": "Binance Futures"
+    },
+    "spot": {
+      "abbr": "Spot",
+      "plain": "Mercado à vista",
+      "line": "Procura no mercado à vista (institucional via ETF)",
+      "meaning": "Compras e vendas no mercado à vista — distinto de apostas alavancadas.",
+      "method": "Fluxos ETF spot agregados",
+      "source": "Farside"
+    }
   },
   "common": {
     "loading": "A carregar…",
@@ -388,7 +498,7 @@
   "liquidity": {
     "eyebrow": "De onde vem o dinheiro",
     "title": "Liquidez",
-    "subtitle": "Oferta de stablecoins, fluxos ETF spot e estado de alavancagem — as três origens observáveis. Sem proxies inventados.",
+    "subtitle": "Oferta de stablecoins, fundos cotados (ETF) e estado de alavancagem — as três origens observáveis. Sem proxies inventados.",
     "readingLabel": "Leitura do dia",
     "stale": "Snapshot antigo — a página não chama APIs no render.",
     "totalSupply": "Oferta agregada",
@@ -402,11 +512,15 @@
     "reguaLabel": "Posição na distribuição (90d)",
     "sourceStables": "Fonte: stablecoins.llama.fi/stablecoincharts/all",
     "originsTitle": "Origens de liquidez",
-    "originsHint": "Spot institucional (ETF) · combustível on-chain (stables) · alavancagem (derivados).",
+    "originsHint": "Mercado à vista (fundos cotados) · combustível on-chain (stables) · alavancagem (derivados).",
     "topTitle": "Maiores stablecoins (circulating USD)",
     "omittedTitle": "Omitido de propósito",
     "empty": "Ainda não há snapshot de liquidez.",
-    "emptyHint": "Corre o cron refresh-heavy ou npx tsx scripts/ingest-liquidity.ts."
+    "emptyHint": "Corre o cron refresh-heavy ou npx tsx scripts/ingest-liquidity.ts.",
+    "stablecoinsLabel": "Stablecoins (on-chain)",
+    "stableDetail": "Δ7d {delta} · nível {level}",
+    "sourcesAria": "Origens de liquidez: fundos cotados no mercado à vista, variação de oferta de stablecoins, e estado de alavancagem.",
+    "sourcesFootnote": "Barras não são comparáveis em dólares entre canais: alavancagem é estado (custo da alavancagem e posições abertas), não fluxo monetário."
   },
   "expertise": {
     "label": "Densidade",

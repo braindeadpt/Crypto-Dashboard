@@ -6,6 +6,7 @@ import {
   type PulseDimension,
   type PulseDimensionId,
 } from "@/lib/instrument/pulseDimensions";
+import { PercentileTwin } from "@/components/jargon/PercentileTwin";
 import type { MetricContextApi } from "@/lib/history/context";
 import type { HistoryMetricId } from "@/lib/history/metrics";
 import type { RegimeResult } from "@/lib/types";
@@ -456,18 +457,28 @@ export function Pulso({ regime, hist, className = "" }: Props) {
                 </p>
                 <p className="mt-1 text-data tabular-nums text-ink">
                   {formatValue(activeDim)}
-                  {activeDim.percentile != null && (
-                    <span className="ml-2 text-muted">
-                      · p{Math.round(activeDim.percentile)} ·{" "}
-                      {activeDim.sampleDays}d
-                    </span>
-                  )}
-                  {activeDim.percentile == null && (
-                    <span className="ml-2 text-warn">
-                      · {t("shortSample", { days: activeDim.sampleDays })}
-                    </span>
-                  )}
                 </p>
+                {activeDim.percentile != null ? (
+                  <p className="mt-1">
+                    <PercentileTwin
+                      context={{
+                        valor: activeDim.value ?? 0,
+                        percentil: activeDim.percentile,
+                        zScore: null,
+                        min: null,
+                        max: null,
+                        mediana: null,
+                        classificação: "normal",
+                        diasDeAmostra: activeDim.sampleDays,
+                        janelaDias: activeDim.sampleDays,
+                      }}
+                    />
+                  </p>
+                ) : (
+                  <p className="mt-1 text-meta text-warn">
+                    {t("shortSample", { days: activeDim.sampleDays })}
+                  </p>
+                )}
                 <p className="mt-2 text-meta text-muted">
                   {loc === "pt" ? activeDim.explainPt : activeDim.explainEn}
                 </p>

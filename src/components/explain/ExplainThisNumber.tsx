@@ -1,15 +1,18 @@
 "use client";
 
 import { useExpertise } from "@/components/expertise/ExpertiseProvider";
+import type { JargonTermId } from "@/lib/jargon";
 import { cn } from "@/lib/format";
 import { useTranslations } from "next-intl";
 import { useId, useState, type ReactNode } from "react";
 
 type Props = {
   value: ReactNode;
-  meaning: string;
-  method: string;
-  source: string;
+  meaning?: string;
+  method?: string;
+  source?: string;
+  /** Prefer dictionary — one system with jargon, not a parallel explainer */
+  term?: JargonTermId;
   updatedAt?: string;
   className?: string;
 };
@@ -18,21 +21,29 @@ type Props = {
  * Density-aware explanation:
  * - Essencial: meaning always visible
  * - Operador: click to expand
- * - Analista: value only (optional method behind nothing — raw if methodSources)
+ * - Analista: value only (optional method behind methodSources)
+ *
+ * Pass `term` to pull meaning/method/source from the central jargon dictionary.
  */
 export function ExplainThisNumber({
   value,
-  meaning,
-  method,
-  source,
+  meaning: meaningProp,
+  method: methodProp,
+  source: sourceProp,
+  term,
   updatedAt,
   className,
 }: Props) {
   const t = useTranslations("explain");
+  const tj = useTranslations("jargon");
   const common = useTranslations("common");
   const { level, show } = useExpertise();
   const [open, setOpen] = useState(false);
   const id = useId();
+
+  const meaning = term ? tj(`${term}.meaning`) : (meaningProp ?? "");
+  const method = term ? tj(`${term}.method`) : (methodProp ?? "");
+  const source = term ? tj(`${term}.source`) : (sourceProp ?? "");
 
   if (level === "analyst") {
     return (

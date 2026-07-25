@@ -1,11 +1,9 @@
 "use client";
 
+import { PercentileTwin } from "@/components/jargon/PercentileTwin";
 import type { HistoryMetricId } from "@/lib/history/metrics";
 import type { MetricContextApi } from "@/lib/history/context";
-import {
-  formatContextSentence,
-  shortContextHint,
-} from "@/lib/history/format";
+import { formatContextSentence } from "@/lib/history/format";
 import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -58,34 +56,32 @@ export function useHistoryContexts(): Partial<
 
 type HintProps = {
   metric: HistoryMetricId;
-  /** Prefer live value overlay when series last point may be stale */
   liveValue?: number;
   stretched?: boolean;
   className?: string;
+  /** Instrument tape: allow p71 · 90d; elsewhere prefer plain sentence */
+  technical?: boolean;
 };
 
-/** Compact percentile chip under a tape/row number. */
+/** Compact history twin under a tape/row number — jargon dictionary, not bare pN. */
 export function MetricHistoryHint({
   metric,
   stretched = true,
   className = "",
+  technical = false,
 }: HintProps) {
   const locale = useLocale();
   const metrics = useHistoryContexts();
   const ctx = metrics[metric];
-  const short = shortContextHint(ctx);
-  if (!short || !ctx) return null;
+  if (!ctx) return null;
 
   const title = formatContextSentence(ctx, locale === "pt" ? "pt" : "en", {
     stretchedLabel: stretched,
   });
 
   return (
-    <span
-      className={`text-meta text-faint tabular-nums ${className}`}
-      title={title}
-    >
-      {short}
+    <span className={className} title={title}>
+      <PercentileTwin context={ctx} technical={technical} />
     </span>
   );
 }

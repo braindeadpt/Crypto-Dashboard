@@ -16,9 +16,8 @@ export function shortContextHint(ctx: MetricContextApi | MetricContext | null | 
 }
 
 /**
- * Full sentence for tooltips / prose.
- * PT: "percentil 92 dos últimos 90 dias — só 8% dos dias estiveram mais esticados"
- * Uses sampleDays honestly when < windowDays.
+ * Full sentence for tooltips / prose — plain language, no bare "percentil".
+ * Prefer PercentileTwin + jargon messages in UI; this remains for aria / titles.
  */
 export function formatContextSentence(
   ctx: MetricContextApi | MetricContext,
@@ -42,20 +41,11 @@ export function formatContextSentence(
   }
 
   const p = Math.round(pct);
-  const above = Math.max(0, 100 - p);
-  const stretched = opts?.stretchedLabel !== false;
-
+  void opts;
   if (locale === "pt") {
-    const tail = stretched
-      ? ` — só ${above}% dos dias estiveram mais esticados`
-      : ` — só ${above}% dos dias foram mais altos`;
-    return `percentil ${p} dos últimos ${sample} dias${tail}`;
+    return `mais alto que ${p}% dos últimos ${sample} dias`;
   }
-
-  const tail = stretched
-    ? ` — only ${above}% of days were more stretched`
-    : ` — only ${above}% of days were higher`;
-  return `percentile ${p} of the last ${sample} days${tail}`;
+  return `higher than ${p}% of the last ${sample} days`;
 }
 
 export const BAND_LABEL_PT: Record<MetricBand, string> = {

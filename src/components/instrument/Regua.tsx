@@ -1,5 +1,6 @@
 "use client";
 
+import { PercentileTwin } from "@/components/jargon/PercentileTwin";
 import type { MetricContextApi } from "@/lib/history/context";
 import {
   BAND_LABEL_EN,
@@ -7,6 +8,7 @@ import {
   formatContextSentence,
 } from "@/lib/history/format";
 import type { MetricBand } from "@/lib/stats";
+import { useTranslations } from "next-intl";
 
 type Props = {
   context: MetricContextApi | null | undefined;
@@ -18,6 +20,11 @@ type Props = {
   className?: string;
   /** Optional visible label above expanded variant */
   label?: string;
+  /**
+   * plain = human sentence (Agora / Mundo / Fluxos)
+   * technical = p71 · 90d (Instrumento)
+   */
+  caption?: "plain" | "technical";
 };
 
 const ZONE = {
@@ -67,7 +74,9 @@ export function Regua({
   stretched = false,
   className = "",
   label,
+  caption = "plain",
 }: Props) {
+  const tPct = useTranslations("jargon.percentile");
   const insufficient =
     !context ||
     context.classificação === "insufficient" ||
@@ -230,17 +239,6 @@ export function Regua({
               stroke="var(--bg)"
               strokeWidth="1"
             />
-            {variant === "inline" && (
-              <text
-                x={xAt(pct!)}
-                y={h - 1}
-                textAnchor="middle"
-                fill="var(--muted)"
-                style={{ fontSize: 8, fontFamily: "var(--font-mono)" }}
-              >
-                {`p${Math.round(pct!)}`}
-              </text>
-            )}
           </g>
         )}
 
@@ -258,15 +256,6 @@ export function Regua({
             <text x={w - padX} y={h - 4} textAnchor="end">
               {formatAxis(context.max)}
             </text>
-            <text
-              x={xAt(pct!)}
-              y={trackY - 8}
-              textAnchor="middle"
-              fill="var(--ink)"
-              style={{ fontSize: 11, fontFamily: "var(--font-mono)", fontWeight: 500 }}
-            >
-              {`p${Math.round(pct!)} · ${bandLabel(context.classificação, locale)} · ${context.diasDeAmostra}d`}
-            </text>
           </g>
         )}
       </svg>
@@ -274,13 +263,21 @@ export function Regua({
       {/* Visible text backup — never colour-only */}
       <p className="sr-only">{ariaText(context, locale, stretched)}</p>
       {variant === "inline" && (
-        <span className="regua__caption text-meta tabular-nums text-faint" aria-hidden="true">
-          {insufficient
-            ? context && context.diasDeAmostra > 0
-              ? `${context.diasDeAmostra}d`
-              : "—"
-            : `p${Math.round(pct!)} · ${context!.diasDeAmostra}d`}
-        </span>
+        <PercentileTwin
+          context={context}
+          technical={caption === "technical"}
+          className="regua__caption"
+        />
+      )}
+      {variant === "expanded" && !insufficient && pct != null && context && (
+        <p className="mt-1 text-meta text-muted">
+          {caption === "technical"
+            ? `${tPct("tech", { p: Math.round(pct), days: context.diasDeAmostra })} · ${bandLabel(context.classificação, locale)}`
+            : tPct("line", { p: Math.round(pct), days: context.diasDeAmostra })}
+        </p>
+      )}
+      {variant === "expanded" && insufficient && (
+        <PercentileTwin context={context} className="mt-1 block" />
       )}
     </figure>
   );

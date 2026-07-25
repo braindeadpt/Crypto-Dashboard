@@ -76,6 +76,7 @@ export function InstrumentDesk({
 }: Props) {
   const t = useTranslations("board");
   const ti = useTranslations("instrumento");
+  const tj = useTranslations("jargon");
   const locale = useLocale();
   const watch = useWatchlist();
   const [symbol, setSymbol] = useState<"BTCUSDT" | "ETHUSDT" | "SOLUSDT">(
@@ -184,6 +185,7 @@ export function InstrumentDesk({
         {etf?.btc.latest && (
           <TapeItem
             label="ETF BTC"
+            title={tj("etf.plain")}
             value={formatUsdMillions(etf.btc.latest.totalUsdM, 0)}
             change={etf.btc.latest.totalUsdM}
             changeIsAbs
@@ -194,6 +196,7 @@ export function InstrumentDesk({
         {btcPerp && (
           <TapeItem
             label="FUND BTC"
+            title={tj("funding.plain")}
             value={`${(btcPerp.fundingRate * 100).toFixed(4)}%`}
             history={hist.funding_btc}
             historyLocale={histLocale}
@@ -203,6 +206,7 @@ export function InstrumentDesk({
         {btcPerp && (
           <TapeItem
             label="OI BTC"
+            title={tj("oi.plain")}
             value={formatUsd(btcPerp.openInterestUsd, true)}
             history={hist.oi_btc}
             historyLocale={histLocale}
@@ -218,6 +222,7 @@ export function InstrumentDesk({
         )}
         <TapeItem
           label="BREADTH"
+          title={tj("breadth.plain")}
           value={`${breadth}%`}
           history={hist.breadth}
           historyLocale={histLocale}
@@ -359,6 +364,7 @@ export function InstrumentDesk({
                       variant="expanded"
                       locale={histLocale}
                       label="ETF BTC · 90d"
+                      caption="technical"
                     />
                   </div>
                 )}
@@ -377,9 +383,15 @@ export function InstrumentDesk({
                   <thead>
                     <tr className="font-mono text-[0.58rem] uppercase text-faint">
                       <th className="py-1 pr-2">Asset</th>
-                      <th className="py-1 pr-2">Funding</th>
-                      <th className="py-1 pr-2">OI Δ24h</th>
-                      <th className="py-1">L/S</th>
+                      <th className="py-1 pr-2" title={tj("funding.abbr")}>
+                        {tj("funding.plain")}
+                      </th>
+                      <th className="py-1 pr-2" title={tj("oi.abbr")}>
+                        {tj("oi.plain")} Δ24h
+                      </th>
+                      <th className="py-1" title={tj("ls.abbr")}>
+                        {tj("ls.plain")}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -420,6 +432,7 @@ export function InstrumentDesk({
                     locale={histLocale}
                     stretched
                     label="Funding BTC · 90d"
+                    caption="technical"
                   />
                 </div>
               )}
@@ -491,6 +504,7 @@ export function InstrumentDesk({
                   variant="expanded"
                   locale={histLocale}
                   className="my-2"
+                  caption="technical"
                 />
               )}
               {sentiment.openInterest.change24hPct != null && (
@@ -702,6 +716,7 @@ export function InstrumentDesk({
                     variant="inline"
                     locale={histLocale}
                     className="mt-1"
+                    caption="technical"
                   />
                   {defi.change1d != null && (
                     <p

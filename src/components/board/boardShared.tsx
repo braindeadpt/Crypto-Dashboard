@@ -95,6 +95,7 @@ export function TapeItem({
   historyLocale = "pt",
   historyStretched = false,
   watched = false,
+  title,
 }: {
   label: string;
   value: string;
@@ -105,6 +106,8 @@ export function TapeItem({
   historyLocale?: "pt" | "en";
   historyStretched?: boolean;
   watched?: boolean;
+  /** Accessible plain twin when label is an abbreviation */
+  title?: string;
 }) {
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
   const prev = useRef<number | string | undefined>(flashKey);
@@ -139,6 +142,7 @@ export function TapeItem({
             ? "tape-flash-down"
             : ""
       }`}
+      title={title}
     >
       <span
         className={`text-label ${
@@ -180,6 +184,7 @@ export function TapeItem({
           locale={historyLocale}
           stretched={historyStretched}
           className="mt-0.5"
+          caption="technical"
         />
       )}
       {change != null && !changeIsAbs && (
@@ -220,6 +225,7 @@ export function ExpandedMetric({
         locale={locale}
         stretched={stretched}
         className="mt-2"
+        caption="technical"
       />
     </div>
   );

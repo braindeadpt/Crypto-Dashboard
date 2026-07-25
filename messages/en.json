@@ -191,7 +191,117 @@
     "method": "How it is calculated",
     "raw": "Source",
     "updated": "Updated",
-    "learnMore": "Explain"
+    "learnMore": "Explain",
+    "abbrHint": "Abbreviation"
+  },
+  "jargon": {
+    "oi": {
+      "abbr": "OI",
+      "plain": "Open positions",
+      "line": "{value} in open positions — the fuel for a cascade",
+      "meaning": "Derivative contracts still open. Higher OI means more fuel for liquidation cascades.",
+      "method": "Binance Futures open interest (BTC) × mark price",
+      "source": "Binance Futures"
+    },
+    "openInterest": {
+      "abbr": "OI",
+      "plain": "Open positions",
+      "line": "{value} in open positions — the fuel for a cascade",
+      "meaning": "Derivative contracts still open. Higher OI means more fuel for liquidation cascades.",
+      "method": "Binance Futures open interest × mark price",
+      "source": "Binance Futures"
+    },
+    "funding": {
+      "abbr": "Funding",
+      "plain": "Cost of leverage",
+      "line": "Cost of holding leveraged positions: {band}",
+      "meaning": "Periodic fee between longs and shorts on perpetuals. Positive = longs pay shorts.",
+      "method": "BTCUSDT funding rate (Binance Futures)",
+      "source": "Binance Futures",
+      "band": {
+        "calm": "calm",
+        "normal": "normal",
+        "elevated": "elevated",
+        "extreme": "extreme"
+      }
+    },
+    "etf": {
+      "abbr": "ETF",
+      "plain": "Listed funds",
+      "line": "Institutional demand via listed funds (ETF): {value}",
+      "meaning": "Net flow of US spot ETFs — a proxy for institutional spot demand.",
+      "method": "Farside aggregation of spot BTC/ETH/SOL ETFs",
+      "source": "Farside"
+    },
+    "tvl": {
+      "abbr": "TVL",
+      "plain": "On-chain deposits",
+      "line": "{value} deposited in on-chain applications",
+      "meaning": "Capital parked in DeFi protocols. Not volume and not profit — stationed capital.",
+      "method": "DefiLlama historicalChainTvl (canonical)",
+      "source": "DefiLlama"
+    },
+    "ls": {
+      "abbr": "L/S",
+      "plain": "Long vs short bets",
+      "lineLong": "almost {multiple}× more bets on upside than downside",
+      "lineShort": "almost {multiple}× more bets on downside than upside",
+      "lineFlat": "upside and downside bets nearly balanced",
+      "meaning": "Ratio of long to short accounts on perpetuals. Above 1 = more long accounts.",
+      "method": "Global long/short account ratio (Binance)",
+      "source": "Binance Futures"
+    },
+    "breadth": {
+      "abbr": "Breadth",
+      "plain": "Market breadth",
+      "line": "only {n} of every 100 large coins are rising",
+      "meaning": "Share of top assets up over 24h. Narrow breadth = fragile move.",
+      "method": "Positive 24h change count in CoinGecko top",
+      "source": "CoinGecko"
+    },
+    "amplitude": {
+      "abbr": "Breadth",
+      "plain": "Market breadth",
+      "line": "only {n} of every 100 large coins are rising",
+      "meaning": "Share of top assets up over 24h. Narrow breadth = fragile move.",
+      "method": "Positive 24h change count in CoinGecko top",
+      "source": "CoinGecko"
+    },
+    "percentile": {
+      "abbr": "p",
+      "plain": "Place in history",
+      "line": "higher than {p}% of the last {days} days",
+      "lineShort": "short sample — only {days} days",
+      "lineNone": "not enough history yet",
+      "tech": "p{p} · {days}d",
+      "meaning": "Where today's value sits in the distribution of recent days — never invented.",
+      "method": "Empirical percentile of the persisted daily series",
+      "source": "CLAREZA history"
+    },
+    "fearGreed": {
+      "abbr": "F&G",
+      "plain": "Fear and greed",
+      "line": "Fear and greed index: {value}",
+      "meaning": "Aggregated market sentiment (0–100). Extremes add to regime stress.",
+      "method": "Alternative.me Fear & Greed Index",
+      "source": "Alternative.me"
+    },
+    "leverage": {
+      "abbr": "Lev.",
+      "plain": "Leverage",
+      "line": "Leverage state (funding and open positions)",
+      "meaning": "Derivatives pressure — funding and open interest — not a dollar cash flow.",
+      "method": "Funding + OI change (Binance)",
+      "source": "Binance Futures"
+    },
+    "spot": {
+      "abbr": "Spot",
+      "plain": "Spot market",
+      "line": "Spot-market demand (institutional via ETF)",
+      "meaning": "Buys and sells in the spot market — distinct from leveraged bets.",
+      "method": "Aggregated spot ETF flows",
+      "source": "Farside"
+    }
   },
   "common": {
     "loading": "Loading…",
@@ -388,7 +498,7 @@
   "liquidity": {
     "eyebrow": "Where the money comes from",
     "title": "Liquidity",
-    "subtitle": "Stablecoin supply, spot ETF flows and leverage state — the three observable origins. No invented proxies.",
+    "subtitle": "Stablecoin supply, listed funds (ETF) and leverage state — the three observable origins. No invented proxies.",
     "readingLabel": "Day reading",
     "stale": "Stale snapshot — this page never calls APIs on render.",
     "totalSupply": "Aggregate supply",
@@ -402,11 +512,15 @@
     "reguaLabel": "Position in the distribution (90d)",
     "sourceStables": "Source: stablecoins.llama.fi/stablecoincharts/all",
     "originsTitle": "Liquidity origins",
-    "originsHint": "Institutional spot (ETF) · on-chain fuel (stables) · leverage (derivatives).",
+    "originsHint": "Spot market (listed funds) · on-chain fuel (stables) · leverage (derivatives).",
     "topTitle": "Largest stables (circulating USD)",
     "omittedTitle": "Deliberately omitted",
     "empty": "No liquidity snapshot yet.",
-    "emptyHint": "Run refresh-heavy cron or npx tsx scripts/ingest-liquidity.ts."
+    "emptyHint": "Run refresh-heavy cron or npx tsx scripts/ingest-liquidity.ts.",
+    "stablecoinsLabel": "Stablecoins (on-chain)",
+    "stableDetail": "7d Δ {delta} · level {level}",
+    "sourcesAria": "Liquidity origins: listed funds in the spot market, stablecoin supply change, and leverage state.",
+    "sourcesFootnote": "Bars are not dollar-comparable across channels: leverage is state (cost of leverage and open positions), not a cash flow."
   },
   "expertise": {
     "label": "Density",
