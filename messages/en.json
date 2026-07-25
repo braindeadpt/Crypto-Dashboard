@@ -10,6 +10,7 @@
     "world": "World",
     "flows": "Flows",
     "context": "Context",
+    "instrument": "Instrument",
     "wallet": "Wallet",
     "walletSoon": "Coming soon: paste a public address — no keys, no server storage.",
     "soon": "soon",
@@ -409,11 +410,40 @@
   },
   "expertise": {
     "label": "Density",
-    "hint": "Changes how many metrics and how much detail you see — no login.",
+    "hint": "Essential / Operator change density. Analyst opens the Instrument.",
     "levels": {
       "citizen": "Essential",
       "operator": "Operator",
       "analyst": "Analyst"
+    }
+  },
+  "instrumento": {
+    "eyebrow": "Level 3 · operational detail",
+    "title": "Instrument",
+    "subtitle": "Full tape, rulers, spot vs leverage, chart, derivatives, yields and DEX activity — everything that left the entry.",
+    "empty": "Could not load the instrument. Please try again shortly.",
+    "openFull": "Open instrument",
+    "bridgeEyebrow": "Detail",
+    "bridgeDefault": "Tape, rulers, chart and derivatives live in the Instrument.",
+    "bridgeAnalyst": "Analyst mode — full detail is one step away.",
+    "chartHint": "Binance spot",
+    "labels": {
+      "breadth": "Breadth",
+      "realizedVol": "Realized vol",
+      "btcFee": "BTC fee"
+    },
+    "acts": {
+      "whereTitle": "Where we are",
+      "whereNote": "distribution · 90 days",
+      "rulerSr": "The Ruler · 90d distribution",
+      "moneyTitle": "Where the money comes from",
+      "moneyNote": "spot · leverage · price",
+      "priceTitle": "Price, up close",
+      "priceNote": "candles · derivatives · liquidations",
+      "wideTitle": "The wider market",
+      "wideNote": "movers · on-chain · yield",
+      "listTitle": "Your list",
+      "listNote": "local · no server"
     }
   },
   "mundo": {

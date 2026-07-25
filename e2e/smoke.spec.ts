@@ -5,6 +5,7 @@ const DESTINATIONS = [
   "/pt/mundo",
   "/pt/fluxos",
   "/pt/contexto",
+  "/pt/instrumento",
   "/pt/brief",
   "/pt/estilo",
 ] as const;

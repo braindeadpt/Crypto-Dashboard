@@ -1,25 +1,33 @@
 "use client";
 
 import { useExpertise } from "@/components/expertise/ExpertiseProvider";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { EXPERTISE_LEVELS, type ExpertiseLevel } from "@/lib/expertise";
 import { useTranslations } from "next-intl";
 
 /**
  * Expertise dial — changes real density across the product (not cosmetic).
+ * Analista: atalho directo ao /instrumento (não redireccionamos todas as
+ * visitas a Agora — o ritual e o E3 N1+N2 vivem lá).
  */
 export function ExpertiseDial({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("expertise");
   const { level, setLevel } = useExpertise();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  /**
-   * No telemóvel o dial mostra densidade, não iniciais: mais barras = mais
-   * detalhe. "E / O / A" não diz nada a quem chega pela primeira vez.
-   */
   const bars: Record<ExpertiseLevel, number> = {
     citizen: 1,
     operator: 2,
     analyst: 3,
   };
+
+  function choose(id: ExpertiseLevel) {
+    setLevel(id);
+    if (id === "analyst" && pathname !== "/instrumento") {
+      router.push("/instrumento");
+    }
+  }
 
   return (
     <div
@@ -37,11 +45,11 @@ export function ExpertiseDial({ compact = false }: { compact?: boolean }) {
             role="radio"
             aria-checked={active}
             aria-label={t(`levels.${id}`)}
-            onClick={() => setLevel(id as ExpertiseLevel)}
+            onClick={() => choose(id as ExpertiseLevel)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                setLevel(id as ExpertiseLevel);
+                choose(id as ExpertiseLevel);
               }
             }}
             className={`px-1.5 py-1 text-label transition sm:px-2 ${

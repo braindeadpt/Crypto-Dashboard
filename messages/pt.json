@@ -10,6 +10,7 @@
     "world": "Mundo",
     "flows": "Fluxos",
     "context": "Contexto",
+    "instrument": "Instrumento",
     "wallet": "Carteira",
     "walletSoon": "Em breve: cola um endereço público — sem chaves, sem armazenamento no servidor.",
     "soon": "em breve",
@@ -409,11 +410,40 @@
   },
   "expertise": {
     "label": "Densidade",
-    "hint": "Muda quantas métricas e quanto detalhe vês — sem login.",
+    "hint": "Essencial / Operador mudam a densidade. Analista abre o Instrumento.",
     "levels": {
       "citizen": "Essencial",
       "operator": "Operador",
       "analyst": "Analista"
+    }
+  },
+  "instrumento": {
+    "eyebrow": "Nível 3 · detalhe operacional",
+    "title": "Instrumento",
+    "subtitle": "Tape completa, réguas, spot vs alavancagem, gráfico, derivados, yields e actividade DEX — tudo o que saiu da entrada.",
+    "empty": "Não foi possível carregar o instrumento. Tenta novamente em breve.",
+    "openFull": "Abrir instrumento",
+    "bridgeEyebrow": "Detalhe",
+    "bridgeDefault": "Tape, réguas, gráfico e derivados estão no Instrumento.",
+    "bridgeAnalyst": "Modo Analista — o detalhe completo está a um passo.",
+    "chartHint": "Spot Binance",
+    "labels": {
+      "breadth": "Amplitude",
+      "realizedVol": "Vol. realizada",
+      "btcFee": "Taxa BTC"
+    },
+    "acts": {
+      "whereTitle": "Onde estamos",
+      "whereNote": "distribuição · 90 dias",
+      "rulerSr": "A Régua · distribuição 90d",
+      "moneyTitle": "De onde vem o dinheiro",
+      "moneyNote": "spot · alavancagem · preço",
+      "priceTitle": "O preço, de perto",
+      "priceNote": "velas · derivados · liquidações",
+      "wideTitle": "O mercado amplo",
+      "wideNote": "movimentos · on-chain · rendimento",
+      "listTitle": "A tua lista",
+      "listNote": "local · sem servidor"
     }
   },
   "mundo": {

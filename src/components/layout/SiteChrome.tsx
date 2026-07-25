@@ -12,13 +12,14 @@ import { ThemeToggle } from "./ThemeToggle";
  * `wallet` is reserved (VISION) — shown disabled so the IA already has a slot.
  */
 const LINKS: {
-  href: "/" | "/mundo" | "/fluxos" | "/contexto";
-  key: "now" | "world" | "flows" | "context";
+  href: "/" | "/mundo" | "/fluxos" | "/contexto" | "/instrumento";
+  key: "now" | "world" | "flows" | "context" | "instrument";
 }[] = [
   { href: "/", key: "now" },
   { href: "/mundo", key: "world" },
   { href: "/fluxos", key: "flows" },
   { href: "/contexto", key: "context" },
+  { href: "/instrumento", key: "instrument" },
 ];
 
 export function SiteHeader() {

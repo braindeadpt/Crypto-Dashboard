@@ -11,7 +11,13 @@ Um prompt de cada vez, um commit por prompt.
 > peso coberto e 9 testes em `reading.test.ts`. **Estão construídas mas ainda
 > NÃO ligadas à UI** — isso é o E3.
 >
-> **Começar no E2.** Ordem restante: E2 → E3 → E4 → E5 → E6 → E7 → E8.
+> **E2 — JÁ FEITO.** `/instrumento` recebe o Nível 3 (tape, réguas, spot vs
+> alavancagem, gráfico, derivados, yields, DEX, trending). A entrada ficou
+> magra (ritual + Pulso + faixa + ponte + watchlist). Dial **Analista** navega
+> para `/instrumento` ao seleccionar; Agora continua acessível na nav (o ritual
+> e o E3 N1+N2 vivem lá).
+>
+> **Começar no E3.** Ordem restante: E3 → E4 → E5 → E6 → E7 → E8.
 >
 > Ao chegar ao E3, importar de `@/lib/reading` e usar `buildReadingSet` — não
 > construir outro cálculo a competir com este.

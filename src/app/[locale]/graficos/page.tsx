@@ -8,5 +8,5 @@ export default async function Page({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  redirect({ href: "/", locale });
+  redirect({ href: "/instrumento", locale });
 }
