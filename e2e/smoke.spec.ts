@@ -122,6 +122,10 @@ test.describe("polish · a11y keyboard + reduced motion", () => {
     const dial = page.getByRole("radiogroup", { name: /Densidade|Density/i });
     await expect(dial).toBeVisible();
     const radios = dial.getByRole("radio");
+    // Wait for hydration before interacting: the markup is visible from SSR, but
+    // a key press dispatched before React attaches its listeners is dropped, and
+    // no amount of assertion retrying brings it back. This raced, not the dial.
+    await page.waitForLoadState("networkidle");
     // Default is Operador (index 1); Space selects focused radio (ARIA pattern)
     await radios.nth(0).focus();
     await page.keyboard.press("Space");
