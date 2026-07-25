@@ -1,4 +1,4 @@
-export type ExpertiseLevel = "citizen" | "operator" | "analyst";
+export type { ExpertiseLevel } from "@/lib/expertise";
 
 export type MarketPosture = "calm" | "unsettled" | "storm" | "weird";
 
@@ -129,6 +129,8 @@ export interface DefiSnapshot {
     pegDeviation?: number | null;
   }[];
   updatedAt: string;
+  /** True when the disk snapshot is older than its freshness window. */
+  stale?: boolean;
 }
 
 export interface BriefItem {
