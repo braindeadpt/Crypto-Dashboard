@@ -1,177 +1,187 @@
-# CLAREZA — Plano de reestruturação da informação
+# CLAREZA — Plano estrutural completo
 
-> O design encontrou o caminho. A informação ainda não. Este documento decide
-> **o que se mostra, a quem, e por que ordem** — e, sobretudo, **o que se corta**.
+> Análise total do produto, não da página inicial. Decide **o que existe, onde
+> vive, quem o vê e o que se corta** — para parar de remendar.
 >
-> Data: 2026-07-25 · Estado: plano, por executar
+> Data: 2026-07-25 · Estado: plano · Execução em `ESTRUTURA-PROMPTS.md`
 
 ---
 
-## 1. O diagnóstico, medido
+## 1. Levantamento medido (todas as páginas)
 
-Auditoria da página inicial (`/pt`, nível Operador, 1440px):
+Auditoria automática de todas as rotas (`/pt`, nível Operador, 1440px):
 
-| Métrica | Valor |
-|---|---|
-| Percentagens no ecrã | **105** |
-| Valores em dólares | 28 |
-| Réguas de percentil | 21 |
-| Secções | 15 |
-| Links internos | 21 |
-| Preço do BTC repetido | 3× |
-| "OI" | 12× · "percentil" 15× · "ETF" 11× · "90d" 10× · "TVL" 9× |
+| Rota | Caracteres | % no ecrã | Secções | SVGs | Tabelas |
+|---|---|---|---|---|---|
+| **/** (Agora) | **6 820** | **105** | 15 | 21 | 3 |
+| /mundo | 1 445 | 24 | 5 | 1 | 0 |
+| /fluxos | 3 713 | 10 | 11 | 3 | 2 |
+| /contexto | 5 613 | 2 | 7 | **0** | 0 |
+| /estilo | 1 438 | 2 | 4 | 0 | 0 |
 
-**~154 números num só ecrã.** Um utilizador experiente perde-se; um utilizador
-comum nem tenta. O problema não é a quantidade de dados que temos — é não termos
-decidido o que merece o ecrã de entrada.
+**Aliases** (16 rotas antigas que servem as 4 novas):
+`/sectores`, `/memes`, `/caso` → **/mundo** ·
+`/liquidez`, `/sentimento`, `/defi`, `/yields` → **/fluxos** ·
+`/lab`, `/atlas`, `/ciclo`, `/portugal` → **/contexto** ·
+`/mercado`, `/graficos`, `/etf` → (verificar destino)
 
-### A causa-raiz
+### Os cinco problemas estruturais
 
-**O produto está organizado por FONTE DE DADOS, não por PERGUNTA.**
+**1. A entrada faz o trabalho de toda a gente.**
+A página inicial tem 105 percentagens; os três destinos **somados** têm 36.
+Tem 21 SVGs; os destinos somados têm 4. A entrada não é uma porta — é o produto
+inteiro empilhado, e os destinos são salas vazias.
 
-As secções de hoje — derivados, DeFi, ETF, DEX, yields, trending — são o desenho
-das APIs que consumimos. Ninguém acorda a perguntar "qual é o funding rate?".
-As perguntas reais, por ordem:
+**2. A diferenciação está esfomeada.**
+`/mundo` aloja o **Caso & Efeito** — a única coisa que nenhum concorrente faz — e
+é a página **mais pobre do produto**: 1 445 caracteres, 1 SVG. O que nos torna
+únicos ocupa 20% do espaço do que nos torna genéricos.
 
-1. *Está a acontecer alguma coisa que eu deva saber?* — 5 segundos
-2. *O quê, e porquê?* — 30 segundos
-3. *O que é que isso significa para mim?* — 2 minutos
-4. *Quero ver tudo* — 5+ minutos
+**3. `/contexto` é uma parede de texto.**
+5 613 caracteres, **zero visualizações**, 2 percentagens. É a página de aprender e
+não tem uma única imagem. Ninguém lê isto.
 
-Enquanto a estrutura não espelhar isto, mais polimento não resolve.
+**4. Organização por fonte de dados, não por pergunta.**
+Derivados, DeFi, ETF, DEX, yields são o desenho das **APIs que consumimos**.
+Ninguém acorda a perguntar "qual é o funding rate?".
+
+**5. 16 URLs duplicados.**
+Conteúdo idêntico servido em 4-5 endereços diferentes. Mau para manutenção, mau
+para SEO (conteúdo duplicado), e sinal de que a consolidação ficou a meio.
 
 ---
 
 ## 2. Os quatro princípios
 
-**P1 — Uma pergunta por ecrã.** Cada vista responde a UMA pergunta. Se responde
-a três, são três vistas.
+**P1 — Uma pergunta por ecrã.** Se uma vista responde a três perguntas, são três
+vistas.
 
 **P2 — Regra do "e depois?".** Todo o número tem de mudar o que o leitor pensa ou
-faz. Se não muda, sai do ecrã de entrada. Sem excepção — nem para dados de que
-gostamos.
+faz. Se não muda, sai da entrada. Sem excepção — nem para dados de que gostamos.
 
-**P3 — Nenhum termo técnico sozinho.** Todo o jargão traz o seu gémeo em
-português comum, **na linha**, não escondido num tooltip. O número técnico fica
-para quem o sabe ler; a frase fica para quem não sabe.
+**P3 — Nenhum termo técnico sozinho.** Todo o jargão traz o gémeo em português
+comum **na linha**, não em tooltip.
 
-**P4 — Revelação progressiva.** O detalhe não desaparece — muda de sítio. O
-Dial de Expertise deixa de ser cosmético e passa a ser a espinha da arquitectura.
+**P4 — Revelação progressiva.** O detalhe não desaparece: muda de nível. O Dial
+de Expertise passa a ser a espinha da arquitectura, não um enfeite.
 
 ---
 
-## 3. A nova estrutura: três níveis
+## 3. Estrutura-alvo: 5 destinos + 1 futuro
 
-### Nível 1 — A RESPOSTA (é o que se vê ao abrir)
+| Destino | Pergunta que responde | Hoje | Passa a ter |
+|---|---|---|---|
+| **AGORA** `/` | *Está a acontecer alguma coisa?* | tudo (6 820) | Nível 1 + 2. **Perde ~60%** |
+| **MUNDO** `/mundo` | *O que se mexeu e porquê?* | 1 445 | **Cresce 3×**. É a joia. |
+| **FLUXOS** `/fluxos` | *O dinheiro entra ou sai?* | 3 713 | Reorganizado por pergunta |
+| **CONTEXTO** `/contexto` | *Como funciona? E em Portugal?* | parede de texto | **Ganha visualização** |
+| **INSTRUMENTO** `/instrumento` | *Quero ver tudo* | — (está na entrada) | **Novo.** Recebe o excesso |
+| CARTEIRA `/carteira` | *Quanto tenho?* | "em breve" | Futuro (ver VISION) |
 
-Um ecrã. Sem scroll. Responde a *"está a acontecer alguma coisa?"*.
-
-- **Uma frase grande** — o estado do mercado hoje, em português comum.
-  Ex.: *"Mercado tenso. O dinheiro está a sair dos ETF e a alavancagem está alta."*
-- **Três números. Não 154.**
-  - **Direcção** — para onde vai o preço (BTC + amplitude do mercado numa só leitura)
-  - **Risco** — quão frágil está (alavancagem + liquidações numa só leitura)
-  - **Dinheiro** — está a entrar ou a sair (ETF + stablecoins numa só leitura)
-- **Uma coisa a vigiar hoje** — a única acção de atenção que se justifica.
-- **O Pulso** como imagem do estado (já feito, e é a peça partilhável).
-
-Se um utilizador comum só vir isto, já ficou mais informado do que com 8 tabs.
-
-### Nível 2 — A EVIDÊNCIA (um scroll ou um clique)
-
-Responde a *"o quê e porquê?"*. Quatro a seis cartões, **um sinal por cartão**,
-cada um com: pergunta em título · resposta em linguagem simples · número · régua.
-
-1. **O dinheiro está a entrar ou a sair?** — ETF spot + oferta de stablecoins
-2. **Há risco de cascata?** — alavancagem, funding, liquidações ao vivo
-3. **A subida/queda é ampla ou de meia dúzia?** — amplitude
-4. **O que se mexeu, e porquê?** — Caso & Efeito (já construído, é o melhor que temos)
-5. **Onde está o dinheiro a rodar?** — sectores/narrativas
-6. **Há algo partido?** — peg de stablecoins, taxas de rede
-
-### Nível 3 — O INSTRUMENTO (o profissional)
-
-Responde a *"quero ver tudo"*. É praticamente a board de hoje — tape completa,
-grelha de réguas, derivados por activo, gráfico com timeframes, yields, DEX.
-**Não desaparece. Deixa de ser a porta de entrada.**
-
-O Dial passa a comandar isto de verdade:
-`Essencial` = Nível 1 · `Operador` = 1+2 · `Analista` = 1+2+3.
+**O movimento central:** o Nível 3 sai da entrada e passa a ter casa própria em
+`/instrumento`. A entrada fica respirável sem perder nada — o profissional tem
+tudo a um clique, e o Dial em `Analista` pode levá-lo lá por omissão.
 
 ---
 
-## 4. O que sai do ecrã de entrada (e porquê)
+## 4. Os três níveis (dentro de AGORA)
 
-Aplicando o P2 sem sentimentalismo:
+### Nível 1 — A RESPOSTA (sem scroll)
+- **Uma frase grande** em português comum:
+  *"Mercado tenso. O dinheiro está a sair dos ETF e a alavancagem está alta."*
+- **Três números, não 154** — leituras compostas, não métricas cruas:
+  - **DIRECÇÃO** (preço + amplitude)
+  - **RISCO** (alavancagem + liquidações + funding)
+  - **DINHEIRO** (ETF + stablecoins)
+- **Uma coisa a vigiar hoje.**
+- **O Pulso** como imagem do estado (já feito).
 
-| Elemento | Decisão | Porquê |
+### Nível 2 — A EVIDÊNCIA (um scroll)
+4–6 cartões, **um sinal por cartão**, título em forma de pergunta:
+1. O dinheiro está a entrar ou a sair?
+2. Há risco de cascata?
+3. A subida/queda é ampla ou de meia dúzia?
+4. O que se mexeu, e porquê? *(→ leva a MUNDO)*
+5. Onde está o dinheiro a rodar? *(sectores)*
+6. Há algo partido? *(peg, taxas)*
+
+### Nível 3 — O INSTRUMENTO (`/instrumento`)
+Praticamente a board de hoje: tape completa, grelha de réguas, derivados por
+activo, gráfico com timeframes, yields, DEX, trending.
+
+**Dial:** `Essencial` = N1 · `Operador` = N1+N2 · `Analista` = N1+N2 + atalho
+directo ao Instrumento.
+
+---
+
+## 5. O que sai da entrada (lista de cortes)
+
+| Elemento | Vai para | Porquê |
 |---|---|---|
-| **Tendências retail** | Fora → Nível 3 | O próprio cartão diz "Atenção ≠ liquidez". Se admitimos que não é sinal, não pode estar na entrada. |
-| **Yields / APY** | Fora → página própria | Não responde a "o que está a acontecer no mercado". É uma tarefa diferente (procurar rendimento). |
-| **Actividade DEX** | Fora → Nível 3 | Nicho. Interessa a quem caça memecoins, não a quem quer orientação. |
-| **Grelha de 8 réguas** | Fora → Nível 3 | 21 réguas num ecrã anulam-se. No Nível 1-2, a régua acompanha *o número que importa*, não todos. |
-| **Preço BTC (3×)** | 1× | Aparece na tape, na faixa de preço e no ritual. Escolher um sítio. |
-| **Stress (4×)** | 1× | Idem: tape, Pulso, ritual, painel de derivados. |
-| **Tape de 10 métricas** | 4 no Nível 1 | BTC, ETH, e as duas leituras compostas (risco, dinheiro). O resto no Nível 3. |
+| Tendências retail | Instrumento | O próprio cartão diz *"Atenção ≠ liquidez"*. Se admitimos que não é sinal, não pode estar na entrada. |
+| Yields / APY | Página própria | Não responde a "o que se passa". É outra tarefa: procurar rendimento. |
+| Actividade DEX | Mundo (nicho) | Interessa a quem caça memecoins, não a quem quer orientação. |
+| Grelha de 8 réguas | Instrumento | 21 réguas num ecrã anulam-se. No N1-2 a régua acompanha *o número que importa*. |
+| Preço BTC (3×) | 1× | Aparece na tape, na faixa e no ritual. Escolher um sítio. |
+| Stress (4×) | 1× | Idem: tape, Pulso, ritual, painel de derivados. |
+| Tape de 10 métricas | 4 na entrada | BTC, ETH + as duas leituras compostas. O resto no Instrumento. |
+| Spot vs Alavancagem | Fluxos | É exactamente a pergunta de FLUXOS. Está no sítio errado. |
 
-**Nada disto é apagado.** Tudo continua a existir — noutro nível ou noutra página.
-A diferença é que deixa de competir com o essencial pelo mesmo pixel.
+**Nada é apagado. Tudo muda de nível.**
 
 ---
 
-## 5. A camada de tradução (o que serve "pessoas normais")
-
-Cada termo técnico ganha um gémeo em português comum. **Na linha, não em tooltip.**
+## 6. A camada de tradução (serve normais *e* profissionais)
 
 | Hoje | Passa a ser |
 |---|---|
-| `Funding 0.0083%` | *"Custo de manter posições alavancadas: normal"* (+ número em pequeno) |
+| `Funding 0.0083%` | *"Custo de manter posições alavancadas: normal"* + número pequeno |
 | `p71 · 90d` | *"mais alto que 71% dos últimos 90 dias"* |
 | `OI $6.94B` | *"$6,94 mil M em posições abertas — o combustível de uma cascata"* |
-| `L/S 1.85` | *"há quase 2× mais apostas na subida do que na descida"* |
+| `L/S 1.85` | *"quase 2× mais apostas na subida do que na descida"* |
 | `TVL $75.4B` | *"$75,4 mil M depositados em aplicações on-chain"* |
-| `Peg watch` | *"stablecoins a valer o que deviam?"* |
 | `Amplitude 28%` | *"só 28 de cada 100 moedas grandes estão a subir"* |
 
-Regra: **o profissional lê o número e ignora a frase; o principiante lê a frase e
-ignora o número.** Servem-se os dois sem construir dois produtos.
+**O profissional lê o número e ignora a frase; o principiante lê a frase e ignora
+o número.** Servem-se os dois sem construir dois produtos.
 
 ---
 
-## 6. Como escolher o que entra (critério permanente)
+## 7. Critério permanente (o travão)
 
-Antes de acrescentar seja o que for ao Nível 1 ou 2, tem de passar nos cinco:
+Antes de acrescentar seja o que for a AGORA, tem de passar nos cinco:
 
-1. **Responde a uma das quatro perguntas?** Se não, é Nível 3.
-2. **Muda o que o leitor pensa ou faz?** Se não, fora.
-3. **Já está dito noutro sítio?** Se sim, escolher um.
-4. **Um principiante percebe em 5 segundos?** Se não, falta a tradução (P3).
-5. **Temos o dado com qualidade?** Se não, **omitir** — nunca estimar e apresentar
-   como facto. (Regra herdada, não negociável.)
-
----
-
-## 7. Ordem de execução
-
-1. **Definir as três leituras compostas** — Direcção, Risco, Dinheiro. É o
-   trabalho intelectual central: transformar ~20 métricas em 3 leituras honestas,
-   com pesos documentados. Reaproveita o motor de regime, que já faz isto para o
-   stress.
-2. **Construir o Nível 1** e pô-lo como entrada.
-3. **Camada de tradução** aplicada a todo o jargão (§5).
-4. **Reorganizar em Nível 2** — cartões por pergunta, não por fonte.
-5. **Mover o resto para Nível 3** e ligar o Dial a sério.
-6. **Cortar as duplicações** (§4).
-7. Só depois: mais polimento visual.
+1. Responde a uma das quatro perguntas do leitor? Se não → Instrumento.
+2. Muda o que o leitor pensa ou faz? Se não → fora.
+3. Já está dito noutro sítio? Se sim → escolher um.
+4. Um principiante percebe em 5 segundos? Se não → falta tradução (P3).
+5. Temos o dado com qualidade? Se não → **omitir**. Nunca estimar e apresentar
+   como facto. *(Regra herdada, não negociável.)*
 
 ---
 
-## 8. O risco desta mudança
+## 8. Ordem de execução
 
-Ser honesto sobre o que se perde: um utilizador profissional pode sentir que o
-produto "ficou mais pobre" ao abrir. Mitigação: o Dial guarda a preferência
-localmente — quem escolhe `Analista` uma vez, entra sempre no instrumento
-completo. A simplificação é o **padrão**, não uma imposição.
+1. **Leituras compostas** (Direcção / Risco / Dinheiro) — o trabalho intelectual
+   central: ~20 métricas → 3 leituras honestas, pesos documentados.
+2. **Criar `/instrumento`** e mover-lhe o Nível 3.
+3. **Reconstruir AGORA** como N1 + N2.
+4. **Camada de tradução** em todo o jargão.
+5. **Engordar MUNDO** — promover o Caso & Efeito à peça central.
+6. **Dar visualização a CONTEXTO.**
+7. **Resolver os 16 aliases** (canónicos + redirects permanentes).
+8. Só depois: mais polimento visual.
 
-E um aviso: a tentação, daqui a três meses, vai ser voltar a acrescentar painéis
-à entrada porque "também é útil". O §6 existe para travar isso.
+---
+
+## 9. Riscos
+
+**O profissional pode sentir perda ao abrir.** Mitigação: o Dial guarda a
+preferência localmente — quem escolhe `Analista` entra sempre no Instrumento. A
+simplificação é o **padrão**, não uma imposição.
+
+**A tentação de reencher.** Daqui a três meses vai haver um painel "que também é
+útil". O §7 existe para travar isso.
+
+**Não regredir na honestidade.** Nenhuma leitura composta pode esconder que um
+dos seus ingredientes falhou. Se falta um sinal, a leitura di-lo.
