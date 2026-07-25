@@ -85,8 +85,10 @@ export function WatchlistPanel({ className = "" }: { className?: string }) {
     <section className={`border border-line bg-surface p-4 ${className}`}>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h2 className="font-display text-title text-ink">{t("title")}</h2>
-          <p className="mt-1 max-w-xl text-meta text-muted">{t("privacy")}</p>
+          {/* Título visualmente no cabeçalho do acto; aqui fica só para
+              leitores de ecrã, para não duplicar a mesma frase no ecrã. */}
+          <h2 className="sr-only">{t("title")}</h2>
+          <p className="max-w-xl text-meta text-muted">{t("privacy")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button

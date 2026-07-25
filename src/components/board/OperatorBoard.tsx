@@ -270,8 +270,13 @@ export function OperatorBoard({
 
       {/* Expanded réguas — operator+ */}
       <ExpertiseGate section="reguaExpanded">
-      <section className="panel-secondary mt-3 p-3 md:p-4">
-        <h2 className="text-label text-faint">
+      <div className="board-act">
+        <ActHead
+          title={locale === "pt" ? "Onde estamos" : "Where we are"}
+          note={locale === "pt" ? "distribuição · 90 dias" : "distribution · 90 days"}
+        />
+      <section className="panel-secondary p-3 md:p-4">
+        <h2 className="sr-only">
           {locale === "pt" ? "A Régua · distribuição 90d" : "The Ruler · 90d distribution"}
         </h2>
         <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -340,11 +345,17 @@ export function OperatorBoard({
           />
         </div>
       </section>
+      </div>
       </ExpertiseGate>
 
       <ExpertiseGate section="boardSecondary">
-      {/* SPOT VS ALAVANCA */}
-      <section className="panel-secondary mt-3 p-3 md:p-4">
+      {/* ACTO — de onde vem o dinheiro */}
+      <div className="board-act">
+        <ActHead
+          title={locale === "pt" ? "De onde vem o dinheiro" : "Where the money comes from"}
+          note={locale === "pt" ? "spot · alavancagem · preço" : "spot · leverage · price"}
+        />
+      <section className="panel-secondary p-3 md:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-label text-faint">
             {t("spotVsLev")}
@@ -451,9 +462,16 @@ export function OperatorBoard({
           </div>
         </div>
       </section>
+      </div>
       </ExpertiseGate>
 
-      <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.85fr)]">
+      {/* ACTO — preço e derivados */}
+      <div className="board-act">
+        <ActHead
+          title={locale === "pt" ? "O preço, de perto" : "Price, up close"}
+          note={locale === "pt" ? "velas · derivados · liquidações" : "candles · derivatives · liquidations"}
+        />
+      <div className="grid gap-3 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.85fr)]">
         {/* self-start: the chart has a fixed height, so stretching to match the
             taller sibling column left a dead black band under the candles. */}
         <section className="min-w-0 self-start border border-line bg-surface lum-panel">
@@ -552,8 +570,15 @@ export function OperatorBoard({
           <LiveLiquidations compact />
         </div>
       </div>
+      </div>
 
-      <div className={`mt-3 grid gap-3 ${dex ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}>
+      {/* ACTO — o mercado amplo */}
+      <div className="board-act">
+        <ActHead
+          title={locale === "pt" ? "O mercado amplo" : "The wider market"}
+          note={locale === "pt" ? "movimentos · on-chain · rendimento" : "movers · on-chain · yield"}
+        />
+      <div className={`grid gap-3 ${dex ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}>
         <Panel title={t("movers")} href="/mundo">
           <div className="grid grid-cols-2 gap-3">
             <MoverCol
@@ -762,8 +787,29 @@ export function OperatorBoard({
           </Panel>
         )}
       </div>
+      </div>
 
-      <WatchlistPanel className="mt-3" />
+      {/* ACTO — pessoal */}
+      <div className="board-act">
+        <ActHead
+          title={locale === "pt" ? "A tua lista" : "Your list"}
+          note={locale === "pt" ? "local · sem servidor" : "local · no server"}
+        />
+        <WatchlistPanel />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Cabeçalho de acto. A board lê-se em actos — sem estas âncoras a página é uma
+ * pilha de painéis do mesmo peso, que foi o diagnóstico original.
+ */
+function ActHead({ title, note }: { title: string; note?: string }) {
+  return (
+    <div className="act-head">
+      <h2 className="act-head__title">{title}</h2>
+      {note && <span className="act-head__note">{note}</span>}
     </div>
   );
 }

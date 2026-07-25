@@ -382,18 +382,66 @@ button {
   box-shadow: var(--elev-hero);
 }
 
+/*
+ * Secondary reads RECESSED, not just "same box again". Before, .panel and
+ * .panel-secondary were byte-identical, so the tiers were fiction and the page
+ * read as one flat stack of equal boxes.
+ */
 .panel-secondary {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-instrument);
-  box-shadow: var(--elev-1);
-}
-
-.panel-tertiary {
-  background: transparent;
+  background: var(--bg-elevated);
   border: 1px solid var(--line);
   border-radius: var(--radius-instrument);
   box-shadow: var(--elev-0);
+}
+
+/* Quietest tier — reference material. A hairline, no box. */
+.panel-tertiary {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: var(--elev-0);
+}
+
+/* ——————————————————————————————————————————————————————————
+ * Ritmo — a página é lida em actos, não como uma pilha
+ *
+ * Dentro de um acto os blocos respiram pouco (mt-3); entre actos abre-se um
+ * intervalo largo. É o espaçamento, mais do que a moldura, que agrupa.
+ * —————————————————————————————————————————————————————————— */
+.board-act {
+  margin-top: 3.25rem;
+}
+@media (min-width: 768px) {
+  .board-act {
+    margin-top: 4.5rem;
+  }
+}
+
+/* Cabeçalho de acto — âncora de leitura, com fio luminoso à esquerda */
+.act-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid var(--accent);
+  box-shadow: -1px 0 12px -4px var(--accent-glow);
+}
+.act-head__title {
+  font-family: var(--font-display), Sora, sans-serif;
+  font-size: var(--text-title);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+.act-head__note {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
 }
 
 .card {

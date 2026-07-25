@@ -21,6 +21,17 @@ export function BoardSlowExtras({
 
   return (
     <div className="mx-auto w-full max-w-[1400px] section-pad pb-10">
+      {/* Mesmo ritmo de actos da board — este bloco chega por streaming, mas
+          não deve aterrar no fundo da página sem âncora de leitura. */}
+      <div className="board-act">
+        <div className="act-head">
+          <h2 className="act-head__title">
+            {locale === "pt" ? "Fluxos institucionais" : "Institutional flows"}
+          </h2>
+          <span className="act-head__note">
+            {locale === "pt" ? "ETF · actividade DEX" : "ETF · DEX activity"}
+          </span>
+        </div>
       <div className="grid gap-3 lg:grid-cols-2">
         <section className="border border-line bg-surface p-3">
           <div className="flex items-center justify-between gap-2">
@@ -119,6 +130,7 @@ export function BoardSlowExtras({
             )}
           </ul>
         </section>
+      </div>
       </div>
     </div>
   );
