@@ -523,5 +523,52 @@
     "count": "{n} / {max}",
     "full": "Lista cheia ({max}). Remove um activo primeiro.",
     "dup": "Já está na lista."
+  },
+  "readings": {
+    "todayEyebrow": "O mercado hoje",
+    "watch": "A vigiar",
+    "driver": "Puxa mais",
+    "noData": "Sem dados suficientes para esta leitura.",
+    "partial": "Leitura parcial — falta: {missing}.",
+    "direction": {
+      "label": "Direcção"
+    },
+    "risk": {
+      "label": "Risco"
+    },
+    "money": {
+      "label": "Dinheiro"
+    }
+  },
+  "questions": {
+    "actTitle": "A evidência",
+    "actNote": "um sinal por pergunta",
+    "noSignal": "Sem sinal disponível.",
+    "money": {
+      "q": "O dinheiro está a entrar ou a sair?",
+      "cta": "Ver fluxos"
+    },
+    "risk": {
+      "q": "Há risco de cascata?",
+      "cta": "Ver derivados"
+    },
+    "breadth": {
+      "q": "A subida é ampla ou de meia dúzia?"
+    },
+    "why": {
+      "q": "O que se mexeu, e porquê?",
+      "a": "As hipóteses para cada movimento do dia, com a evidência a favor e contra.",
+      "cta": "Abrir Caso & Efeito"
+    },
+    "rotation": {
+      "q": "Onde está o dinheiro a rodar?",
+      "a": "Que sectores ganham e perdem quota nos últimos dias.",
+      "cta": "Ver sectores"
+    },
+    "broken": {
+      "q": "Há algo partido?",
+      "a": "Stablecoins fora do valor devido e custo da rede.",
+      "cta": "Ver liquidez"
+    }
   }
 }

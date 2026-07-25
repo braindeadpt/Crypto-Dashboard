@@ -46,6 +46,7 @@ async function HomeBoard({ locale }: { locale: string }) {
       market={data.market}
       regime={data.regime}
       ritual={data.ritual}
+      readings={data.readings}
     />
   );
 }

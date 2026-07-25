@@ -523,5 +523,52 @@
     "count": "{n} / {max}",
     "full": "List full ({max}). Remove one first.",
     "dup": "Already on the list."
+  },
+  "readings": {
+    "todayEyebrow": "The market today",
+    "watch": "Watching",
+    "driver": "Main driver",
+    "noData": "Not enough data for this reading.",
+    "partial": "Partial reading — missing: {missing}.",
+    "direction": {
+      "label": "Direction"
+    },
+    "risk": {
+      "label": "Risk"
+    },
+    "money": {
+      "label": "Money"
+    }
+  },
+  "questions": {
+    "actTitle": "The evidence",
+    "actNote": "one signal per question",
+    "noSignal": "No signal available.",
+    "money": {
+      "q": "Is money coming in or going out?",
+      "cta": "See flows"
+    },
+    "risk": {
+      "q": "Is there cascade risk?",
+      "cta": "See derivatives"
+    },
+    "breadth": {
+      "q": "Is the move broad or just a handful?"
+    },
+    "why": {
+      "q": "What moved, and why?",
+      "a": "Hypotheses for each of today's moves, with evidence for and against.",
+      "cta": "Open Case & Effect"
+    },
+    "rotation": {
+      "q": "Where is money rotating?",
+      "a": "Which sectors are gaining and losing share in recent days.",
+      "cta": "See sectors"
+    },
+    "broken": {
+      "q": "Is anything broken?",
+      "a": "Stablecoins off their peg and network cost.",
+      "cta": "See liquidity"
+    }
   }
 }

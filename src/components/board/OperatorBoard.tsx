@@ -1,6 +1,8 @@
 "use client";
 
 import { ActHead } from "@/components/board/boardShared";
+import { QuestionCards } from "@/components/board/QuestionCards";
+import { ReadingHeadline, ReadingTrio } from "@/components/board/ReadingCards";
 import { Pulso } from "@/components/instrument/Pulso";
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
 import { WatchlistPanel } from "@/components/watchlist/WatchlistPanel";
@@ -9,6 +11,7 @@ import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
 import type { DailyRitual } from "@/lib/editorial/ritual";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
+import type { ReadingSet } from "@/lib/reading";
 import type { MarketSnapshot, RegimeResult } from "@/lib/types";
 import { useTranslations } from "next-intl";
 import { useBoardRefresh } from "@/lib/hooks/useBoardRefresh";
@@ -18,14 +21,19 @@ type Props = {
   market: MarketSnapshot;
   regime: RegimeResult;
   ritual: DailyRitual;
+  readings: ReadingSet;
 };
 
 /**
- * Entrada magra (E2): ritual + Pulso + faixa de preço + watchlist.
- * O detalhe (tape, réguas, gráfico, derivados, yields, DEX…) vive em /instrumento.
- * E3 reconstrói Nível 1+2 aqui.
+ * Entrada (E3): Nível 1 responde, Nível 2 mostra a evidência.
+ *
+ * Ordem deliberada — a resposta primeiro, os números depois. Antes a entrada
+ * abria com 105 percentagens e pedia ao leitor que sintetizasse; agora sintetiza
+ * o produto e o detalhe vive em /instrumento.
+ *
+ * Densidade pelo Dial: Essencial = só Nível 1 · Operador/Analista = 1 + 2.
  */
-export function OperatorBoard({ market, regime, ritual }: Props) {
+export function OperatorBoard({ market, regime, ritual, readings }: Props) {
   const t = useTranslations("board");
   const ti = useTranslations("instrumento");
   const { level } = useExpertise();
@@ -50,7 +58,9 @@ export function OperatorBoard({ market, regime, ritual }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter">
-      <DailyRitualCard ritual={ritual} className="mb-3" />
+      {/* NÍVEL 1 — a resposta, antes de qualquer número solto */}
+      <ReadingHeadline readings={readings} />
+      <ReadingTrio readings={readings} />
 
       <Pulso regime={regime} hist={hist} className="mt-3" />
 
@@ -82,6 +92,13 @@ export function OperatorBoard({ market, regime, ritual }: Props) {
           )}
         </div>
       </section>
+
+      {/* NÍVEL 2 — a evidência. Essencial fica-se pelo Nível 1. */}
+      {level !== "citizen" && <QuestionCards readings={readings} />}
+
+      {/* O ritual passa para depois da resposta: quem quer o briefing lê-o a
+          seguir; quem só quer saber o estado já foi servido acima. */}
+      <DailyRitualCard ritual={ritual} className="mt-3" />
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border border-line bg-bg-elevated px-4 py-3">
         <div>
