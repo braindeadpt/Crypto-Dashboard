@@ -178,13 +178,27 @@ export async function fetchTrendingCoins(): Promise<TrendingCoin[]> {
   });
 }
 
-export async function fetchBtcHistoryDays(days = 365) {
+export async function fetchBtcHistoryDays(days: number | "max" = 365) {
   return cachedFetch(`market:btc-history:${days}`, 600_000, async () => {
     const data = await cg<{ prices: [number, number][] }>(
       `/coins/bitcoin/market_chart?vs_currency=usd&days=${days}`,
     );
     return data.prices.map(([t, p]) => ({ time: t, price: p }));
   });
+}
+
+/** Keep SVG paths light — stride so ~maxPoints remain. */
+export function downsampleSeries<T>(
+  points: T[],
+  maxPoints = 180,
+): T[] {
+  if (points.length <= maxPoints) return points;
+  const stride = Math.ceil(points.length / maxPoints);
+  const out: T[] = [];
+  for (let i = 0; i < points.length; i += stride) out.push(points[i]!);
+  const last = points[points.length - 1]!;
+  if (out[out.length - 1] !== last) out.push(last);
+  return out;
 }
 
 /** Quotes for arbitrary CoinGecko ids (watchlist). Max ~50 ids. */

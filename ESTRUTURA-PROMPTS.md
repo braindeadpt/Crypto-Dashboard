@@ -25,7 +25,10 @@ Um prompt de cada vez, um commit por prompt.
 > **E5 — JÁ FEITO.** `/mundo` centrado em Caso & Efeito (`CaseEffectStage` +
 > horizonte / sinais / força das hipóteses), sectores ligados aos casos.
 >
-> **Começar no E3** (se ainda não na UI) ou **E6**. Ordem restante: E3 → E6 → E7 → E8.
+> **E6 — JÁ FEITO.** `/contexto` com SVGs: fase do ciclo, série histórica BTC,
+> timeline navegável, diagramas no Atlas, Portugal datado/com fonte/orientação.
+>
+> Ordem restante: E7 → E8. (E3 leituras na UI se ainda em falta.)
 >
 > Ao chegar ao E3, importar de `@/lib/reading` e usar `buildReadingSet` — não
 > construir outro cálculo a competir com este.

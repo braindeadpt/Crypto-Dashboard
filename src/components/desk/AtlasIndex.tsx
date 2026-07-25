@@ -1,5 +1,6 @@
 "use client";
 
+import { AtlasDiagram } from "@/components/atlas/AtlasDiagram";
 import { ATLAS } from "@/lib/content/atlas";
 import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -23,9 +24,9 @@ export function AtlasIndex() {
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-6 enter">
       <header className="max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
           {t("title")}
-        </h1>
+        </h2>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
         <input
           value={q}
@@ -36,24 +37,26 @@ export function AtlasIndex() {
       </header>
 
       <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((c) => (
-          <li key={c.slug}>
-            <Link
-              href={`/atlas/${c.slug}`}
-              className="card block h-full p-4 transition hover:border-accent/40 hover:bg-surface-2"
-            >
-              <p className="text-xs font-semibold uppercase tracking-wide text-faint">
-                {t(c.level)}
-              </p>
-              <h2 className="mt-1 text-lg font-semibold">
-                {locale === "pt" ? c.titlePt : c.titleEn}
-              </h2>
-              <p className="mt-2 line-clamp-3 text-sm text-muted">
-                {locale === "pt" ? c.summaryPt : c.summaryEn}
-              </p>
-            </Link>
-          </li>
-        ))}
+        {filtered.map((c) => {
+          const title = locale === "pt" ? c.titlePt : c.titleEn;
+          return (
+            <li key={c.slug}>
+              <Link
+                href={`/atlas/${c.slug}`}
+                className="block h-full border border-line bg-surface p-4 transition hover:border-accent/40 hover:bg-surface-2"
+              >
+                <AtlasDiagram slug={c.slug} title={title} className="mb-3 max-w-none" />
+                <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+                  {t(c.level)}
+                </p>
+                <h3 className="mt-1 text-lg font-semibold">{title}</h3>
+                <p className="mt-2 line-clamp-3 text-sm text-muted">
+                  {locale === "pt" ? c.summaryPt : c.summaryEn}
+                </p>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
 import { useExpertise } from "@/components/expertise/ExpertiseProvider";
+import { AtlasDiagram } from "@/components/atlas/AtlasDiagram";
 import { AtlasIndex } from "@/components/desk/AtlasIndex";
 import { CycleDesk } from "@/components/desk/CycleDesk";
 import { PortugalDesk } from "@/components/desk/PortugalDesk";
@@ -56,21 +57,27 @@ export function ContextoDesk({ cycle }: Props) {
             <ExpertiseGate section="readings">
               <p className="mt-1 text-meta text-muted">{t("atlasHint")}</p>
             </ExpertiseGate>
-            <ul className="mt-6 grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
               {ATLAS.filter((c) => c.level === "beginner")
                 .slice(0, 6)
-                .map((c) => (
-                  <li key={c.slug}>
-                    <Link
-                      href={`/atlas/${c.slug}`}
-                      className="block border border-line bg-surface p-3 hover:border-accent/40"
-                    >
-                      <span className="font-medium">
-                        {locale === "pt" ? c.titlePt : c.titleEn}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
+                .map((c) => {
+                  const title = locale === "pt" ? c.titlePt : c.titleEn;
+                  return (
+                    <li key={c.slug}>
+                      <Link
+                        href={`/atlas/${c.slug}`}
+                        className="block border border-line bg-surface p-3 hover:border-accent/40"
+                      >
+                        <AtlasDiagram
+                          slug={c.slug}
+                          title={title}
+                          className="mb-2 max-w-none"
+                        />
+                        <span className="font-medium">{title}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         )}

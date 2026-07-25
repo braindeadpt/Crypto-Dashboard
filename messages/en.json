@@ -105,7 +105,19 @@
       "distribution": "Distribution",
       "bear": "Bear market",
       "early": "Early cycle"
-    }
+    },
+    "phaseVizTitle": "Where we are in the ~4-year cycle",
+    "phaseVizAria": "Phase {phase}, about {pct} percent since the last halving",
+    "phaseVizHint": "Heuristic map aligned to halvings — not a forecast or physical law.",
+    "youAreHere": "Here",
+    "historyVizTitle": "BTC historical series (log scale)",
+    "historyVizAria": "Bitcoin price chart on a log scale with halving markers",
+    "historyVizHint": "Source: CoinGecko. H lines = halvings. Historical correlation ≠ causation.",
+    "historyUnavailable": "Historical series unavailable right now — cycle position above still stands.",
+    "timelineNavHint": "Click a point or use previous/next",
+    "timelineAria": "Navigable Bitcoin event timeline",
+    "timelinePrev": "Previous",
+    "timelineNext": "Next"
   },
   "sentiment": {
     "title": "Sentiment",
@@ -149,7 +161,14 @@
     "cmvm": "CMVM and supervision",
     "custody": "Custody and risk",
     "tax": "Taxation (orientation)",
-    "links": "Official links"
+    "links": "Official links",
+    "orientationBadge": "Orientation · not advice",
+    "reviewedAt": "Lane reviewed {date}",
+    "asOf": "As of {date}",
+    "howTo": "How to proceed",
+    "examples": "Practical examples",
+    "sources": "Sources",
+    "uncertainty": "Uncertainty"
   },
   "atlas": {
     "title": "Learn",

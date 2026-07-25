@@ -105,7 +105,19 @@
       "distribution": "Distribuição",
       "bear": "Mercado em baixa",
       "early": "Início de ciclo"
-    }
+    },
+    "phaseVizTitle": "Onde estamos no ciclo de ~4 anos",
+    "phaseVizAria": "Fase {phase}, cerca de {pct} por cento desde o último halving",
+    "phaseVizHint": "Mapa heurístico alinhado aos halvings — não é previsão nem lei física.",
+    "youAreHere": "Aqui",
+    "historyVizTitle": "Série histórica BTC (escala log)",
+    "historyVizAria": "Gráfico do preço do Bitcoin em escala logarítmica com marcações de halving",
+    "historyVizHint": "Fonte: CoinGecko. Linhas H = halvings. Correlação histórica ≠ causalidade.",
+    "historyUnavailable": "Série histórica indisponível neste momento — a posição no ciclo acima continua válida.",
+    "timelineNavHint": "Clica num ponto ou usa anterior/seguinte",
+    "timelineAria": "Linha do tempo navegável de eventos do Bitcoin",
+    "timelinePrev": "Anterior",
+    "timelineNext": "Seguinte"
   },
   "sentiment": {
     "title": "Sentimento",
@@ -149,7 +161,14 @@
     "cmvm": "CMVM e supervisão",
     "custody": "Custódia e risco",
     "tax": "Fiscalidade (orientação)",
-    "links": "Ligações oficiais"
+    "links": "Ligações oficiais",
+    "orientationBadge": "Orientação · não aconselhamento",
+    "reviewedAt": "Faixa revista em {date}",
+    "asOf": "Datado {date}",
+    "howTo": "Como proceder",
+    "examples": "Exemplos práticos",
+    "sources": "Fontes",
+    "uncertainty": "Incerteza"
   },
   "atlas": {
     "title": "Aprender",

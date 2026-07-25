@@ -207,6 +207,11 @@ export interface TimelineEvent {
   priceHint?: string;
 }
 
+export interface CyclePricePoint {
+  time: number;
+  price: number;
+}
+
 export interface CycleSnapshot {
   phase: "accumulation" | "bull" | "distribution" | "bear" | "early";
   phaseLabelPt: string;
@@ -221,5 +226,7 @@ export interface CycleSnapshot {
   };
   cycleProgressPct: number;
   athDistancePct: number | null;
+  /** Downsampled BTC USD series for cycle chart (empty if unavailable). */
+  priceHistory: CyclePricePoint[];
   updatedAt: string;
 }

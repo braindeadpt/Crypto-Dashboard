@@ -1,5 +1,6 @@
 "use client";
 
+import { AtlasDiagram } from "@/components/atlas/AtlasDiagram";
 import { getConcept } from "@/lib/content/atlas";
 import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -10,6 +11,7 @@ export function AtlasArticle({ slug }: { slug: string }) {
   const locale = useLocale();
   const concept = getConcept(slug);
   if (!concept) notFound();
+  const title = locale === "pt" ? concept.titlePt : concept.titleEn;
 
   return (
     <article className="mx-auto max-w-3xl px-4 pb-20 pt-6 md:px-6 enter">
@@ -19,13 +21,12 @@ export function AtlasArticle({ slug }: { slug: string }) {
       <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-faint">
         {t("level")}: {t(concept.level)}
       </p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-tight">
-        {locale === "pt" ? concept.titlePt : concept.titleEn}
-      </h1>
+      <h1 className="mt-2 text-4xl font-semibold tracking-tight">{title}</h1>
       <p className="mt-3 text-lg text-muted">
         {locale === "pt" ? concept.summaryPt : concept.summaryEn}
       </p>
-      <div className="card mt-8 p-6 leading-relaxed text-ink">
+      <AtlasDiagram slug={concept.slug} title={title} className="mt-6 max-w-sm" />
+      <div className="mt-8 border border-line bg-surface p-6 leading-relaxed text-ink">
         {locale === "pt" ? concept.bodyPt : concept.bodyEn}
       </div>
 
@@ -37,10 +38,7 @@ export function AtlasArticle({ slug }: { slug: string }) {
           <ul className="mt-3 flex flex-wrap gap-2">
             {concept.relatedSlugs.map((s) => (
               <li key={s}>
-                <Link
-                  href={`/atlas/${s}`}
-                  className="chip hover:border-accent"
-                >
+                <Link href={`/atlas/${s}`} className="chip hover:border-accent">
                   {s}
                 </Link>
               </li>

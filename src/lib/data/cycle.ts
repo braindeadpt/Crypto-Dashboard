@@ -1,20 +1,29 @@
-import { fetchBtcHistoryDays, fetchMarketSnapshot } from "@/lib/data/coingecko";
-import type { CycleSnapshot } from "@/lib/types";
+import {
+  downsampleSeries,
+  fetchBtcHistoryDays,
+  fetchMarketSnapshot,
+} from "@/lib/data/coingecko";
+import type { CyclePricePoint, CycleSnapshot } from "@/lib/types";
 
 /** Approx next halving ~ April 2028 (block 1,050,000) */
 const LAST_HALVING = "2024-04-20";
 const NEXT_HALVING_ESTIMATE = "2028-04-15";
 
 export async function fetchCycleSnapshot(): Promise<CycleSnapshot> {
-  const [market, history] = await Promise.all([
+  const [market, history1y, historyMax] = await Promise.all([
     fetchMarketSnapshot(),
-    fetchBtcHistoryDays(365).catch(() => [] as { time: number; price: number }[]),
+    fetchBtcHistoryDays(365).catch(() => [] as CyclePricePoint[]),
+    fetchBtcHistoryDays("max").catch(() => [] as CyclePricePoint[]),
   ]);
 
   const price = market.btc.price;
-  const prices = history.map((h) => h.price);
+  const prices = history1y.map((h) => h.price);
   const ath = prices.length ? Math.max(...prices, price) : price;
   const athDistancePct = ath > 0 ? ((price - ath) / ath) * 100 : null;
+  const priceHistory = downsampleSeries(
+    historyMax.length ? historyMax : history1y,
+    200,
+  );
 
   const next = new Date(NEXT_HALVING_ESTIMATE);
   const daysLeft = Math.max(
@@ -91,6 +100,7 @@ export async function fetchCycleSnapshot(): Promise<CycleSnapshot> {
     },
     cycleProgressPct,
     athDistancePct,
+    priceHistory,
     updatedAt: new Date().toISOString(),
   };
 }
