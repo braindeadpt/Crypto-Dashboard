@@ -1,9 +1,20 @@
 # CLAREZA — Prompts de execução: reestruturação da informação
 
 Executa `PLANO-INFORMACAO.md`. **Envia o E0 primeiro em cada sessão nova.**
-Um prompt de cada vez, um commit por prompt, pela ordem E1 → E8.
+Um prompt de cada vez, um commit por prompt.
 
-E1 e E2 são a fundação (leituras compostas + casa para o excesso). **Não saltar.**
+> ## ESTADO
+>
+> **E1 — JÁ FEITO** (commit `0ea344a`). **Não repetir.** As três leituras vivem
+> em `src/lib/reading/` (`buildReadingSet`, `computeDirection`, `computeRisk`,
+> `computeMoney`), com contributos, lacunas nomeadas, confiança proporcional ao
+> peso coberto e 9 testes em `reading.test.ts`. **Estão construídas mas ainda
+> NÃO ligadas à UI** — isso é o E3.
+>
+> **Começar no E2.** Ordem restante: E2 → E3 → E4 → E5 → E6 → E7 → E8.
+>
+> Ao chegar ao E3, importar de `@/lib/reading` e usar `buildReadingSet` — não
+> construir outro cálculo a competir com este.
 
 ---
 
