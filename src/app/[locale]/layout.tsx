@@ -1,5 +1,8 @@
 import { SiteFooter, SiteHeader } from "@/components/layout/SiteChrome";
+import { SkipLink } from "@/components/layout/SkipLink";
 import { HtmlLang } from "@/components/layout/HtmlLang";
+import { ExpertiseProvider } from "@/components/expertise/ExpertiseProvider";
+import { WatchlistProvider } from "@/components/watchlist/WatchlistProvider";
 import { routing } from "@/i18n/routing";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -26,12 +29,19 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <HtmlLang />
-      <div className="flex min-h-screen w-full flex-col">
-        <SiteHeader />
-        <main className="w-full flex-1">{children}</main>
-        <SiteFooter />
-      </div>
+      <ExpertiseProvider>
+        <WatchlistProvider>
+          <HtmlLang />
+          <SkipLink />
+          <div className="flex min-h-screen w-full min-w-0 flex-col">
+            <SiteHeader />
+            <main id="main" className="w-full min-w-0 flex-1" tabIndex={-1}>
+              {children}
+            </main>
+            <SiteFooter />
+          </div>
+        </WatchlistProvider>
+      </ExpertiseProvider>
     </NextIntlClientProvider>
   );
 }

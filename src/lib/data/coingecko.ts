@@ -163,6 +163,55 @@ export async function fetchBtcHistoryDays(days = 365) {
   });
 }
 
+/** Quotes for arbitrary CoinGecko ids (watchlist). Max ~50 ids. */
+export async function fetchMarketsByIds(ids: string[]): Promise<AssetQuote[]> {
+  const clean = [...new Set(ids.map((id) => id.trim().toLowerCase()).filter(Boolean))];
+  if (!clean.length) return [];
+  const key = `market:ids:${clean.slice().sort().join(",")}`;
+  return cachedFetch(key, 90_000, async () => {
+    try {
+      const markets = await cg<CgMarket[]>(
+        `/coins/markets?vs_currency=usd&ids=${encodeURIComponent(clean.join(","))}&order=market_cap_desc&sparkline=false&price_change_percentage=1h%2C24h%2C7d`,
+      );
+      return markets.map(toQuote);
+    } catch {
+      return [];
+    }
+  });
+}
+
+export type CoinSearchHit = {
+  id: string;
+  symbol: string;
+  name: string;
+  marketCapRank: number | null;
+};
+
+export async function searchCoins(query: string, limit = 8): Promise<CoinSearchHit[]> {
+  const q = query.trim();
+  if (q.length < 2) return [];
+  return cachedFetch(`market:search:${q.toLowerCase()}`, 120_000, async () => {
+    try {
+      const data = await cg<{
+        coins: {
+          id: string;
+          name: string;
+          symbol: string;
+          market_cap_rank: number | null;
+        }[];
+      }>(`/search?query=${encodeURIComponent(q)}`);
+      return (data.coins ?? []).slice(0, limit).map((c) => ({
+        id: c.id,
+        symbol: c.symbol.toUpperCase(),
+        name: c.name,
+        marketCapRank: c.market_cap_rank,
+      }));
+    } catch {
+      return [];
+    }
+  });
+}
+
 /** Memecoins by volume — CoinGecko category (≠ DEX liquidity). */
 export async function fetchMemeMarkets(perPage = 30): Promise<AssetQuote[]> {
   return cachedFetch("market:memes", 150_000, async () => {

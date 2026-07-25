@@ -13,7 +13,7 @@ export function AtlasArticle({ slug }: { slug: string }) {
 
   return (
     <article className="mx-auto max-w-3xl px-4 pb-20 pt-6 md:px-6 enter">
-      <Link href="/atlas" className="text-sm font-semibold text-accent">
+      <Link href="/contexto" className="text-sm font-semibold text-accent">
         ← {t("title")}
       </Link>
       <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-faint">

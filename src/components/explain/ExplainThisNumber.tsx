@@ -1,5 +1,6 @@
 "use client";
 
+import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import { cn } from "@/lib/format";
 import { useTranslations } from "next-intl";
 import { useId, useState, type ReactNode } from "react";
@@ -13,6 +14,12 @@ type Props = {
   className?: string;
 };
 
+/**
+ * Density-aware explanation:
+ * - Essencial: meaning always visible
+ * - Operador: click to expand
+ * - Analista: value only (optional method behind nothing — raw if methodSources)
+ */
 export function ExplainThisNumber({
   value,
   meaning,
@@ -23,8 +30,36 @@ export function ExplainThisNumber({
 }: Props) {
   const t = useTranslations("explain");
   const common = useTranslations("common");
+  const { level, show } = useExpertise();
   const [open, setOpen] = useState(false);
   const id = useId();
+
+  if (level === "analyst") {
+    return (
+      <div className={cn(className)}>
+        <div className="font-mono text-3xl font-medium tracking-tight tabular-nums text-ink">
+          {value}
+        </div>
+        {show("methodSources") && (
+          <p className="mt-1 font-mono text-[0.65rem] text-faint">
+            {source}
+            {updatedAt ? ` · ${new Date(updatedAt).toLocaleString()}` : ""}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  if (level === "citizen") {
+    return (
+      <div className={cn(className)}>
+        <div className="font-mono text-3xl font-medium tracking-tight tabular-nums text-ink">
+          {value}
+        </div>
+        <p className="mt-2 max-w-sm text-meta text-muted">{meaning}</p>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("relative", className)}>

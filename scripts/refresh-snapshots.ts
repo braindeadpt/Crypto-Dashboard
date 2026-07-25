@@ -152,7 +152,7 @@ async function main() {
   const started = Date.now();
   const result = await refreshHeavySnapshots();
   console.log(
-    `Done in ${((Date.now() - started) / 1000).toFixed(1)}s — yields=${result.yieldsPools} protocols=${result.defiProtocols} etfOk=${result.etfOk} TVL=${result.tvlSource}`,
+    `Done in ${((Date.now() - started) / 1000).toFixed(1)}s — yields=${result.yieldsPools} protocols=${result.defiProtocols} etfOk=${result.etfOk} TVL=${result.tvlSource} historyPts=${result.historyPoints}`,
   );
   if (!result.etfOk) {
     console.log("Retrying ETF via curl seed (offline ingest only)…");

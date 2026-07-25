@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test:unit": "npx --yes tsx --test src/lib/regime/engine.test.ts",
+    "test:unit": "npx --yes tsx --test src/lib/regime/engine.test.ts src/lib/stats/context.test.ts src/lib/viz/squarify.test.ts src/lib/history/deltas.test.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "snapshots:refresh": "npx --yes tsx scripts/refresh-snapshots.ts",

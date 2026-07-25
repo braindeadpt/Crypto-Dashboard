@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 
 type Props = {
   compact?: boolean;
-  href?: "/sentimento" | null;
+  href?: "/fluxos" | "/sentimento" | null;
 };
 
 function connectionLabel(
@@ -23,7 +23,7 @@ function connectionLabel(
   return t("liqConnecting");
 }
 
-export function LiveLiquidations({ compact = false, href = "/sentimento" }: Props) {
+export function LiveLiquidations({ compact = false, href = "/fluxos" }: Props) {
   const t = useTranslations("board");
   const data = useForceLiquidations();
   const top = data.events.slice(0, compact ? 4 : 8);

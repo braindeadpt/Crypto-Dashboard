@@ -54,18 +54,18 @@ export function LabDesk({
       </div>
 
       <div className="mt-8">
-        <LiveLiquidations href="/sentimento" />
+        <LiveLiquidations href="/fluxos" />
       </div>
 
       <div className="mt-8 flex flex-wrap gap-4 text-sm font-semibold">
-        <Link href="/sentimento" className="text-accent">
-          Sentimento →
+        <Link href="/fluxos" className="text-accent">
+          Fluxos →
         </Link>
-        <Link href="/mercado" className="text-accent">
-          Mercado →
+        <Link href="/mundo" className="text-accent">
+          Mundo →
         </Link>
-        <Link href="/graficos" className="text-accent">
-          Gráficos →
+        <Link href="/" className="text-accent">
+          Agora →
         </Link>
       </div>
     </div>

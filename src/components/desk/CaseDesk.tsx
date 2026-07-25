@@ -16,7 +16,7 @@ export function CaseDesk({ caseFile }: { caseFile: CaseFile }) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-20 pt-6 md:px-6 enter">
-      <Link href="/caso" className="text-meta text-accent">
+      <Link href="/mundo" className="text-meta text-accent">
         ← {t("back")}
       </Link>
 

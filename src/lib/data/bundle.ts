@@ -6,7 +6,11 @@ import { fetchDerivativesSnapshot } from "@/lib/data/derivatives";
 import { fetchEtfSnapshot } from "@/lib/data/etf";
 import { fetchMarketSnapshot } from "@/lib/data/coingecko";
 import { fetchSentimentSnapshot } from "@/lib/data/sentiment";
-import { buildDeterministicBrief } from "@/lib/editorial/brief";
+import {
+  buildDailyRitual,
+  ritualToBriefItem,
+} from "@/lib/editorial/ritual";
+import { getHistoryDayDeltas } from "@/lib/history/deltas";
 import { computeBreadthPct, computeRegime } from "@/lib/regime/engine";
 import type { DefiSnapshot, RegimeResult } from "@/lib/types";
 
@@ -116,14 +120,31 @@ export async function getRegimeBundle(): Promise<{
 }
 
 export async function getFrontPageData() {
-  const { regime, market, sentiment, defi, caseContext } =
-    await getRegimeBundle();
+  const [{ regime, market, sentiment, defi, caseContext }, { deltas }] =
+    await Promise.all([getRegimeBundle(), getHistoryDayDeltas()]);
   const cases = buildDailyCases(
     [...market.movers.gainers, ...market.movers.losers],
     caseContext,
   );
-  const brief = buildDeterministicBrief({ market, regime, sentiment });
+  const ritual = buildDailyRitual({
+    market,
+    regime,
+    sentiment,
+    deltas,
+    cases,
+  });
+  const brief = ritualToBriefItem(ritual);
   const cycle = await fetchCycleSnapshot().catch(() => null);
 
-  return { regime, market, sentiment, cases, brief, cycle, defi, caseContext };
+  return {
+    regime,
+    market,
+    sentiment,
+    cases,
+    brief,
+    ritual,
+    cycle,
+    defi,
+    caseContext,
+  };
 }

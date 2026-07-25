@@ -5,16 +5,28 @@ import type { EtfAssetFlows, EtfSnapshot } from "@/lib/data/etf";
 import { cn, formatUsdMillions } from "@/lib/format";
 import { useLocale, useTranslations } from "next-intl";
 
-export function EtfDesk({ data }: { data: EtfSnapshot }) {
+export function EtfDesk({
+  data,
+  embedded = false,
+}: {
+  data: EtfSnapshot;
+  embedded?: boolean;
+}) {
   const t = useTranslations("etf");
   const locale = useLocale();
 
   return (
-    <div className="mx-auto max-w-[1400px] section-pad pb-20 pt-6 enter">
+    <div
+      className={`mx-auto max-w-[1400px] section-pad pb-20 enter ${embedded ? "pt-8" : "pt-6"}`}
+    >
       <header className="max-w-3xl">
-        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
-          {t("title")}
-        </h1>
+        {embedded ? (
+          <h2 className="font-display text-title text-ink">{t("title")}</h2>
+        ) : (
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+            {t("title")}
+          </h1>
+        )}
         <p className="mt-2 text-sm text-muted">{t("subtitle")}</p>
         {data.stale && (
           <p className="mt-2 font-mono text-[0.7rem] text-warn">

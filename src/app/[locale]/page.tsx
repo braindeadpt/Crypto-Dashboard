@@ -66,6 +66,7 @@ async function HomeBoard({ locale }: { locale: string }) {
         market={data.market}
         sentiment={data.sentiment}
         regime={data.regime}
+        ritual={data.ritual}
         defi={data.defi}
         yields={yieldsBundle.pools}
         etf={null}

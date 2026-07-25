@@ -2,11 +2,21 @@
 
 import { LiveLiquidations } from "@/components/board/LiveLiquidations";
 import { PriceChart } from "@/components/charts/PriceChart";
+import { Regua } from "@/components/instrument/Regua";
+import { Pulso } from "@/components/instrument/Pulso";
+import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
+import { WatchlistPanel } from "@/components/watchlist/WatchlistPanel";
+import { useWatchlist } from "@/components/watchlist/WatchlistProvider";
+import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
+import { useExpertise } from "@/components/expertise/ExpertiseProvider";
+import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
 import type { DerivativesSnapshot } from "@/lib/data/derivatives";
 import type { DexFrenzySnapshot } from "@/lib/data/dex";
 import type { EtfSnapshot } from "@/lib/data/etf";
 import type { MempoolFees } from "@/lib/data/mempool";
+import type { DailyRitual } from "@/lib/editorial/ritual";
+import type { MetricContextApi } from "@/lib/history/context";
 import { deltaClass, formatPct, formatUsd, formatUsdMillions } from "@/lib/format";
 import type {
   DefiSnapshot,
@@ -39,6 +49,7 @@ type Props = {
   market: MarketSnapshot;
   sentiment: SentimentSnapshot;
   regime: RegimeResult;
+  ritual: DailyRitual;
   defi: DefiSnapshot | null;
   yields: YieldPool[];
   etf: EtfSnapshot | null;
@@ -52,6 +63,7 @@ export function OperatorBoard({
   market,
   sentiment,
   regime,
+  ritual,
   defi,
   yields,
   etf,
@@ -62,6 +74,7 @@ export function OperatorBoard({
 }: Props) {
   const t = useTranslations("board");
   const locale = useLocale();
+  const watch = useWatchlist();
   const [symbol, setSymbol] = useState<"BTCUSDT" | "ETHUSDT" | "SOLUSDT">(
     "BTCUSDT",
   );
@@ -86,6 +99,9 @@ export function OperatorBoard({
       : {}),
   });
   useBoardRefresh();
+  const hist = useHistoryContexts();
+  const histLocale = locale === "pt" ? "pt" : "en";
+  const { show } = useExpertise();
 
   const btcPx = live.quotes.BTCUSDT?.price ?? market.btc.price;
   const btcChg = live.quotes.BTCUSDT?.change24h ?? market.btc.change24h;
@@ -96,8 +112,11 @@ export function OperatorBoard({
 
   return (
     <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter">
-      {/* TAPE */}
-      <div className="flex items-center gap-0 overflow-x-auto border border-line bg-bg-elevated">
+      {/* Daily ritual — retention anchor */}
+      <DailyRitualCard ritual={ritual} className="mb-3" />
+
+      {/* TAPE — scrolls inside container, never the body */}
+      <div className="scroll-x flex items-center gap-0 border border-line bg-bg-elevated">
         <LiveStatus
           connection={live.connection}
           lastUpdate={live.lastUpdate}
@@ -126,104 +145,204 @@ export function OperatorBoard({
             flashKey={solPx}
           />
         )}
+        {watch.quotes
+          .filter((q) => !["bitcoin", "ethereum", "solana"].includes(q.id))
+          .slice(0, 6)
+          .map((q) => (
+            <TapeItem
+              key={q.id}
+              label={q.symbol}
+              value={formatUsd(q.price)}
+              change={q.change24h}
+              flashKey={q.price}
+              watched
+            />
+          ))}
         <TapeItem
           label="MCAP"
           value={formatUsd(market.global.totalMarketCap, true)}
           change={market.global.marketCapChange24h}
         />
-        <TapeItem label="BTC.D" value={`${market.global.btcDominance.toFixed(1)}%`} />
-        <TapeItem label="F&G" value={String(sentiment.fearGreed.value)} />
+        <TapeItem
+          label="BTC.D"
+          value={`${market.global.btcDominance.toFixed(1)}%`}
+          history={hist.btc_dominance}
+          historyLocale={histLocale}
+        />
+        <TapeItem
+          label="F&G"
+          value={String(sentiment.fearGreed.value)}
+          history={hist.fear_greed}
+          historyLocale={histLocale}
+        />
         {etf?.btc.latest && (
           <TapeItem
             label="ETF BTC"
             value={formatUsdMillions(etf.btc.latest.totalUsdM, 0)}
             change={etf.btc.latest.totalUsdM}
             changeIsAbs
+            history={hist.etf_btc_flow}
+            historyLocale={histLocale}
           />
         )}
         {btcPerp && (
           <TapeItem
             label="FUND BTC"
             value={`${(btcPerp.fundingRate * 100).toFixed(4)}%`}
+            history={hist.funding_btc}
+            historyLocale={histLocale}
+            historyStretched
           />
         )}
-        {ethPerp && (
+        {btcPerp && (
           <TapeItem
-            label="FUND ETH"
-            value={`${(ethPerp.fundingRate * 100).toFixed(4)}%`}
+            label="OI BTC"
+            value={formatUsd(btcPerp.openInterestUsd, true)}
+            history={hist.oi_btc}
+            historyLocale={histLocale}
           />
-        )}
-        {solPerp && (
-          <TapeItem
-            label="FUND SOL"
-            value={`${(solPerp.fundingRate * 100).toFixed(4)}%`}
-          />
-        )}
-        {btcPerp?.oiChange24hPct != null && (
-          <TapeItem
-            label="OI Δ BTC"
-            value={formatPct(btcPerp.oiChange24hPct)}
-            change={btcPerp.oiChange24hPct}
-          />
-        )}
-        {btcPerp?.longShortRatio != null && (
-          <TapeItem label="L/S BTC" value={btcPerp.longShortRatio.toFixed(2)} />
         )}
         {mempool && (
-          <TapeItem label="FEE BTC" value={`${mempool.fastestFee} sat`} />
+          <TapeItem
+            label="FEE BTC"
+            value={`${mempool.fastestFee} sat`}
+            history={hist.fee_btc}
+            historyLocale={histLocale}
+          />
+        )}
+        <TapeItem
+          label="BREADTH"
+          value={`${breadth}%`}
+          history={hist.breadth}
+          historyLocale={histLocale}
+        />
+        {hist.vol_realized_btc && show("tapeExtended") && (
+          <TapeItem
+            label="VOL R"
+            value={`${hist.vol_realized_btc.valor.toFixed(0)}%`}
+            history={hist.vol_realized_btc}
+            historyLocale={histLocale}
+          />
+        )}
+        {hist.volume_btc && show("tapeExtended") && (
+          <TapeItem
+            label="VOL $"
+            value={formatUsd(hist.volume_btc.valor, true)}
+            history={hist.volume_btc}
+            historyLocale={histLocale}
+          />
         )}
         <TapeItem label="STRESS" value={`${regime.score}`} />
-        <TapeItem label="BREADTH" value={`${breadth}%`} />
       </div>
 
-      {/* HERO — market state now (~20% visual weight) */}
-      <section
-        className={`panel-hero mt-3 p-4 md:p-5 ${
-          regime.score >= 60 || Math.abs(btcChg) >= 4 ? "threshold-flash" : ""
-        }`}
-      >
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-label text-faint">{t("marketNow")}</p>
-            <div className="mt-2 flex flex-wrap items-baseline gap-3">
-              <h1 className="text-hero text-ink">
-                BTC{" "}
-                <span className={deltaClass(btcChg)}>{formatUsd(btcPx)}</span>
-              </h1>
-              <span
-                className={`text-data ${deltaClass(btcChg)}`}
-                aria-label={`${btcChg >= 0 ? "up" : "down"} ${formatPct(btcChg)}`}
-              >
-                {btcChg >= 0 ? "▲" : "▼"} {formatPct(btcChg)}
-              </span>
-            </div>
-            <p className="mt-2 max-w-2xl text-body text-muted">
-              {locale === "pt" ? regime.headlinePt : regime.headlineEn}
+      {/* O PULSO — signature hero */}
+      <Pulso regime={regime} hist={hist} className="mt-3" />
+
+      {/* Price strip under pulse */}
+      <section className="mt-3 flex flex-wrap items-end justify-between gap-3 border border-line bg-surface px-4 py-3">
+        <div>
+          <p className="text-label text-faint">{t("marketNow")}</p>
+          <p className="mt-1 font-display text-display text-ink">
+            BTC{" "}
+            <span className={deltaClass(btcChg)}>{formatUsd(btcPx)}</span>
+            <span className={`ml-3 text-data ${deltaClass(btcChg)}`}>
+              {btcChg >= 0 ? "▲" : "▼"} {formatPct(btcChg)}
+            </span>
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-4">
+          <div>
+            <p className="text-label text-faint">ETH</p>
+            <p className={`text-data ${deltaClass(ethChg)}`}>
+              {formatUsd(ethPx)} · {formatPct(ethChg)}
             </p>
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <span
-              className={`chip chip-${regime.posture}`}
-              title={t("postureLabel")}
-            >
-              {t(`posture.${regime.posture}`)}
-            </span>
-            <div className="text-right">
-              <p className="text-label text-faint">{t("stressLabel")}</p>
-              <p className="text-title tabular-nums text-ink">{regime.score}</p>
-            </div>
-            {topContributors[0] && (
-              <p className="max-w-[16rem] text-right text-meta text-faint">
-                {locale === "pt"
-                  ? topContributors[0].labelPt
-                  : topContributors[0].labelEn}
-                <span className="text-warn"> +{topContributors[0].points}</span>
+          {solPx != null && solChg != null && (
+            <div>
+              <p className="text-label text-faint">SOL</p>
+              <p className={`text-data ${deltaClass(solChg)}`}>
+                {formatUsd(solPx)} · {formatPct(solChg)}
               </p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
+      {/* Expanded réguas — operator+ */}
+      <ExpertiseGate section="reguaExpanded">
+      <section className="panel-secondary mt-3 p-3 md:p-4">
+        <h2 className="text-label text-faint">
+          {locale === "pt" ? "A Régua · distribuição 90d" : "The Ruler · 90d distribution"}
+        </h2>
+        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ExpandedMetric
+            label="Funding BTC"
+            value={
+              btcPerp
+                ? `${(btcPerp.fundingRate * 100).toFixed(4)}%`
+                : "—"
+            }
+            history={hist.funding_btc}
+            locale={histLocale}
+            stretched
+          />
+          <ExpandedMetric
+            label="Fear & Greed"
+            value={String(sentiment.fearGreed.value)}
+            history={hist.fear_greed}
+            locale={histLocale}
+          />
+          <ExpandedMetric
+            label={locale === "pt" ? "Amplitude" : "Breadth"}
+            value={`${breadth}%`}
+            history={hist.breadth}
+            locale={histLocale}
+          />
+          <ExpandedMetric
+            label="OI BTC"
+            value={
+              btcPerp ? formatUsd(btcPerp.openInterestUsd, true) : "—"
+            }
+            history={hist.oi_btc}
+            locale={histLocale}
+          />
+          <ExpandedMetric
+            label="ETF BTC"
+            value={
+              etf?.btc.latest
+                ? formatUsdMillions(etf.btc.latest.totalUsdM, 0)
+                : "—"
+            }
+            history={hist.etf_btc_flow}
+            locale={histLocale}
+          />
+          <ExpandedMetric
+            label={locale === "pt" ? "Vol. realizada" : "Realized vol"}
+            value={
+              hist.vol_realized_btc
+                ? `${hist.vol_realized_btc.valor.toFixed(1)}%`
+                : "—"
+            }
+            history={hist.vol_realized_btc}
+            locale={histLocale}
+          />
+          <ExpandedMetric
+            label="TVL DeFi"
+            value={defi ? formatUsd(defi.totalTvl, true) : "—"}
+            history={hist.tvl}
+            locale={histLocale}
+          />
+          <ExpandedMetric
+            label={locale === "pt" ? "Taxa BTC" : "BTC fee"}
+            value={mempool ? `${mempool.fastestFee} sat/vB` : "—"}
+            history={hist.fee_btc}
+            locale={histLocale}
+          />
+        </div>
+      </section>
+      </ExpertiseGate>
+
+      <ExpertiseGate section="boardSecondary">
       {/* SPOT VS ALAVANCA */}
       <section className="panel-secondary mt-3 p-3 md:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -239,7 +358,7 @@ export function OperatorBoard({
                 <p className="font-mono text-[0.62rem] uppercase text-faint">
                   {t("etfSpot")}
                 </p>
-                <Link href="/etf" className="font-mono text-[0.62rem] text-accent">
+                <Link href="/fluxos" className="font-mono text-[0.62rem] text-accent">
                   →
                 </Link>
               </div>
@@ -255,6 +374,16 @@ export function OperatorBoard({
                   sum5={etf.sol?.sum5dUsdM ?? null}
                 />
               </div>
+              {hist.etf_btc_flow && (
+                <div className="mt-3">
+                  <Regua
+                    context={hist.etf_btc_flow}
+                    variant="expanded"
+                    locale={histLocale}
+                    label="ETF BTC · 90d"
+                  />
+                </div>
+              )}
               <p className="mt-2 font-mono text-[0.58rem] text-faint">
                 {t("etfAfterClose")}
               </p>
@@ -305,12 +434,24 @@ export function OperatorBoard({
                 </tbody>
               </table>
             </div>
+            {hist.funding_btc && (
+              <div className="mt-3">
+                <Regua
+                  context={hist.funding_btc}
+                  variant="expanded"
+                  locale={histLocale}
+                  stretched
+                  label="Funding BTC · 90d"
+                />
+              </div>
+            )}
             <p className="mt-2 font-mono text-[0.58rem] text-faint">
               {t("lsHint")}
             </p>
           </div>
         </div>
       </section>
+      </ExpertiseGate>
 
       <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.85fr)]">
         <section className="min-w-0 border border-line bg-surface">
@@ -348,7 +489,7 @@ export function OperatorBoard({
               ))}
             </div>
             <Link
-              href="/graficos"
+              href="/"
               className="font-mono text-[0.65rem] uppercase tracking-wider text-accent sm:justify-self-end"
             >
               {t("openCharts")} →
@@ -358,11 +499,19 @@ export function OperatorBoard({
         </section>
 
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-          <Panel title={t("derivatives")} href="/sentimento">
+          <Panel title={t("derivatives")} href="/fluxos">
             <Row
               label="OI BTC"
               value={formatUsd(sentiment.openInterest.value, true)}
             />
+            {hist.oi_btc && (
+              <Regua
+                context={hist.oi_btc}
+                variant="expanded"
+                locale={histLocale}
+                className="my-2"
+              />
+            )}
             {sentiment.openInterest.change24hPct != null && (
               <Row
                 label="OI Δ24h"
@@ -403,15 +552,53 @@ export function OperatorBoard({
       </div>
 
       <div className={`mt-3 grid gap-3 ${dex ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}>
-        <Panel title={t("movers")} href="/mercado">
+        <Panel title={t("movers")} href="/mundo">
           <div className="grid grid-cols-2 gap-3">
-            <MoverCol title={t("gainers")} items={market.movers.gainers.slice(0, 5)} />
-            <MoverCol title={t("losers")} items={market.movers.losers.slice(0, 5)} />
+            <MoverCol
+              title={t("gainers")}
+              items={market.movers.gainers.slice(0, 5)}
+              watchedIds={watch.assets.map((a) => a.id)}
+            />
+            <MoverCol
+              title={t("losers")}
+              items={market.movers.losers.slice(0, 5)}
+              watchedIds={watch.assets.map((a) => a.id)}
+            />
           </div>
+          {watch.quotes.length > 0 && (
+            <div className="mt-3 border-t border-line pt-3">
+              <p className="mb-2 text-label text-accent">{t("watchMovers")}</p>
+              <ul className="space-y-1.5">
+                {[...watch.quotes]
+                  .sort((a, b) => Math.abs(b.change24h) - Math.abs(a.change24h))
+                  .slice(0, 6)
+                  .map((q) => (
+                    <li
+                      key={q.id}
+                      className="flex items-center justify-between gap-2 text-sm"
+                    >
+                      <Link
+                        href={
+                          Math.abs(q.change24h) >= 3
+                            ? `/caso/case-${q.id}`
+                            : "/mundo"
+                        }
+                        className="font-medium hover:text-accent"
+                      >
+                        {q.symbol}
+                      </Link>
+                      <span className={`text-data tabular-nums ${deltaClass(q.change24h)}`}>
+                        {formatPct(q.change24h)}
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
         </Panel>
 
         {dex && (
-        <Panel title={t("dexFrenzy")} href="/memes">
+        <Panel title={t("dexFrenzy")} href="/mundo">
           <p className="mb-2 border border-accent/25 bg-accent-dim px-2 py-1.5 font-mono text-[0.65rem] text-accent">
             {locale === "pt" ? dex.notePt : dex.noteEn}
           </p>
@@ -446,7 +633,7 @@ export function OperatorBoard({
         </Panel>
         )}
 
-        <Panel title={t("yields")} href="/yields">
+        <Panel title={t("yields")} href="/fluxos">
           <ul className="space-y-1.5">
             {yields.slice(0, 6).map((y) => (
               <li key={y.pool} className="text-sm">
@@ -505,13 +692,19 @@ export function OperatorBoard({
         </Panel>
 
         {defi && (
-          <Panel title={t("defiPulse")} href="/defi">
+          <Panel title={t("defiPulse")} href="/fluxos">
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <p className="font-mono text-[0.58rem] text-faint">TVL</p>
                 <p className="font-mono text-xl font-medium">
                   {formatUsd(defi.totalTvl, true)}
                 </p>
+                <Regua
+                  context={hist.tvl}
+                  variant="inline"
+                  locale={histLocale}
+                  className="mt-1"
+                />
                 {defi.change1d != null && (
                   <p className={`font-mono text-xs ${deltaClass(defi.change1d)}`}>
                     {formatPct(defi.change1d)} 1d
@@ -567,6 +760,8 @@ export function OperatorBoard({
           </Panel>
         )}
       </div>
+
+      <WatchlistPanel className="mt-3" />
     </div>
   );
 }
@@ -640,12 +835,20 @@ function TapeItem({
   change,
   changeIsAbs,
   flashKey,
+  history,
+  historyLocale = "pt",
+  historyStretched = false,
+  watched = false,
 }: {
   label: string;
   value: string;
   change?: number;
   changeIsAbs?: boolean;
   flashKey?: number | string;
+  history?: MetricContextApi | null;
+  historyLocale?: "pt" | "en";
+  historyStretched?: boolean;
+  watched?: boolean;
 }) {
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
   const prev = useRef<number | string | undefined>(flashKey);
@@ -673,7 +876,7 @@ function TapeItem({
 
   return (
     <div
-      className={`flex min-w-[6.5rem] shrink-0 flex-col border-r border-line px-3 py-2 last:border-r-0 ${
+      className={`flex min-w-[6.25rem] shrink-0 flex-col border-r border-line px-2.5 py-2 last:border-r-0 sm:min-w-[7.5rem] sm:px-3 ${
         flash === "up"
           ? "tape-flash-up"
           : flash === "down"
@@ -681,8 +884,9 @@ function TapeItem({
             : ""
       }`}
     >
-      <span className="text-label text-faint">
+      <span className={`text-label ${watched ? "text-accent" : "text-faint"}`}>
         {label}
+        {watched ? " ·" : ""}
       </span>
       <span
         className={`text-data font-medium ${
@@ -694,14 +898,63 @@ function TapeItem({
                 : ""
             : ""
         }`}
+        aria-live="polite"
+        aria-atomic="false"
       >
+        {change != null && !changeIsAbs && (
+          <span className="sr-only">
+            {change > 0 ? "up" : change < 0 ? "down" : "flat"}{" "}
+            {formatPct(change)}
+          </span>
+        )}
         {value}
       </span>
+      {history && (
+        <Regua
+          context={history}
+          variant="inline"
+          locale={historyLocale}
+          stretched={historyStretched}
+          className="mt-0.5"
+        />
+      )}
       {change != null && !changeIsAbs && (
-        <span className={`text-meta tabular-nums ${deltaClass(change)}`}>
+        <span
+          className={`text-meta tabular-nums ${deltaClass(change)}`}
+          aria-hidden="true"
+        >
+          {change > 0 ? "▲ " : change < 0 ? "▼ " : ""}
           {formatPct(change)}
         </span>
       )}
+    </div>
+  );
+}
+
+function ExpandedMetric({
+  label,
+  value,
+  history,
+  locale,
+  stretched,
+}: {
+  label: string;
+  value: string;
+  history?: MetricContextApi | null;
+  locale: "pt" | "en";
+  stretched?: boolean;
+}) {
+  return (
+    <div className="border border-line/80 bg-bg-elevated p-2.5">
+      <p className="text-label text-faint">{label}</p>
+      <p className="mt-0.5 text-data font-medium tabular-nums text-ink">{value}</p>
+      <Regua
+        context={history}
+        variant="expanded"
+        locale={locale}
+        stretched={stretched}
+        className="mt-2"
+      />
     </div>
   );
 }
@@ -804,10 +1057,13 @@ function Row({
 function MoverCol({
   title,
   items,
+  watchedIds = [],
 }: {
   title: string;
   items: MarketSnapshot["movers"]["gainers"];
+  watchedIds?: string[];
 }) {
+  const watched = new Set(watchedIds);
   return (
     <div>
       <p className="mb-1 font-mono text-[0.6rem] uppercase text-faint">{title}</p>
@@ -817,9 +1073,12 @@ function MoverCol({
             <div className="flex justify-between gap-2">
               <Link
                 href={`/caso/${m.caseId}`}
-                className="font-medium hover:text-accent"
+                className={`font-medium hover:text-accent ${
+                  watched.has(m.id) ? "text-accent" : ""
+                }`}
               >
                 {m.symbol}
+                {watched.has(m.id) ? " ·" : ""}
               </Link>
               <span className={`font-mono tabular-nums ${deltaClass(m.change24h)}`}>
                 {formatPct(m.change24h)}

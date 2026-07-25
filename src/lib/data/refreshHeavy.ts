@@ -1,8 +1,11 @@
 import { ingestEtfSnapshot } from "@/lib/data/etf";
+import { ingestLiquiditySnapshot } from "@/lib/data/liquidity";
 import { pegDeviationPct } from "@/lib/data/peg";
+import { ingestSectorsSnapshot } from "@/lib/data/sectors";
 import { writeSnapshot } from "@/lib/data/snapshotStore";
 import type { YieldPool } from "@/lib/data/yields";
 import type { DefiSnapshot } from "@/lib/types";
+import { ingestHistorySeries } from "@/lib/history/ingest";
 
 const LLAMA = "https://api.llama.fi";
 const STABLES = "https://stablecoins.llama.fi";
@@ -12,7 +15,8 @@ export type TvlSource = "historicalChainTvl" | "chainsSum";
 
 /**
  * Heavy ingest — NEVER call from page render.
- * Downloads large DefiLlama payloads + Farside ETF HTML, writes slim snapshots.
+ * Downloads large DefiLlama payloads + Farside ETF HTML, writes slim snapshots,
+ * then refreshes history, liquidity (stables) and sector rotation.
  */
 export async function refreshHeavySnapshots(): Promise<{
   yieldsPools: number;
@@ -20,6 +24,11 @@ export async function refreshHeavySnapshots(): Promise<{
   totalTvl: number;
   tvlSource: TvlSource;
   etfOk: boolean;
+  historyPoints: number;
+  historyBootstrapped: string[];
+  sectorsThematic: number;
+  sectorsHistoryDays: number;
+  liquiditySeriesDays: number;
 }> {
   const [yields, defi, etf] = await Promise.all([
     ingestYields(),
@@ -31,12 +40,57 @@ export async function refreshHeavySnapshots(): Promise<{
         return false;
       }),
   ]);
+
+  // Liquidity after ETF (spot channel reads ETF snapshot).
+  let liquiditySeriesDays = 0;
+  try {
+    const liq = await ingestLiquiditySnapshot();
+    liquiditySeriesDays = liq.seriesDays;
+  } catch (e) {
+    console.warn(
+      "[liquidity ingest]",
+      e instanceof Error ? e.message : e,
+    );
+  }
+
+  // History after liquidity so stablecoin_supply merge is present / can refresh.
+  let historyPoints = 0;
+  let historyBootstrapped: string[] = [];
+  try {
+    const hist = await ingestHistorySeries();
+    historyPoints = hist.points;
+    historyBootstrapped = hist.bootstrapped;
+  } catch (e) {
+    console.warn(
+      "[history ingest]",
+      e instanceof Error ? e.message : e,
+    );
+  }
+
+  let sectorsThematic = 0;
+  let sectorsHistoryDays = 0;
+  try {
+    const sec = await ingestSectorsSnapshot();
+    sectorsThematic = sec.thematic;
+    sectorsHistoryDays = sec.historyDays;
+  } catch (e) {
+    console.warn(
+      "[sectors ingest]",
+      e instanceof Error ? e.message : e,
+    );
+  }
+
   return {
     yieldsPools: yields.count,
     defiProtocols: defi.protocols,
     totalTvl: defi.totalTvl,
     tvlSource: defi.tvlSource,
     etfOk: etf,
+    historyPoints,
+    historyBootstrapped,
+    sectorsThematic,
+    sectorsHistoryDays,
+    liquiditySeriesDays,
   };
 }
 

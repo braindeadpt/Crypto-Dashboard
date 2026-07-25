@@ -1,29 +1,52 @@
 import { getRegimeBundle } from "@/lib/data/bundle";
-import { buildDeterministicBrief } from "@/lib/editorial/brief";
+import { buildDailyCases } from "@/lib/cases/build";
+import {
+  buildDailyRitual,
+  ritualToBriefItem,
+  type DailyRitual,
+} from "@/lib/editorial/ritual";
+import { getHistoryDayDeltas } from "@/lib/history/deltas";
 import { NextResponse } from "next/server";
 
 export const revalidate = 120;
 
-export async function GET() {
+/**
+ * Daily ritual — structure fixed; numbers only from computed signals.
+ * Optional LLM may rephrase prose fields only (never invent facts).
+ */
+export async function GET(req: Request) {
   try {
-    const { market, regime, sentiment } = await getRegimeBundle();
-    const brief = buildDeterministicBrief({ market, regime, sentiment });
+    const { searchParams } = new URL(req.url);
+    const format = searchParams.get("format"); // "ritual" | "brief" (default ritual)
 
-    // Optional LLM enrichment
+    const [{ market, regime, sentiment, caseContext }, { deltas }] =
+      await Promise.all([getRegimeBundle(), getHistoryDayDeltas()]);
+
+    const cases = buildDailyCases(
+      [...market.movers.gainers, ...market.movers.losers],
+      caseContext,
+    );
+
+    let ritual = buildDailyRitual({
+      market,
+      regime,
+      sentiment,
+      deltas,
+      cases,
+    });
+
     if (process.env.OPENAI_API_KEY) {
       try {
-        const enriched = await enrichWithLlm(brief, {
-          headline: regime.headlineEn,
-          fng: sentiment.fearGreed.value,
-          btc: market.btc.change24h,
-        });
-        return NextResponse.json(enriched);
+        ritual = await enrichRitualProse(ritual);
       } catch {
-        return NextResponse.json(brief);
+        /* keep deterministic */
       }
     }
 
-    return NextResponse.json(brief);
+    if (format === "brief") {
+      return NextResponse.json(ritualToBriefItem(ritual));
+    }
+    return NextResponse.json(ritual);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Failed" },
@@ -32,10 +55,7 @@ export async function GET() {
   }
 }
 
-async function enrichWithLlm(
-  brief: ReturnType<typeof buildDeterministicBrief>,
-  ctx: { headline: string; fng: number; btc: number },
-) {
+async function enrichRitualProse(ritual: DailyRitual): Promise<DailyRitual> {
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -49,16 +69,30 @@ async function enrichWithLlm(
         {
           role: "system",
           content:
-            "You are the CLAREZA editorial desk. Write PT-PT (Portugal) and EN. Output JSON with keys: whyItMattersPt, whyItMattersEn, uncertainty, watchNext. No buy/sell advice. Calm, precise, educational.",
+            "You are CLAREZA editorial. Rewrite ONLY whyItMattersPt, whyItMattersEn, uncertainty, watchNext. Use the provided signals as the only facts — never invent numbers, events, or catalysts. PT-PT and EN. No buy/sell advice. If quietDay is true, keep the tone honest and short.",
         },
         {
           role: "user",
           content: JSON.stringify({
-            fact: brief.fact,
-            context: ctx,
+            quietDay: ritual.quietDay,
+            fact: ritual.fact,
+            posture: ritual.posture,
+            score: ritual.score,
+            headlinePt: ritual.headlinePt,
+            headlineEn: ritual.headlineEn,
+            notableDeltas: ritual.notableDeltas.map((d) => ({
+              id: d.metricId,
+              absChange: d.absChange,
+              pctChange: d.pctChange,
+              prev: d.prev,
+              curr: d.curr,
+            })),
+            mover: ritual.mover,
             existing: {
-              whyItMattersPt: brief.whyItMattersPt,
-              whyItMattersEn: brief.whyItMattersEn,
+              whyItMattersPt: ritual.whyItMattersPt,
+              whyItMattersEn: ritual.whyItMattersEn,
+              uncertainty: ritual.uncertainty,
+              watchNext: ritual.watchNext,
             },
           }),
         },
@@ -78,10 +112,11 @@ async function enrichWithLlm(
   };
 
   return {
-    ...brief,
-    whyItMattersPt: parsed.whyItMattersPt ?? brief.whyItMattersPt,
-    whyItMattersEn: parsed.whyItMattersEn ?? brief.whyItMattersEn,
-    uncertainty: parsed.uncertainty ?? brief.uncertainty,
-    watchNext: parsed.watchNext ?? brief.watchNext,
+    ...ritual,
+    whyItMattersPt: parsed.whyItMattersPt ?? ritual.whyItMattersPt,
+    whyItMattersEn: parsed.whyItMattersEn ?? ritual.whyItMattersEn,
+    uncertainty: parsed.uncertainty ?? ritual.uncertainty,
+    watchNext: parsed.watchNext ?? ritual.watchNext,
+    mode: "llm",
   };
 }

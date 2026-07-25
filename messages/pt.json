@@ -1,21 +1,75 @@
 {
   "meta": {
-    "title": "CLAREZA Crypto — Centro de comandos crypto",
-    "description": "Centro de comandos crypto para operadores: preços, gráficos, derivados, liquidações ao vivo, DeFi, yields e memes — em português de Portugal.",
-    "tagline": "Centro de comandos crypto",
-    "disclaimer": "Isto não constitui aconselhamento financeiro. Dados de mercado para acompanhamento operacional."
+    "title": "CLAREZA Crypto — Observatório de mercado",
+    "description": "Observatório de mercado crypto para operadores: preços, derivados, liquidações ao vivo, DeFi e contexto — em português de Portugal.",
+    "tagline": "Observatório de mercado",
+    "disclaimer": "Isto não constitui aconselhamento financeiro. Dados de mercado para observação e acompanhamento operacional."
   },
   "nav": {
-    "board": "Board",
-    "case": "Caso & Efeito",
-    "market": "Mercado",
-    "charts": "Gráficos",
-    "sentiment": "Sentimento",
-    "defi": "DeFi",
-    "yields": "Yields",
-    "memes": "Memes",
-    "lab": "Lab",
-    "etf": "ETF"
+    "now": "Agora",
+    "world": "Mundo",
+    "flows": "Fluxos",
+    "context": "Contexto",
+    "wallet": "Carteira",
+    "walletSoon": "Em breve: cola um endereço público — sem chaves, sem armazenamento no servidor.",
+    "soon": "em breve",
+    "aria": "Navegação principal"
+  },
+  "theme": {
+    "label": "Tema",
+    "light": "Papel",
+    "dark": "Noite"
+  },
+  "chrome": {
+    "language": "Idioma",
+    "footerNote": "Read-only · Sem custódia · Liquidações via stream público",
+    "styleGuide": "Sistema de design",
+    "skipToContent": "Saltar para o conteúdo"
+  },
+  "style": {
+    "title": "Sistema de design",
+    "subtitle": "O Observatório: tipografia com papéis distintos, cor com funções separadas, elevação calibrada e movimento só quando há significado.",
+    "type": "Tipografia",
+    "typeHint": "Fraunces (editorial) · IBM Plex Sans (UI) · IBM Plex Mono (dados). Escala 12 / 14 / 18 / 24 / 40 / 72.",
+    "color": "Cor e papéis",
+    "colorHint": "Acento ≠ direcção ≠ regime ≠ foco. Direcção sempre com ▲▼.",
+    "elevation": "Elevação",
+    "elevationHint": "Poucos níveis; superfície e sombra curta — sem vidro.",
+    "motion": "Movimento",
+    "motionHint": "Flash em mudança de valor; respeita prefers-reduced-motion.",
+    "direction": "Direcção de preço",
+    "regime": "Estado de regime",
+    "deltaSample": "Teal / âmbar + glifo — não só verde/vermelho.",
+    "flashHint": "Clica para disparar flash significativo",
+    "aaNote": "Contraste AA verificado nos pares ink/bg, muted/bg, accent/bg e up|down/bg (ambos os temas). Ver design-system.md.",
+    "roles": {
+      "accent": "Marca / interacção / live",
+      "up": "Sobe (direcção)",
+      "down": "Desce (direcção)",
+      "calm": "Regime calmo",
+      "unsettled": "Regime instável",
+      "storm": "Regime tempestade",
+      "weird": "Regime misto",
+      "focus": "Anel de foco (a11y)",
+      "ink": "Texto principal",
+      "muted": "Texto secundário",
+      "bg": "Fundo (papel / graphite)",
+      "surface": "Superfície de painel"
+    },
+    "elev": {
+      "flat": "0 · plano",
+      "raised": "1 · elevado",
+      "float": "2 · flutuante",
+      "hero": "herói · domina"
+    },
+    "typeSamples": {
+      "label": "Rótulo de instrumento",
+      "meta": "Metadados e captions 14",
+      "body": "Texto de corpo para leitura operacional.",
+      "title": "Título de secção",
+      "display": "Momento editorial",
+      "hero": "87 432"
+    }
   },
   "market": {
     "title": "Mercado",
@@ -170,6 +224,7 @@
     "liqLongs": "Longs liquidados",
     "liqShorts": "Shorts liquidados",
     "movers": "Maiores movimentos 24h",
+    "watchMovers": "A tua lista",
     "gainers": "Em alta",
     "losers": "Em baixa",
     "memes": "Memes",
@@ -208,7 +263,12 @@
     "fees24h": "Taxas 24h",
     "pegWatch": "Monitorização do peg",
     "pegOk": "Sem despegue relevante nas stables USD (±0,15%). Yield-bearing excluídos.",
-    "yieldsSortHint": "Ordenado por APY · TVL ≥ 1M · reward assinalado"
+    "yieldsSortHint": "Ordenado por APY · TVL ≥ 1M · reward assinalado",
+    "chartLoading": "A carregar candles…",
+    "chartFail": "Falha ao carregar gráfico",
+    "chartTable": "Tabela acessível",
+    "chartCaption": "OHLC {symbol} intervalo {interval}",
+    "chartTime": "Hora"
   },
   "charts": {
     "title": "Gráficos",
@@ -260,5 +320,178 @@
     "solUnavailable": "Fluxos SOL indisponíveis ou tabela Farside sem dados interpretáveis neste momento.",
     "staleAge": "Snapshot antigo — últimos fluxos de {date}. A página não faz scrape ao vivo.",
     "flowDate": "Fluxos do dia: {date}"
+  },
+  "history": {
+    "band": {
+      "extreme_low": "extremo baixo",
+      "low": "baixo",
+      "normal": "normal",
+      "high": "alto",
+      "extreme_high": "extremo alto",
+      "insufficient": "amostra curta"
+    },
+    "percentileOf": "percentil {p} dos últimos {days} dias",
+    "moreStretched": "só {pct}% dos dias estiveram mais esticados",
+    "incomplete": "Ainda só {days} dias de histórico — contexto incompleto."
+  },
+  "pulso": {
+    "title": "O Pulso",
+    "ariaLead": "Pulso do mercado · postura {posture}",
+    "stress": "Stress {score}",
+    "hoverHint": "Passa sobre um eixo para ver valor, percentil e fonte.",
+    "shortSample": "amostra curta ({days}d)",
+    "source": "Fonte",
+    "contrib": "+{points} no stress",
+    "share": "Partilhar imagem",
+    "sharing": "A gerar…",
+    "posture": {
+      "calm": "Calmo",
+      "unsettled": "Instável",
+      "storm": "Tempestade",
+      "weird": "Misto"
+    }
+  },
+  "regua": {
+    "title": "A Régua",
+    "median": "Mediana",
+    "short": "Amostra curta"
+  },
+  "sectors": {
+    "eyebrow": "Onde o capital está a rodar",
+    "title": "Sectores",
+    "subtitle": "Mapa temático por capitalização e rotação de quota — a pergunta «o que está a acontecer no mundo crypto agora?» sem a distorção do top 25 genérico.",
+    "readingLabel": "Leitura do dia",
+    "stale": "Snapshot antigo — a página não chama a CoinGecko no render.",
+    "historyDays": "{days} dias de histórico persistido",
+    "source": "Fonte: CoinGecko /coins/categories",
+    "megaLabel": "Infra (fora do mapa)",
+    "mapTitle": "Mapa temático",
+    "mapHint": "Área = capitalização. Cor + ▲▼ = variação 24h. Clica para ver activos.",
+    "mapLegend": "L1 / smart-contract fora do mapa — dominariam a área.",
+    "rotationTitle": "Rotação",
+    "rotationHint": "Variação da quota relativa no mapa temático vs período anterior — para onde a força se move.",
+    "share": "{pct}% do mapa temático",
+    "clear": "Fechar",
+    "changeContext": "Variação 24h na distribuição histórica",
+    "observeOnly": "Observação apenas — sem causalidade nem recomendação.",
+    "coinsTitle": "Activos no sector",
+    "coinsLoading": "A carregar activos…",
+    "coinsError": "Não foi possível obter activos deste sector.",
+    "coinsEmpty": "Sem activos devolvidos para esta categoria.",
+    "colSector": "Sector",
+    "colMcap": "Cap.",
+    "colShare": "Quota",
+    "empty": "Ainda não há snapshot de sectores.",
+    "emptyHint": "Corre o cron refresh-heavy ou npx tsx scripts/ingest-sectors.ts."
+  },
+  "liquidity": {
+    "eyebrow": "De onde vem o dinheiro",
+    "title": "Liquidez",
+    "subtitle": "Oferta de stablecoins, fluxos ETF spot e estado de alavancagem — as três origens observáveis. Sem proxies inventados.",
+    "readingLabel": "Leitura do dia",
+    "stale": "Snapshot antigo — a página não chama APIs no render.",
+    "totalSupply": "Oferta agregada",
+    "totalHint": "Soma circulating USD (todos os pegs)",
+    "peggedUsd": "Pegged USD",
+    "peggedHint": "Só stablecoins indexadas ao dólar",
+    "change7d": "Δ 7 dias",
+    "change30d": "Δ 30 dias",
+    "supplyTitle": "Oferta de stablecoins · 90 dias",
+    "supplyHint": "Área = nível. Subida = combustível a entrar no sistema on-chain.",
+    "reguaLabel": "Posição na distribuição (90d)",
+    "sourceStables": "Fonte: stablecoins.llama.fi/stablecoincharts/all",
+    "originsTitle": "Origens de liquidez",
+    "originsHint": "Spot institucional (ETF) · combustível on-chain (stables) · alavancagem (derivados).",
+    "topTitle": "Maiores stablecoins (circulating USD)",
+    "omittedTitle": "Omitido de propósito",
+    "empty": "Ainda não há snapshot de liquidez.",
+    "emptyHint": "Corre o cron refresh-heavy ou npx tsx scripts/ingest-liquidity.ts."
+  },
+  "expertise": {
+    "label": "Densidade",
+    "hint": "Muda quantas métricas e quanto detalhe vês — sem login.",
+    "levels": {
+      "citizen": "Essencial",
+      "operator": "Operador",
+      "analyst": "Analista"
+    }
+  },
+  "mundo": {
+    "eyebrow": "Onde o capital e a narrativa se movem",
+    "title": "Mundo",
+    "subtitle": "Sectores, rotação, movimentos e o porquê (Caso & Efeito) — a leitura do mercado além de BTC/ETH/SOL.",
+    "readingLabel": "Leitura de sectores",
+    "casesTitle": "Caso & Efeito",
+    "casesHint": "Hipóteses ranqueadas a partir de evidência — não títulos de clickbait.",
+    "gainers": "Em alta 24h",
+    "losers": "Em baixa 24h",
+    "sectorsTitle": "Mapa de sectores",
+    "sectorsHint": "Área = capitalização temática. Clica para activos.",
+    "rotationTitle": "Rotação de quota",
+    "close": "Fechar",
+    "loadingCoins": "A carregar activos…",
+    "colSector": "Sector",
+    "colShare": "Quota",
+    "empty": "Não foi possível carregar o mapa de sectores."
+  },
+  "fluxos": {
+    "eyebrow": "De onde vem o dinheiro",
+    "title": "Fluxos",
+    "subtitle": "Stablecoins, ETF spot e alavancagem — as origens observáveis de liquidez, sem proxies inventados.",
+    "leverageTitle": "Alavancagem e sentimento",
+    "leverageHint": "Funding, open interest e liquidações — estado, não fluxo em dólares.",
+    "empty": "Ainda não há snapshot de liquidez.",
+    "emptyHint": "Corre refresh-heavy ou scripts/ingest-liquidity.ts."
+  },
+  "contexto": {
+    "eyebrow": "Mapa, não GPS",
+    "title": "Contexto",
+    "subtitle": "Ciclo, aprendizagem e enquadramento em Portugal — para ler o mercado com memória.",
+    "walletBridge": "Em breve: Carteira (colar endereço público, zero chaves no servidor) liga este contexto à tua posição — ver VISION. Não construído nesta versão.",
+    "noCycle": "Ciclo indisponível neste momento.",
+    "atlasTitle": "Atlas",
+    "atlasHint": "Conceitos essenciais — Essencial mostra o essencial; Operador/Analista abrem o índice completo."
+  },
+  "ritual": {
+    "eyebrow": "Ritual diário · ~5 min",
+    "title": "O briefing de hoje",
+    "posture": "Postura",
+    "changed": "O que mudou desde ontem",
+    "quiet": "Nada de material nas séries centrais — dia quieto. Não inventamos narrativa.",
+    "vs": "{from} → {to}",
+    "move": "Movimento com contexto",
+    "noMove": "Sem movimento absoluto ≥3% nos toppers — sem caso forçado.",
+    "caseLink": "Caso & Efeito",
+    "lesson": "Lição do café",
+    "learnMore": "Abrir no Atlas",
+    "dont": "Aviso anti-hype",
+    "stress": "Stress {score}",
+    "mode": "Redacção: {mode}",
+    "modeDet": "determinística (sinais calculados)",
+    "modeLlm": "LLM só sobre sinais já calculados",
+    "postureLabels": {
+      "calm": "Calmo",
+      "unsettled": "Instável",
+      "storm": "Tempestade",
+      "weird": "Misto"
+    }
+  },
+  "watchlist": {
+    "title": "A tua lista",
+    "privacy": "Fica no teu navegador — nunca nos nossos servidores. Sem login, sem custódia. O mesmo padrão que a futura Carteira.",
+    "search": "Pesquisar activo",
+    "searchPlaceholder": "Ex.: ARB, TIA, celestia…",
+    "searching": "A pesquisar…",
+    "export": "Exportar",
+    "import": "Importar",
+    "importOk": "Lista importada.",
+    "importFail": "Ficheiro inválido.",
+    "empty": "Ainda sem activos. Adiciona os teus para os veres na tape e nos movimentos.",
+    "noQuote": "Cotação indisponível",
+    "case": "Caso",
+    "remove": "Remover {symbol}",
+    "count": "{n} / {max}",
+    "full": "Lista cheia ({max}). Remove um activo primeiro.",
+    "dup": "Já está na lista."
   }
 }

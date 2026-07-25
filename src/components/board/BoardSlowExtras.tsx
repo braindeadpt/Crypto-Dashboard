@@ -28,7 +28,7 @@ export function BoardSlowExtras({
               {t("etfSpot")}
             </h2>
             <Link
-              href="/etf"
+              href="/fluxos"
               className="font-mono text-[0.65rem] uppercase text-accent"
             >
               {t("openEtf")} →
@@ -78,7 +78,7 @@ export function BoardSlowExtras({
               {t("dexFrenzy")}
             </h2>
             <Link
-              href="/memes"
+              href="/mundo"
               className="font-mono text-[0.65rem] uppercase text-accent"
             >
               {t("memes")} →

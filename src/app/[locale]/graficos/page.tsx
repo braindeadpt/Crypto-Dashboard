@@ -1,12 +1,12 @@
-import { ChartsDesk } from "@/components/desk/ChartsDesk";
+import { redirect } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
 
-export default async function GraficosPage({
+export default async function Page({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <ChartsDesk />;
+  redirect({ href: "/", locale });
 }
