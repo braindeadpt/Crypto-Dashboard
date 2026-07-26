@@ -19,8 +19,17 @@ async function cg<T>(path: string, attempt = 0): Promise<T> {
     next: { revalidate: 60 },
     headers: cgHeaders(),
   });
-  if (res.status === 429 && attempt < 3) {
-    await new Promise((r) => setTimeout(r, 1200 * (attempt + 1)));
+  /**
+   * Backoff curto e deliberado: 300ms + 600ms, no máximo ~0,9s.
+   *
+   * Era 1200+2400+3600 = 7,2s, e como isto corre no caminho de render, cada
+   * expiração de cache com a CoinGecko em 429 custava 7,3s de espera ao
+   * utilizador (medido em produção em /mundo e /contexto). O cachedFetch passou
+   * a servir o último valor bom quando a fonte falha, por isso insistir aqui
+   * deixou de valer o tempo — mais vale desistir depressa e servir o que há.
+   */
+  if (res.status === 429 && attempt < 2) {
+    await new Promise((r) => setTimeout(r, 300 * (attempt + 1)));
     return cg(path, attempt + 1);
   }
   if (!res.ok) {
