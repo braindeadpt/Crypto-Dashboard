@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "coingecko": {
+      "command": "npx",
+      "args": ["-y", "@coingecko/coingecko-mcp"]
+    },
+    "defillama": {
+      "url": "https://mcp.defillama.com/mcp",
+      "transport": "http"
+    },
+    "etherscan": {
+      "url": "https://mcp.etherscan.io/mcp",
+      "transport": "http",
+      "headers": {
+        "Authorization": "Bearer ${env:ETHERSCAN_API_KEY}"
+      }
+    }
+  }
+}

@@ -81,11 +81,15 @@ local junctions, gitignored and recreated automatically by the
   `market-analysis`, `institutional-crypto`, `risk-assessment`,
   `flows-and-events`, `defillama-setup` — data-API skills (endpoints,
   rate limits, correct calls).
+- `etherscan`, `etherscan-flow`, `etherscan-contract-review`,
+  `etherscan-transaction-debugger` — official Etherscan "Build with AI"
+  skills (API V2, MCP, CLI, forensics) for the `/carteira` surface.
 - `frontend-design`, `frontend-ui-engineering`, `web-design-guidelines` —
   generic UI taste; they never override the house rules or the Noite tokens.
 
-MCP pair (when configured in `.devin/mcp_config.json`): `coingecko` via
-`npx -y @coingecko/coingecko-mcp`, `defillama` via `https://mcp.defillama.com/mcp`.
+MCP servers in `.devin/mcp_config.json`: `coingecko` (npx stdio),
+`defillama` (HTTP), `etherscan` (HTTP, bearer `ETHERSCAN_API_KEY` — the
+only official endpoint is `mcp.etherscan.io/mcp`; never use lookalikes).
 
 ## Commands
 

@@ -31,6 +31,30 @@
       "skillPath": "defillama-setup/SKILL.md",
       "computedHash": "7b7c66933b43fe5c66454841173aae7e5b9991062374ecf3bf00d523d9cc1d37"
     },
+    "etherscan": {
+      "source": "etherscan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/etherscan/SKILL.md",
+      "computedHash": "9a6fb5959ef3fab3297eed45b33b157cdf82e85a831833c8422a35b641149337"
+    },
+    "etherscan-contract-review": {
+      "source": "etherscan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/etherscan-contract-review/SKILL.md",
+      "computedHash": "396852de1aea9c7f4e57c35dbd11d2033322e5730872ef2b99f766450f8dcbfb"
+    },
+    "etherscan-flow": {
+      "source": "etherscan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/etherscan-flow/SKILL.md",
+      "computedHash": "0e88799af2527127132e644811466133f75262011a057d246351e1ac74eacf04"
+    },
+    "etherscan-transaction-debugger": {
+      "source": "etherscan/skills",
+      "sourceType": "github",
+      "skillPath": "skills/etherscan-transaction-debugger/SKILL.md",
+      "computedHash": "9289e4dc1b6fc240af86b64ac211d7b019742ad4517f604a8013dfac5fca3409"
+    },
     "flows-and-events": {
       "source": "DefiLlama/defillama-skills",
       "sourceType": "github",
