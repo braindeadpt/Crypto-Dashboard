@@ -98,6 +98,8 @@ export interface SentimentSnapshot {
     value: number;
     change24hPct: number | null;
   };
+  /** 30-day F&G series, ascending — optional (degrades when upstream fails). */
+  fngHistory?: { value: number; timestamp: string }[];
   updatedAt: string;
 }
 
@@ -192,6 +194,8 @@ export interface AtlasConcept {
   summaryEn: string;
   bodyPt: string;
   bodyEn: string;
+  /** ISO date — when the article was last reviewed. Optional until audited. */
+  asOf?: string;
   relatedMetrics: string[];
   relatedSlugs: string[];
 }

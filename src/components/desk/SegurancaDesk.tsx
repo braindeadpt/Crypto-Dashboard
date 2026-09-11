@@ -1,12 +1,14 @@
 "use client";
 
-import { PORTUGAL_CONTENT } from "@/lib/content/portugal";
+import { EntropyInstrument } from "@/components/seguranca/EntropyInstrument";
+import { PhishingQuiz } from "@/components/seguranca/PhishingQuiz";
+import { SEGURANCA_CONTENT } from "@/lib/content/seguranca";
 import { useLocale, useTranslations } from "next-intl";
 
-export function PortugalDesk() {
-  const t = useTranslations("portugal");
+export function SegurancaDesk() {
+  const t = useTranslations("seguranca");
   const locale = useLocale();
-  const c = PORTUGAL_CONTENT;
+  const c = SEGURANCA_CONTENT;
   const pt = locale === "pt";
 
   return (
@@ -23,20 +25,6 @@ export function PortugalDesk() {
           {t("reviewedAt", { date: c.reviewedAt })}
         </p>
       </header>
-
-      <section className="mt-6 border border-accent/40 bg-accent-dim p-5">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-accent">
-          {t("sixtyTitle")}
-        </h3>
-        <ul className="mt-3 space-y-2">
-          {(pt ? c.sixtySecondsPt : c.sixtySecondsEn).map((line) => (
-            <li key={line} className="flex gap-2 text-sm text-ink">
-              <span className="mt-0.5 shrink-0 font-mono text-accent">✓</span>
-              <span>{line}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
 
       <div className="mt-8 space-y-6">
         {c.sections.map((s) => (
@@ -112,28 +100,10 @@ export function PortugalDesk() {
             </ul>
           </section>
         ))}
-      </div>
 
-      <section className="mt-8">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-faint">
-          {t("faq")}
-        </h3>
-        <div className="mt-3 space-y-2">
-          {c.faq.map((f) => (
-            <details
-              key={f.qEn}
-              className="group border border-line bg-surface px-4 py-3 open:border-accent/50"
-            >
-              <summary className="cursor-pointer list-none text-sm font-medium text-ink transition group-open:text-accent">
-                {pt ? f.qPt : f.qEn}
-              </summary>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {pt ? f.aPt : f.aEn}
-              </p>
-            </details>
-          ))}
-        </div>
-      </section>
+        <EntropyInstrument />
+        <PhishingQuiz />
+      </div>
 
       <section className="mt-8">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-faint">

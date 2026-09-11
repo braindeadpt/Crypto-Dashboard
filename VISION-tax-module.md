@@ -341,3 +341,64 @@ venda** decide se há realização (§5, §8).
 
 ### Sem OSS para reaproveitar
 Camada legal/educativa (§7): conteúdo original + validação por TOC/jurista. Não há atalho.
+
+---
+
+## Apêndice B — Etherscan API V2 + Flow (investigação 2026-09-11)
+
+### O que foi avaliado
+
+**Etherscan API V2** — uma chave, 60+ chains EVM via `chainid`. Não cobre
+Bitcoin nem Solana (BTC já tem `mempool.space` no data layer; Solana ficaria
+para outro provider, ex.: Helius).
+
+| Endpoint (`module=account`) | Dá | Tier |
+|---|---|---|
+| `action=balance` | saldo nativo | Free |
+| `action=txlist` | transacções normais | Free |
+| `action=txlistinternal` | movimentos internos (contratos) | Free |
+| `action=tokentx` / `tokennfttx` | transferências ERC-20 / ERC-721 | Free |
+| `action=addresstokenbalance` | portfólio de tokens agregado | PRO (Standard ~$199/mo) |
+| `module=nametag&action=getaddresstag` | labels de endereços | Pro Plus |
+
+**Tiers:** Free = 3 calls/seg, 100k/dia, ~90% das chains, endpoints community,
+atribuição "Powered by Etherscan" obrigatória. Standard ~$199/mo = 10 calls/seg,
+200k/dia, todas as chains, endpoints PRO.
+
+**Etherscan Flow** (etherscan.io/flow) — canvas de investigação: "case files"
+de fluxo de fundos com evidência, snapshots públicos read-only. Detalhe chave:
+funciona com a **chave API do próprio utilizador, que fica no browser** — o
+padrão BYOK é aceite pelo próprio Etherscan. Não é embeddable; é referência de
+formato para o dossier B2B.
+
+### Decisões tomadas na Fase 1 (implementada)
+
+- **BFF proxy fino** (`/api/wallet`): o browser não chama o Etherscan
+  directamente (CORS não é garantido fora da origem etherscan.io). O endereço
+  transita pelo nosso servidor mas **não é persistido** — `cache: "no-store"`,
+  sem `cachedFetch`, sem logs. É o compromisso que §5 já previa.
+- **BYOK**: header `x-etherscan-key` opcional — chave do utilizador guardada
+  só em `localStorage` (`clareza-addresses`), enviada por pedido ao proxy.
+  Fallback: `ETHERSCAN_API_KEY` env no servidor.
+- **Chains iniciais:** Ethereum (1), Base (8453), Arbitrum (42161) — 3 EVM,
+  não "todas".
+- **Saldos de tokens sem PRO:** estimativa agregada das últimas 500
+  `tokentx` (o campo `tokenDecimal` vem na linha) — rotulada como estimativa,
+  pode omitir tokens sem movimento recente. Honesto, não fabricado.
+- **Fiat fora do MVP:** valor em EUR/USD fica para iteração seguinte
+  (CoinGecko já no stack).
+
+### Consequência para o modelo pago (B2B)
+
+No plano pago a chave passa a ser **nossa** (Standard server-side + auth) —
+o custo da API dilui-se na subscrição do gabinete. BYOK serve o B2C privacy-first.
+
+### Estado
+
+- **Fase 1 — INICIADA (2026-09-11):** `/carteira` live — saldo nativo com
+  valor USD (CoinGecko por contrato), tokens estimados, actividade recente,
+  export CSV da actividade (a semente do relatório fiscal), endereços
+  guardados localmente.
+- Falta: classificação de transacções (o problema difícil, §A), preço
+  histórico no timestamp de cada transacção, multi-endereço agregado,
+  Fase 0 (modelo de realização com TOC).

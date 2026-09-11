@@ -909,3 +909,10 @@ button {
     display: inline;
   }
 }
+
+@media print {
+  body { background: #ffffff; color: #111827; }
+  #main { padding-top: 0; }
+  .border, .bg-surface { border-color: #d1d5db !important; background: #ffffff !important; }
+  a::after { content: none; }
+}

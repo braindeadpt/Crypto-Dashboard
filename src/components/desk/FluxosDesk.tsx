@@ -81,6 +81,9 @@ export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
                 <p className="mt-1 text-meta text-muted">
                   {sentiment.fearGreed.classification}
                 </p>
+                {sentiment.fngHistory && sentiment.fngHistory.length > 1 && (
+                  <FngSpark points={sentiment.fngHistory} />
+                )}
               </div>
             </div>
             <div className="mt-4">
@@ -89,6 +92,52 @@ export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
           </section>
         )}
       </ExpertiseGate>
+    </div>
+  );
+}
+
+/** 30-day Fear&Greed sparkline — zone bands + line + last point. */
+function FngSpark({
+  points,
+}: {
+  points: { value: number; timestamp: string }[];
+}) {
+  const W = 240;
+  const H = 56;
+  const min = Math.min(...points.map((p) => p.value));
+  const max = Math.max(...points.map((p) => p.value));
+  const span = Math.max(1, max - min);
+  const x = (i: number) => (i / (points.length - 1)) * W;
+  const y = (v: number) => H - ((v - min) / span) * (H - 8) - 4;
+  const line = points.map((p, i) => `${x(i)},${y(p.value)}`).join(" ");
+  const last = points[points.length - 1];
+  return (
+    <div className="mt-3">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="w-full text-accent"
+        role="img"
+        aria-label={`Fear&Greed 30d: ${min}–${max}`}
+      >
+        <polyline
+          points={line}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <circle
+          cx={x(points.length - 1)}
+          cy={y(last.value)}
+          r="2.5"
+          fill="currentColor"
+        />
+      </svg>
+      <div className="mt-1 flex justify-between font-mono text-[0.6rem] text-faint">
+        <span>30d</span>
+        <span>
+          {min}–{max}
+        </span>
+      </div>
     </div>
   );
 }

@@ -208,12 +208,14 @@ export function ExpandedMetric({
   history,
   locale,
   stretched,
+  children,
 }: {
   label: string;
   value: string;
   history?: MetricContextApi | null;
   locale: "pt" | "en";
   stretched?: boolean;
+  children?: ReactNode;
 }) {
   return (
     <div className="border border-line/80 bg-bg-elevated p-2.5">
@@ -227,6 +229,7 @@ export function ExpandedMetric({
         className="mt-2"
         caption="technical"
       />
+      {children}
     </div>
   );
 }

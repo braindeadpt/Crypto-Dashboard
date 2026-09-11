@@ -155,6 +155,57 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
   });
 }
 
+/** USD spot prices for CoinGecko ids — used by Carteira native balance. */
+export async function fetchUsdPrices(ids: string[]): Promise<Record<string, number>> {
+  const clean = [...new Set(ids.map((i) => i.trim().toLowerCase()).filter(Boolean))];
+  if (!clean.length) return {};
+  return cachedFetch(`market:price:${clean.sort().join(",")}`, 60_000, async () => {
+    try {
+      const data = await cg<Record<string, { usd?: number }>>(
+        `/simple/price?ids=${encodeURIComponent(clean.join(","))}&vs_currencies=usd`,
+      );
+      const out: Record<string, number> = {};
+      for (const [id, v] of Object.entries(data)) {
+        if (typeof v.usd === "number") out[id] = v.usd;
+      }
+      return out;
+    } catch {
+      return {};
+    }
+  });
+}
+
+/**
+ * ERC-20 USD prices by contract on a CoinGecko asset platform
+ * ("ethereum", "base", "arbitrum-one"). Unknown contracts simply don't
+ * appear in the map — callers show them unpriced, never zero.
+ */
+export async function fetchTokenPricesUsd(
+  platform: string,
+  contracts: string[],
+): Promise<Record<string, number>> {
+  const clean = [...new Set(contracts.map((c) => c.toLowerCase()).filter(Boolean))];
+  if (!clean.length) return {};
+  return cachedFetch(
+    `market:tokprice:${platform}:${clean.slice().sort().join(",").slice(0, 500)}`,
+    300_000,
+    async () => {
+      try {
+        const data = await cg<Record<string, { usd?: number }>>(
+          `/simple/token_price/${platform}?contract_addresses=${encodeURIComponent(clean.join(","))}&vs_currencies=usd`,
+        );
+        const out: Record<string, number> = {};
+        for (const [addr, v] of Object.entries(data)) {
+          if (typeof v.usd === "number") out[addr.toLowerCase()] = v.usd;
+        }
+        return out;
+      } catch {
+        return {};
+      }
+    },
+  );
+}
+
 export async function fetchTrendingCoins(): Promise<TrendingCoin[]> {
   return cachedFetch("market:trending", 180_000, async () => {
     try {

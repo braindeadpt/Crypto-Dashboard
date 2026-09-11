@@ -12,14 +12,15 @@ import { ThemeToggle } from "./ThemeToggle";
  * `wallet` is reserved (VISION) — shown disabled so the IA already has a slot.
  */
 const LINKS: {
-  href: "/" | "/mundo" | "/fluxos" | "/contexto" | "/instrumento";
-  key: "now" | "world" | "flows" | "context" | "instrument";
+  href: "/" | "/mundo" | "/fluxos" | "/contexto" | "/instrumento" | "/carteira";
+  key: "now" | "world" | "flows" | "context" | "instrument" | "wallet";
 }[] = [
   { href: "/", key: "now" },
   { href: "/mundo", key: "world" },
   { href: "/fluxos", key: "flows" },
   { href: "/contexto", key: "context" },
   { href: "/instrumento", key: "instrument" },
+  { href: "/carteira", key: "wallet" },
 ];
 
 export function SiteHeader() {
@@ -28,7 +29,7 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-line bg-bg-elevated">
+    <header className="sticky top-0 z-40 w-full border-b border-line bg-bg-elevated print:hidden">
       <div className="obs-shell flex items-center justify-between gap-2 section-pad py-2.5 sm:gap-4 sm:py-3">
         <Link href="/" className="flex min-w-0 shrink items-center gap-2 sm:gap-3">
           <span
@@ -77,17 +78,6 @@ export function SiteHeader() {
             </Link>
           );
         })}
-        {/* Reserved slot — VISION Carteira (read-only address paste). Not built yet. */}
-        <span
-          className="shrink-0 cursor-default border-b-2 border-transparent px-3 py-2.5 text-label text-faint/50"
-          title={t("walletSoon")}
-          aria-disabled="true"
-        >
-          {t("wallet")}
-          <span className="ml-1 text-[0.65rem] uppercase tracking-wider">
-            {t("soon")}
-          </span>
-        </span>
       </nav>
     </header>
   );
@@ -97,7 +87,7 @@ export function SiteFooter() {
   const meta = useTranslations("meta");
   const t = useTranslations("chrome");
   return (
-    <footer className="w-full border-t border-line bg-bg-elevated">
+    <footer className="w-full border-t border-line bg-bg-elevated print:hidden">
       <div className="obs-shell flex flex-col gap-3 section-pad py-10 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-display text-title text-ink">

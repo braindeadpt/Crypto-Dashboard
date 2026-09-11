@@ -6,6 +6,7 @@ import { AtlasDiagram } from "@/components/atlas/AtlasDiagram";
 import { AtlasIndex } from "@/components/desk/AtlasIndex";
 import { CycleDesk } from "@/components/desk/CycleDesk";
 import { PortugalDesk } from "@/components/desk/PortugalDesk";
+import { SegurancaDesk } from "@/components/desk/SegurancaDesk";
 import { Link } from "@/i18n/navigation";
 import { ATLAS } from "@/lib/content/atlas";
 import type { CycleSnapshot } from "@/lib/types";
@@ -82,6 +83,12 @@ export function ContextoDesk({ cycle }: Props) {
           </div>
         )}
       </div>
+
+      <ExpertiseGate section="contextoSeguranca">
+        <div className="border-t border-line">
+          <SegurancaDesk />
+        </div>
+      </ExpertiseGate>
 
       <ExpertiseGate section="contextoPortugal">
         <div className="border-t border-line">

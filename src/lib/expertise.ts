@@ -55,6 +55,7 @@ export type DensitySection =
   | "derivsTable"
   | "atlasFull"
   | "contextoPortugal"
+  | "contextoSeguranca"
   | "contextoBrief"
   | "methodSources";
 
@@ -75,7 +76,8 @@ const RULES: Record<
   etfHistory: { min: "analyst" },
   derivsTable: { min: "operator" },
   atlasFull: { min: "operator" },
-  contextoPortugal: { min: "operator" },
+  contextoPortugal: {}, // orientação legal/fiscal serve todos os níveis
+  contextoSeguranca: { min: "operator" },
   contextoBrief: { min: "analyst" },
   methodSources: { min: "analyst" },
 };

@@ -17,7 +17,15 @@ export type PortugalExample = {
 };
 
 export type PortugalSection = {
-  id: "mica" | "cmvm" | "custody" | "tax";
+  id:
+    | "mica"
+    | "cmvm"
+    | "custody"
+    | "tax"
+    | "isencao"
+    | "swap"
+    | "anexos"
+    | "declarar";
   titlePt: string;
   titleEn: string;
   /** ISO date — when this card was last reviewed for accuracy. */
@@ -35,10 +43,57 @@ export type PortugalSection = {
 
 export const PORTUGAL_CONTENT = {
   disclaimerPt:
-    "Orientação educativa — não é aconselhamento jurídico nem fiscal. Confirma sempre com fontes oficiais e, quando relevante, com um TOC/jurista. Regras mudam.",
+    "Orientação educativa — não é aconselhamento jurídico, fiscal nem contabilístico. Para efeitos contabilísticos ou de declaração, consulta sempre um TOC (Técnico Oficial de Contas). Confirma com fontes oficiais — as regras mudam.",
   disclaimerEn:
-    "Educational orientation — not legal or tax advice. Always verify with official sources and, when relevant, an accountant/lawyer. Rules change.",
-  reviewedAt: "2026-07-25",
+    "Educational orientation — not legal, tax or accounting advice. For accounting or filing purposes, always consult a certified accountant (TOC in Portugal). Verify with official sources — rules change.",
+  reviewedAt: "2026-09-11",
+  /** The five things a newcomer needs first — rendered as the "60 seconds" card. */
+  sixtySecondsPt: [
+    "MiCA já regula as plataformas de cripto na UE (CASPs autorizados) desde dezembro de 2024; em Portugal a Lei n.º 69/2025 executa o regime.",
+    "Para IRS: comprar e guardar não tributa. Alienar — vender por euros, bens ou serviços — pode tributar.",
+    "Cripto detido ≥365 dias: o regime prevê exclusão de tributação das mais-valias, com condições e excepções.",
+    "Trocas cripto↔cripto não são, por si, a operação tributável — o custo de aquisição transporta-se (folheto AT).",
+    "Guarda histórico de tudo (datas + valores em euros) — é a matéria-prima do Portal das Finanças e do teu TOC.",
+  ],
+  sixtySecondsEn: [
+    "MiCA already regulates crypto platforms in the EU (authorised CASPs) since December 2024; Portugal's Law no. 69/2025 executes it.",
+    "For IRS: buying and holding is not taxed. Disposing — selling for euros, goods or services — may be.",
+    "Crypto held ≥365 days: the regime provides exclusion of capital gains, with conditions and exceptions.",
+    "Crypto↔crypto swaps are not, by themselves, the taxable event — acquisition cost carries over (AT leaflet).",
+    "Keep history of everything (dates + EUR values) — it's what Portal das Finanças and your accountant need.",
+  ],
+  faq: [
+    {
+      qPt: "Comprei cripto mas nunca vendi — tenho de declarar?",
+      qEn: "I bought crypto but never sold — do I have to declare it?",
+      aPt: "A mera aquisição e detenção não é, por si, facto tributável de mais-valia. Declaras quando existe alienação onerosa (vender por fiat/bens/serviços) ou rendimento (juros, rewards). Confirma no ano em causa.",
+      aEn: "Merely buying and holding is not, by itself, a taxable capital-gains event. You declare when there is an onerous disposal (selling for fiat/goods/services) or income (interest, rewards). Confirm for the relevant year.",
+    },
+    {
+      qPt: "Troquei BTC por ETH — é tributável?",
+      qEn: "I swapped BTC for ETH — is it taxable?",
+      aPt: "Segundo o folheto AT, a permuta cripto-cripto não constitui, por si, a alienação descrita para tributação; o valor de aquisição transporta-se para o activo recebido até alienação onerosa. Valida o teu caso com TOC.",
+      aEn: "Per the AT leaflet, a crypto-to-crypto swap is not, by itself, the disposal described for taxation; the acquisition cost carries to the received asset until an onerous disposal. Validate your case with an accountant.",
+    },
+    {
+      qPt: "Comprei antes de 2023 — os 365 dias contam?",
+      qEn: "I bought before 2023 — do the 365 days count?",
+      aPt: "O folheto AT prevê que períodos de detenção anteriores à entrada em vigor contam para a regra (contagem transitória). Confirma as datas exactas com a AT/TOC — o detalhe da transição importa.",
+      aEn: "The AT leaflet provides that holding periods before entry into force count towards the rule (transitional counting). Confirm exact dates with the AT/accountant — the transitional detail matters.",
+    },
+    {
+      qPt: "Recebo juros ou rewards de staking — como entra no IRS?",
+      qEn: "I earn interest or staking rewards — how does that enter the IRS?",
+      aPt: "Rendimentos deste tipo podem enquadrar-se na Categoria E (rendimentos de capitais) ou B (actividade) consoante o facto e a natureza — não resolvemos aqui a classificação; leva o histórico ao TOC.",
+      aEn: "Income of this kind may fall under Category E (capital income) or B (activity) depending on the facts — we don't resolve the classification here; take the history to an accountant.",
+    },
+    {
+      qPt: "Sou residente fiscal noutro país — esta faixa serve-me?",
+      qEn: "I'm tax-resident in another country — does this lane apply to me?",
+      aPt: "Esta faixa descreve o enquadramento português. Noutro país as regras são outras — procura a autoridade fiscal local. O que se mantém universal: guarda histórico e desconfia de «dicas de fiscalidade» de influencers.",
+      aEn: "This lane describes the Portuguese framework. Elsewhere the rules differ — check your local tax authority. What stays universal: keep records and distrust influencer “tax tips”.",
+    },
+  ] as { qPt: string; qEn: string; aPt: string; aEn: string }[],
   sections: [
     {
       id: "mica",
@@ -229,6 +284,187 @@ export const PORTUGAL_CONTENT = {
         "O folheto AT é resumo e «não dispensa a leitura da legislação em vigor». Categorias (G / E / B), anexos (G, G1, J) e excepções mudam. Se a regra exacta para o teu facto não estiver clara para nós, dizemo-lo: valida com TOC e AT do ano relevante. Esta camada é a ponte educativa para um futuro módulo fiscal — não o motor.",
       uncertaintyEn:
         "The AT leaflet is a summary and “does not replace reading the law in force”. Categories (G / E / B), annexes (G, G1, J) and exceptions change. If the exact rule for your facts is unclear to us, we say so: validate with an accountant and AT docs for the relevant year. This lane is the educational bridge to a future tax module — not the engine.",
+    },
+    {
+      id: "isencao",
+      titlePt: "A regra dos 365 dias",
+      titleEn: "The 365-day rule",
+      asOf: "2026-09-11",
+      bodyPt:
+        "Segundo o folheto AT, o saldo entre mais e menos-valias de alienação onerosa de criptoactivos (que não sejam valores mobiliários) é tributado — mas quando a detenção for ≥365 dias, o regime prevê exclusão de tributação. Contam-se os dias entre aquisição e alienação. Atenção às condições: residente fiscal em Portugal, o activo não ser valor mobiliário, e não ser rendimento de actividade profissional — e a excepções previstas (ex.: rendimento associado à alienação, situações de offshore no cadeia de valor). O período de detenção anterior a 2023 conta para a regra (transição).",
+      bodyEn:
+        "Per the AT leaflet, the net balance of gains/losses from onerous disposal of crypto-assets (that are not securities) is taxed — but when held ≥365 days, the regime provides exclusion from taxation. Days run from acquisition to disposal. Mind the conditions: Portuguese tax residence, the asset not being a security, and it not being professional-activity income — plus foreseen exceptions (e.g., income tied to the disposal, offshore situations in the value chain). Holding periods before 2023 count (transition).",
+      howToPt: [
+        "Para cada posição, regista a data de aquisição — é ela que decide se passaste os 365 dias, não o preço.",
+        "Se venderes várias tranches compradas em datas diferentes, aplica a regra a cada uma separadamente.",
+        "Antes de assumir isenção: confirma as condições e excepções no folheto AT do ano da declaração.",
+      ],
+      howToEn: [
+        "For each position, record the acquisition date — it decides whether you crossed 365 days, not the price.",
+        "If you sell several tranches bought on different dates, apply the rule to each separately.",
+        "Before assuming exemption: confirm conditions and exceptions in the AT leaflet for the filing year.",
+      ],
+      examples: [
+        {
+          titlePt: "Exemplo — duas vendas, dois resultados",
+          titleEn: "Example — two sales, two outcomes",
+          bodyPt:
+            "Compras 0,1 BTC a 10 jan 2024. Venda A a 20 jan 2025: ≥365 dias → o regime prevê exclusão. Venda B a 15 nov 2024: <365 dias → mais-valia potencialmente tributável. Mesmo activo, mesmo preço — a data decide.",
+          bodyEn:
+            "You buy 0.1 BTC on Jan 10, 2024. Sale A on Jan 20, 2025: ≥365 days → the regime provides exclusion. Sale B on Nov 15, 2024: <365 days → potentially taxable gain. Same asset, same price — the date decides.",
+        },
+      ],
+      sources: [
+        {
+          labelPt: "AT — Folheto «Criptoativos» (PDF)",
+          labelEn: "AT — “Criptoativos” leaflet (PDF)",
+          url: "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Folhetos_informativos/Documents/Criptoativos.pdf",
+        },
+        {
+          labelPt: "Código do IRS — art. 10.º (mais-valias)",
+          labelEn: "IRS Code — art. 10 (capital gains)",
+          url: "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/irs10.aspx",
+        },
+      ],
+      uncertaintyPt:
+        "A exclusão de tributação tem condições e excepções que mudam por lei — nomeadamente o que conta como «valor mobiliário» e rendimentos associados. Não afirmamos a tua isenção: confirma com a AT/TOC no ano da declaração.",
+      uncertaintyEn:
+        "The exclusion has conditions and exceptions that change by law — notably what counts as a “security” and associated income. We do not assert your exemption: confirm with the AT/accountant in the filing year.",
+    },
+    {
+      id: "swap",
+      titlePt: "Trocas cripto↔cripto e stablecoins",
+      titleEn: "Crypto↔crypto and stablecoin swaps",
+      asOf: "2026-09-11",
+      bodyPt:
+        "O folheto AT distingue a permuta de criptoactivos da alienação onerosa: trocar um criptoactivo por outro não é, por si, a operação descrita para tributação de mais-valias — o valor de aquisição transporta-se para o activo recebido e só se apura quando houver alienação onerosa (por fiat, bens ou serviços). Isto difere de modelos noutros países (ex.: EUA), onde a permuta já tributa.",
+      bodyEn:
+        "The AT leaflet distinguishes crypto-asset swaps from onerous disposal: swapping one crypto-asset for another is not, by itself, the operation described for capital-gains taxation — the acquisition cost carries to the received asset and is only computed on an onerous disposal (for fiat, goods or services). This differs from models elsewhere (e.g., the US), where the swap already taxes.",
+      howToPt: [
+        "Regista cada troca com data, quantidades e valor EUR à data — o custo transporta-se e vais precisar dele quando venderes.",
+        "Na dúvida se uma operação é permuta ou alienação (ex.: pagar um serviço em cripto), trata-a como alienação até confirmares.",
+        "Na Carteira do CLAREZA podes exportar a actividade on-chain em CSV — matéria-prima para organizar o histórico.",
+      ],
+      howToEn: [
+        "Log every swap with date, amounts and EUR value at the time — the cost carries over and you'll need it when you sell.",
+        "When unsure whether an operation is a swap or a disposal (e.g., paying for a service in crypto), treat it as a disposal until confirmed.",
+        "In CLAREZA's Wallet you can export on-chain activity as CSV — raw material to organise your history.",
+      ],
+      examples: [
+        {
+          titlePt: "Exemplo — cadeia de trocas",
+          titleEn: "Example — a chain of swaps",
+          bodyPt:
+            "EUR→BTC→ETH→EUR: só a última perna (ETH→EUR) é a alienação onerosa apurada. As pernas BTC→ETH transportam custo. O detalhe de como contam os 365 dias numa cadeia de permutas é ponto a confirmar com a AT/TOC — não inventamos aqui.",
+          bodyEn:
+            "EUR→BTC→ETH→EUR: only the last leg (ETH→EUR) is the computed onerous disposal. The BTC→ETH legs carry cost basis. How the 365 days count across a swap chain is a point to confirm with the AT/accountant — we don't invent it here.",
+        },
+      ],
+      sources: [
+        {
+          labelPt: "AT — Folheto «Criptoativos» (PDF)",
+          labelEn: "AT — “Criptoativos” leaflet (PDF)",
+          url: "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Folhetos_informativos/Documents/Criptoativos.pdf",
+        },
+      ],
+      uncertaintyPt:
+        "Stablecoins e tokens com características de valor mobiliário podem ter enquadramento distinto. Se a tua operação mistura pagamento, rendimento ou activo atípico, valida antes de assumir o tratamento de permuta.",
+      uncertaintyEn:
+        "Stablecoins and tokens with security-like features may have different treatment. If your operation mixes payment, income or an atypical asset, validate before assuming swap treatment.",
+    },
+    {
+      id: "anexos",
+      titlePt: "Onde entra no IRS (categorias e anexos)",
+      titleEn: "Where it lands in the IRS (categories and annexes)",
+      asOf: "2026-09-11",
+      bodyPt:
+        "O folheto AT organiza os rendimentos de criptoactivos por natureza do facto: alienação onerosa segue para o regime de mais-valias (Categoria G, com os quadros previstos nos anexos); rendimentos tipo remuneração/juros/rewards podem seguir para a Categoria E (rendimentos de capitais); e actividade exercida a título profissional/empresarial segue para a Categoria B. A categoria decide o anexo e a tributação — não é tudo «uma taxa de cripto».",
+      bodyEn:
+        "The AT leaflet organises crypto-asset income by the nature of the fact: onerous disposal follows the capital-gains regime (Category G, with the annex boxes foreseen); interest/reward-type income may fall under Category E (capital income); and activity carried out professionally/business-wise follows Category B. The category decides the annex and the tax — it is not all “one crypto rate”.",
+      howToPt: [
+        "Classifica cada operação pela natureza: venda (G), rendimento (E possível), actividade profissional (B possível).",
+        "No Portal das Finanças, o anexo e quadro exactos são os do ano da declaração — usam-se os do folheto AT como mapa, não como substituto.",
+        "Se tens várias naturezas misturadas (vendas + staking + mineração), organiza-as separadamente antes de preencher.",
+      ],
+      howToEn: [
+        "Classify each operation by nature: sale (G), yield (possibly E), professional activity (possibly B).",
+        "On Portal das Finanças, the exact annex and box are the filing year's — use the AT leaflet as a map, not a substitute.",
+        "If you mix several natures (sales + staking + mining), organise them separately before filing.",
+      ],
+      examples: [
+        {
+          titlePt: "Exemplo — três factos, três caminhos",
+          titleEn: "Example — three facts, three paths",
+          bodyPt:
+            "Vender BTC por euros → potencial Cat. G. Juros de um depósito de cripto → pode ser Cat. E. Mineração como profissão → pode ser Cat. B. O mesmo portfólio pode gerar três enquadramentos distintos — separar é metade do trabalho.",
+          bodyEn:
+            "Selling BTC for euros → potential Cat. G. Interest from a crypto deposit → possibly Cat. E. Mining as a profession → possibly Cat. B. The same portfolio can yield three different frameworks — separating is half the work.",
+        },
+      ],
+      sources: [
+        {
+          labelPt: "AT — Folheto «Criptoativos» (PDF)",
+          labelEn: "AT — “Criptoativos” leaflet (PDF)",
+          url: "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Folhetos_informativos/Documents/Criptoativos.pdf",
+        },
+        {
+          labelPt: "Portal das Finanças — IRS",
+          labelEn: "Portal das Finanças — IRS",
+          url: "https://www.portaldasfinancas.gov.pt/",
+        },
+      ],
+      uncertaintyPt:
+        "A fronteira entre Categorias (sobretudo E vs B em yields/staking, e quando uma actividade passa a «profissional») é das zonas menos literais do regime. Para volume relevante, TOC obrigatório — não classificamos casos concretos.",
+      uncertaintyEn:
+        "The border between categories (especially E vs B in yields/staking, and when an activity becomes “professional”) is among the least literal parts of the regime. For meaningful volume, an accountant is mandatory — we don't classify concrete cases.",
+    },
+    {
+      id: "declarar",
+      titlePt: "Como declarar (passo a passo)",
+      titleEn: "How to file (step by step)",
+      asOf: "2026-09-11",
+      bodyPt:
+        "A declaração de IRS entrega-se anualmente no Portal das Finanças, em regra entre abril e junho, relativa ao ano civil anterior. Para cripto, o essencial é chegar com o histórico organizado: cada alienação com data de aquisição, data de alienação e valores em euros. Sem histórico não há declaração fiável — e o histórico constrói-se durante o ano, não em março.",
+      bodyEn:
+        "The IRS return is filed annually on Portal das Finanças, generally between April and June, covering the previous calendar year. For crypto, the essential is arriving with organised history: each disposal with acquisition date, disposal date and values in euros. Without history there is no reliable return — and history is built during the year, not in March.",
+      howToPt: [
+        "Durante o ano: exporta CSV de cada exchange/wallet a cada trimestre; na Carteira do CLAREZA exportas actividade on-chain.",
+        "Em março: consolida por activo e por data; separa alienações, permutas e rendimentos.",
+        "Na declaração: segue o mapa do folheto AT para anexos/quadros do ano; quando o valor for material, um TOC revê antes de submeter.",
+        "Guarda o arquivo com a declaração — a AT pode pedir comprovativos anos depois.",
+      ],
+      howToEn: [
+        "During the year: export CSV from each exchange/wallet every quarter; in CLAREZA's Wallet you export on-chain activity.",
+        "In March: consolidate by asset and date; separate disposals, swaps and income.",
+        "At filing: follow the AT leaflet map for the year's annexes/boxes; when the amount is material, have an accountant review before submitting.",
+        "Keep the archive with the return — the AT may request proof years later.",
+      ],
+      examples: [
+        {
+          titlePt: "Exemplo — a pasta do ano",
+          titleEn: "Example — the year's folder",
+          bodyPt:
+            "Uma pasta por ano civil: extratos de exchanges (CSV), CSV on-chain da Carteira, notas de permutas, e um ficheiro consolidado por operação. Quando chega abril, declarar é transcrever — não reconstruir o ano de memória.",
+          bodyEn:
+            "One folder per calendar year: exchange statements (CSV), on-chain CSV from the Wallet, swap notes, and a consolidated file per operation. When April arrives, filing is transcribing — not rebuilding the year from memory.",
+        },
+      ],
+      sources: [
+        {
+          labelPt: "Portal das Finanças — entrega do IRS",
+          labelEn: "Portal das Finanças — IRS filing",
+          url: "https://www.portaldasfinancas.gov.pt/",
+        },
+        {
+          labelPt: "AT — Folheto «Criptoativos» (PDF)",
+          labelEn: "AT — “Criptoativos” leaflet (PDF)",
+          url: "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Folhetos_informativos/Documents/Criptoativos.pdf",
+        },
+      ],
+      uncertaintyPt:
+        "Prazos, anexos e campos variam por ano — e situações atípicas (mudança de residência fiscal, herança, grandes volumes) saem do âmbito desta faixa. Isto é orientação de organização, não instrução de preenchimento.",
+      uncertaintyEn:
+        "Deadlines, annexes and fields vary by year — and atypical situations (tax-residence change, inheritance, large volumes) are beyond this lane. This is organisational orientation, not filing instructions.",
     },
   ] satisfies PortugalSection[],
   links: [

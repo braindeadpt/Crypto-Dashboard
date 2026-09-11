@@ -20,6 +20,11 @@ export function AtlasArticle({ slug }: { slug: string }) {
       </Link>
       <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-faint">
         {t("level")}: {t(concept.level)}
+        {concept.asOf && (
+          <span className="ml-3 font-normal normal-case">
+            · {t("asOf", { date: concept.asOf })}
+          </span>
+        )}
       </p>
       <h1 className="mt-2 text-4xl font-semibold tracking-tight">{title}</h1>
       <p className="mt-3 text-lg text-muted">

@@ -310,7 +310,26 @@ export function InstrumentDesk({
               value={mempool ? `${mempool.fastestFee} sat/vB` : "—"}
               history={hist.fee_btc}
               locale={histLocale}
-            />
+            >
+              {mempool && (
+                <div className="mt-2 space-y-1 border-t border-line/60 pt-2">
+                  <p className="flex flex-wrap gap-x-2 font-mono text-[0.6rem] text-faint">
+                    <span>30m {mempool.halfHourFee}</span>
+                    <span>1h {mempool.hourFee}</span>
+                    <span>eco {mempool.economyFee}</span>
+                    <span>min {mempool.minimumFee}</span>
+                  </p>
+                  {mempool.pendingCount != null && (
+                    <p className="font-mono text-[0.6rem] text-faint">
+                      {ti("labels.mempoolPending", {
+                        n: mempool.pendingCount.toLocaleString("en"),
+                        vsize: mempool.pendingVsizeMb?.toFixed(1) ?? "—",
+                      })}
+                    </p>
+                  )}
+                </div>
+              )}
+            </ExpandedMetric>
           </div>
         </section>
       </div>

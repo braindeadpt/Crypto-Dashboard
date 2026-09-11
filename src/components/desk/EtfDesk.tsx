@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import type { EtfAssetFlows, EtfSnapshot } from "@/lib/data/etf";
+import type { EtfAssetFlows, EtfDailyFlow, EtfSnapshot } from "@/lib/data/etf";
 import { cn, formatUsdMillions } from "@/lib/format";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -195,6 +195,8 @@ function AssetCard({ title, flows }: { title: string; flows: EtfAssetFlows }) {
         />
       </div>
 
+      <FlowBars history={flows.history} />
+
       {topTickers.length > 0 && (
         <ul className="mt-4 space-y-1 border-t border-line pt-3">
           {topTickers.map(([ticker, v]) => (
@@ -211,6 +213,51 @@ function AssetCard({ title, flows }: { title: string; flows: EtfAssetFlows }) {
           ))}
         </ul>
       )}
+    </div>
+  );
+}
+
+/** Daily net-flow bars — last ~20 days, up/down tone. */
+function FlowBars({ history }: { history: EtfDailyFlow[] }) {
+  const days = history.slice(-20);
+  if (days.length < 2) return null;
+  const W = 240;
+  const H = 48;
+  const mid = H / 2;
+  const maxAbs = Math.max(...days.map((d) => Math.abs(d.totalUsdM)), 1);
+  const bw = W / days.length;
+  return (
+    <div className="mt-4 border-t border-line pt-3">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="w-full"
+        role="img"
+        aria-label="Daily net flows"
+      >
+        <line
+          x1="0"
+          y1={mid}
+          x2={W}
+          y2={mid}
+          stroke="currentColor"
+          strokeWidth="0.5"
+          className="text-line"
+        />
+        {days.map((d, i) => {
+          const h = (Math.abs(d.totalUsdM) / maxAbs) * (H / 2 - 2);
+          const up = d.totalUsdM >= 0;
+          return (
+            <rect
+              key={d.date}
+              x={i * bw + 1}
+              y={up ? mid - h : mid}
+              width={Math.max(1, bw - 2)}
+              height={Math.max(0.5, h)}
+              className={up ? "fill-up" : "fill-down"}
+            />
+          );
+        })}
+      </svg>
     </div>
   );
 }

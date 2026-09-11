@@ -1,4 +1,5 @@
 import { OperatorBoard } from "@/components/board/OperatorBoard";
+import { OnboardingHint } from "@/components/layout/OnboardingHint";
 import { getFrontPageData } from "@/lib/data/bundle";
 import { setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
@@ -42,11 +43,16 @@ async function HomeBoard({ locale }: { locale: string }) {
   }
 
   return (
-    <OperatorBoard
-      market={data.market}
-      regime={data.regime}
-      ritual={data.ritual}
-      readings={data.readings}
-    />
+    <>
+      <div className="section-pad pt-4">
+        <OnboardingHint />
+      </div>
+      <OperatorBoard
+        market={data.market}
+        regime={data.regime}
+        ritual={data.ritual}
+        readings={data.readings}
+      />
+    </>
   );
 }

@@ -39,6 +39,11 @@ export const metadata: Metadata = {
   title: "CLAREZA Crypto — Observatório de mercado",
   description:
     "Observatório de mercado crypto para operadores: preços, derivados, liquidações ao vivo, DeFi e contexto — PT-PT.",
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

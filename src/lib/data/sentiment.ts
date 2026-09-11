@@ -1,6 +1,6 @@
 import { fetchFundingRate, fetchOpenInterest } from "@/lib/data/binance";
 import { fetchOiChange24hPct } from "@/lib/data/derivatives";
-import { fetchFearGreed } from "@/lib/data/feargreed";
+import { fetchFearGreed, fetchFearGreedHistory } from "@/lib/data/feargreed";
 import { readSnapshot } from "@/lib/data/snapshotStore";
 import type { SentimentSnapshot } from "@/lib/types";
 
@@ -22,6 +22,7 @@ async function sentimentFromDisk(): Promise<SentimentSnapshot | null> {
     fearGreed: snap.fearGreed,
     funding: snap.funding,
     openInterest: snap.openInterest,
+    fngHistory: snap.fngHistory,
     updatedAt: snap.updatedAt,
   };
 }
@@ -29,11 +30,12 @@ async function sentimentFromDisk(): Promise<SentimentSnapshot | null> {
 /** Live Binance + Fear&Greed; disk fixture / neutral if upstream fails. */
 export async function fetchSentimentSnapshot(): Promise<SentimentSnapshot> {
   try {
-    const [fng, funding, oi, oiChg] = await Promise.all([
+    const [fng, funding, oi, oiChg, fngHistory] = await Promise.all([
       fetchFearGreed(),
       fetchFundingRate("BTCUSDT"),
       fetchOpenInterest("BTCUSDT"),
       fetchOiChange24hPct("BTCUSDT").catch(() => null),
+      fetchFearGreedHistory(30).catch(() => undefined),
     ]);
 
     const fundingBias =
@@ -54,6 +56,7 @@ export async function fetchSentimentSnapshot(): Promise<SentimentSnapshot> {
         value: oi.value * funding.markPrice,
         change24hPct: oiChg,
       },
+      fngHistory,
       updatedAt: new Date().toISOString(),
     };
   } catch {

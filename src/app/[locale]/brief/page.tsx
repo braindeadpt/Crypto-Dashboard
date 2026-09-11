@@ -1,4 +1,5 @@
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
+import { JournalCard } from "@/components/desk/JournalCard";
 import { getFrontPageData } from "@/lib/data/bundle";
 import { redirect } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -25,7 +26,10 @@ export default async function BriefPage({
 
   return (
     <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-6">
-      <DailyRitualCard ritual={data.ritual} />
+      <div className="mx-auto max-w-3xl">
+        <DailyRitualCard ritual={data.ritual} />
+        <JournalCard />
+      </div>
     </div>
   );
 }

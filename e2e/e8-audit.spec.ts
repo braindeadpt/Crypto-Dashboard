@@ -126,6 +126,9 @@ test.describe("E8 · structural audit", () => {
     await gotoExpertise(page, "/pt/contexto", "operator");
     const contexto = await measureVisible(page);
 
+    await gotoExpertise(page, "/pt/carteira", "operator");
+    const carteira = await measureVisible(page);
+
     await gotoExpertise(page, "/pt", "citizen");
     const homeCitizen = await measureVisible(page);
     await gotoExpertise(page, "/pt", "operator");
@@ -234,6 +237,7 @@ test.describe("E8 · structural audit", () => {
         home,
         mundo,
         contexto,
+        carteira,
         dial: {
           homeCitizen: {
             chars: homeCitizen.chars,
@@ -291,6 +295,11 @@ test.describe("E8 · structural audit", () => {
             value: contexto.svgs,
             pass: contexto.svgs > 0,
           },
+          carteiraLoads: {
+            target: "chars > 200",
+            value: carteira.chars,
+            pass: carteira.chars > 200,
+          },
           btcPriceHits: {
             target: "1×",
             value: home.btcPriceHits,
@@ -324,6 +333,7 @@ test.describe("E8 · structural audit", () => {
 
     expect(home.percentSigns, "home % count").toBeLessThan(30);
     expect(contexto.svgs, "contexto SVGs").toBeGreaterThan(0);
+    expect(carteira.chars, "carteira renders content").toBeGreaterThan(200);
     expect(mundo.chars, "mundo chars grew").toBeGreaterThanOrEqual(
       before.mundoChars * 1.5,
     );
