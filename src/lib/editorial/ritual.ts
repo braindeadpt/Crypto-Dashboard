@@ -62,7 +62,9 @@ export type DailyRitual = {
   whyItMattersPt: string;
   whyItMattersEn: string;
   uncertainty: string;
+  uncertaintyEn: string;
   watchNext: string;
+  watchNextEn: string;
   sources: { title: string; url: string }[];
   credibilityTier: "A" | "B" | "C";
   relatedMetrics: string[];
@@ -227,9 +229,14 @@ export function buildDailyRitual(args: {
     whyItMattersEn,
     uncertainty:
       "Séries diárias podem atrasar vs. o tape live; funding e liquidações são proxies.",
+    uncertaintyEn:
+      "Daily series can lag the live tape; funding and liquidations are proxies.",
     watchNext: quietDay
       ? "Se o dia continuar quieto: funding BTC, fluxo ETF e amplitude — sem forçar uma história."
       : "Confirma se o movimento tem volume e se o Caso & Efeito mantém a hipótese.",
+    watchNextEn: quietDay
+      ? "If the day stays quiet: BTC funding, ETF flow and breadth — don't force a story."
+      : "Confirm the move has volume and that the Case & Effect file keeps its hypothesis.",
     sources: [
       { title: "CoinGecko", url: "https://www.coingecko.com/" },
       {

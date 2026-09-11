@@ -439,10 +439,7 @@ export function Pulso({ regime, hist, className = "" }: Props) {
               {sharing ? t("sharing") : t("share")}
             </button>
           </div>
-          <h2 className="mt-3 font-display text-title text-ink text-balance">
-            {headline}
-          </h2>
-          <p className="mt-2 max-w-xl text-body text-muted">{summary}</p>
+          <p className="mt-3 max-w-xl text-body text-muted">{summary}</p>
           <p className="mt-2 text-meta text-faint">{shape}</p>
 
           {/* Hover / focus panel */}

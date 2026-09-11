@@ -2,7 +2,6 @@
 
 import { ActHead } from "@/components/board/boardShared";
 import { HeroPanel } from "@/components/board/HeroPanel";
-import { QuestionCards } from "@/components/board/QuestionCards";
 import { ReadingTrio } from "@/components/board/ReadingCards";
 import { Pulso } from "@/components/instrument/Pulso";
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
@@ -66,33 +65,51 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
         sol={{ px: solPx, chg: solChg }}
       />
 
-      {/* Bento: o radar e as três leituras lado a lado em ecrã largo. */}
-      <div className="mt-3 grid items-stretch gap-3 lg:grid-cols-12">
-        <Pulso regime={regime} hist={hist} className="lg:col-span-5" />
-        <ReadingTrio readings={readings} className="lg:col-span-7" />
+      {/* Bento: o radar é instrumento de operador — Essencial recebe só as
+          três leituras em linguagem comum. */}
+      <div
+        className={`mt-3 grid items-stretch gap-3 ${
+          level !== "citizen" ? "lg:grid-cols-12" : ""
+        }`}
+      >
+        {level !== "citizen" && (
+          <Pulso regime={regime} hist={hist} className="lg:col-span-5" />
+        )}
+        <ReadingTrio
+          readings={readings}
+          className={level !== "citizen" ? "lg:col-span-7" : ""}
+        />
       </div>
-
-      {/* NÍVEL 2 — a evidência. Essencial fica-se pelo Nível 1. */}
-      {level !== "citizen" && <QuestionCards readings={readings} />}
 
       {/* O ritual passa para depois da resposta: quem quer o briefing lê-o a
           seguir; quem só quer saber o estado já foi servido acima. */}
       <DailyRitualCard ritual={ritual} className="mt-3" />
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border border-line bg-bg-elevated px-4 py-3">
-        <div>
-          <p className="text-label text-faint">{ti("bridgeEyebrow")}</p>
-          <p className="mt-0.5 text-body text-ink">
-            {level === "analyst" ? ti("bridgeAnalyst") : ti("bridgeDefault")}
-          </p>
-        </div>
+      {/* Cada página tem um trabalho — aprofundar é navegar, não re-ler. */}
+      <nav
+        className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-4"
+        aria-label={ti("deeperAria")}
+      >
+        <span className="text-label text-faint">{ti("deeper")}</span>
+        <Link
+          href="/fluxos"
+          className="text-meta text-muted transition hover:text-accent"
+        >
+          {ti("deeperFluxos")} →
+        </Link>
+        <Link
+          href="/mundo"
+          className="text-meta text-muted transition hover:text-accent"
+        >
+          {ti("deeperMundo")} →
+        </Link>
         <Link
           href="/instrumento"
-          className="shrink-0 border border-accent/40 bg-accent-dim px-3 py-2 text-label text-accent transition hover:border-accent"
+          className="text-meta text-muted transition hover:text-accent"
         >
-          {ti("openFull")} →
+          {ti("deeperInstrumento")} →
         </Link>
-      </div>
+      </nav>
 
       <div className="board-act">
         <ActHead title={ti("acts.listTitle")} note={ti("acts.listNote")} />

@@ -39,9 +39,6 @@ export function DailyRitualCard({ ritual, className = "" }: Props) {
   const t = useTranslations("ritual");
   const locale = useLocale();
   const loc = locale === "pt" ? "pt" : "en";
-  const headline = loc === "pt" ? ritual.headlinePt : ritual.headlineEn;
-  const why =
-    loc === "pt" ? ritual.whyItMattersPt : ritual.whyItMattersEn;
   const lessonTitle =
     loc === "pt" ? ritual.lesson.titlePt : ritual.lesson.titleEn;
   const lessonBody =
@@ -70,7 +67,7 @@ export function DailyRitualCard({ ritual, className = "" }: Props) {
         <p className="text-meta text-faint tabular-nums">{ritual.date}</p>
       </header>
 
-      {/* 1. Postura */}
+      {/* 1. Postura — estado + o que vigiar; a manchete vive no hero, não se repete aqui */}
       <div className="mt-4 grid gap-3 sm:gap-4 md:grid-cols-2">
         <Slot n={1} label={t("posture")}>
           <div className="flex flex-wrap items-center gap-2">
@@ -78,11 +75,13 @@ export function DailyRitualCard({ ritual, className = "" }: Props) {
               {t(`postureLabels.${ritual.posture}`)}
             </span>
           </div>
-          <p className="mt-2 font-display text-body text-ink text-balance">
-            {headline}
+          <p className="mt-2 text-body text-ink text-balance">
+            {loc === "pt" ? ritual.watchNext : ritual.watchNextEn}
           </p>
           <ExpertiseGate section="readings">
-            <p className="mt-1 text-meta text-muted">{why}</p>
+            <p className="mt-1 text-meta text-faint">
+              {loc === "pt" ? ritual.uncertainty : ritual.uncertaintyEn}
+            </p>
           </ExpertiseGate>
         </Slot>
 
