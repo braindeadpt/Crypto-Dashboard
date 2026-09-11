@@ -73,7 +73,7 @@ Canonical home is `.agents/skills/` (Agent Skills standard) — same files
 serve Claude, Cursor, Devin, Grok, Copilot, etc. `.claude/skills`,
 `.cursor/skills`, `.devin/skills`, `.grok/skills`, `.github/skills` are
 local junctions, gitignored and recreated automatically by the
-`postinstall` hook (`scripts/setup-agent-links.js`) on `npm install`.
+`postinstall` hook (`scripts/setup-agent-links.mjs`) on `npm install`.
 
 - `crypto-info-site` — house skill: product rules, page jobs, voice, tokens.
 - `coingecko`, `defi-data`, `defi-market-overview`, `token-research`,
