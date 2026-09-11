@@ -1,8 +1,9 @@
 "use client";
 
 import { ActHead } from "@/components/board/boardShared";
+import { HeroPanel } from "@/components/board/HeroPanel";
 import { QuestionCards } from "@/components/board/QuestionCards";
-import { ReadingHeadline, ReadingTrio } from "@/components/board/ReadingCards";
+import { ReadingTrio } from "@/components/board/ReadingCards";
 import { Pulso } from "@/components/instrument/Pulso";
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
 import { WatchlistPanel } from "@/components/watchlist/WatchlistPanel";
@@ -10,7 +11,6 @@ import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
 import type { DailyRitual } from "@/lib/editorial/ritual";
-import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { ReadingSet } from "@/lib/reading";
 import type { MarketSnapshot, RegimeResult } from "@/lib/types";
 import { useTranslations } from "next-intl";
@@ -34,7 +34,6 @@ type Props = {
  * Densidade pelo Dial: Essencial = só Nível 1 · Operador/Analista = 1 + 2.
  */
 export function OperatorBoard({ market, regime, ritual, readings }: Props) {
-  const t = useTranslations("board");
   const ti = useTranslations("instrumento");
   const { level } = useExpertise();
 
@@ -58,40 +57,20 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter">
-      {/* NÍVEL 1 — a resposta, antes de qualquer número solto */}
-      <ReadingHeadline readings={readings} />
-      <ReadingTrio readings={readings} />
+      {/* NÍVEL 1 — a resposta: manchete + preço live no mesmo palco */}
+      <HeroPanel
+        readings={readings}
+        date={ritual.date}
+        btc={{ px: btcPx, chg: btcChg }}
+        eth={{ px: ethPx, chg: ethChg }}
+        sol={{ px: solPx, chg: solChg }}
+      />
 
-      <Pulso regime={regime} hist={hist} className="mt-3" />
-
-      <section className="mt-3 flex flex-wrap items-end justify-between gap-3 border border-line bg-surface px-4 py-3">
-        <div>
-          <p className="text-label text-faint">{t("marketNow")}</p>
-          <p className="mt-1 font-display text-display text-ink">
-            BTC{" "}
-            <span className={deltaClass(btcChg)}>{formatUsd(btcPx)}</span>
-            <span className={`ml-3 text-data ${deltaClass(btcChg)}`}>
-              {btcChg >= 0 ? "▲" : "▼"} {formatPct(btcChg)}
-            </span>
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-4">
-          <div>
-            <p className="text-label text-faint">ETH</p>
-            <p className={`text-data ${deltaClass(ethChg)}`}>
-              {formatUsd(ethPx)} · {formatPct(ethChg)}
-            </p>
-          </div>
-          {solPx != null && solChg != null && (
-            <div>
-              <p className="text-label text-faint">SOL</p>
-              <p className={`text-data ${deltaClass(solChg)}`}>
-                {formatUsd(solPx)} · {formatPct(solChg)}
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Bento: o radar e as três leituras lado a lado em ecrã largo. */}
+      <div className="mt-3 grid items-stretch gap-3 lg:grid-cols-12">
+        <Pulso regime={regime} hist={hist} className="lg:col-span-5" />
+        <ReadingTrio readings={readings} className="lg:col-span-7" />
+      </div>
 
       {/* NÍVEL 2 — a evidência. Essencial fica-se pelo Nível 1. */}
       {level !== "citizen" && <QuestionCards readings={readings} />}

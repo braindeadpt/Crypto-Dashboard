@@ -99,9 +99,15 @@ export function ReadingHeadline({ readings }: { readings: ReadingSet }) {
   );
 }
 
-export function ReadingTrio({ readings }: { readings: ReadingSet }) {
+export function ReadingTrio({
+  readings,
+  className = "",
+}: {
+  readings: ReadingSet;
+  className?: string;
+}) {
   return (
-    <div className="mt-3 grid gap-3 md:grid-cols-3">
+    <div className={`grid gap-3 md:grid-cols-3 ${className}`}>
       <ReadingCard reading={readings.direction} />
       <ReadingCard reading={readings.risk} />
       <ReadingCard reading={readings.money} />

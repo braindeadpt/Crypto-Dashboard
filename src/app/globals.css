@@ -399,6 +399,21 @@ button {
   box-shadow: var(--elev-hero);
 }
 
+/* Ambient field — particles fade toward the edges so the hero stays a
+   reading surface, not a screensaver. */
+.field-fade {
+  -webkit-mask-image: radial-gradient(
+    115% 95% at 72% 38%,
+    black 45%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    115% 95% at 72% 38%,
+    black 45%,
+    transparent 100%
+  );
+}
+
 /*
  * Secondary reads RECESSED, not just "same box again". Before, .panel and
  * .panel-secondary were byte-identical, so the tiers were fiction and the page
