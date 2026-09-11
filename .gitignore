@@ -51,5 +51,8 @@ next-env.d.ts
 /data/perf/
 /data/audit/
 /audit-shots/
+
+# local junctions created by `skills` CLI — canonical copy is .agents/skills/
+.claude/
 .shot.mjs
 .clip.mjs
