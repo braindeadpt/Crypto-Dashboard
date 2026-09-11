@@ -53,7 +53,10 @@ next-env.d.ts
 /data/audit/
 /audit-shots/
 
-# local junctions created by `skills` CLI — canonical copy is .agents/skills/
+# local junctions created by `skills` CLI / setup-agent-links — canonical copy is .agents/skills/
 .claude/
+.devin/skills/
+.grok/
+.github/skills/
 .shot.mjs
 .clip.mjs

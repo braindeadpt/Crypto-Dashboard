@@ -70,10 +70,10 @@ canonical doc `src/app/design-system.md`.
 ## Skills
 
 Canonical home is `.agents/skills/` (Agent Skills standard) — same files
-serve Claude, Cursor, Devin, Copilot, etc. `.claude/skills`, `.cursor/` are
-local junctions/copies and stay gitignored; on a fresh clone recreate with
-`New-Item -ItemType Junction -Path <dir> -Target .agents\skills` (Windows)
-or `ln -sfn ../.agents/skills <dir>`.
+serve Claude, Cursor, Devin, Grok, Copilot, etc. `.claude/skills`,
+`.cursor/skills`, `.devin/skills`, `.grok/skills`, `.github/skills` are
+local junctions, gitignored and recreated automatically by the
+`postinstall` hook (`scripts/setup-agent-links.js`) on `npm install`.
 
 - `crypto-info-site` — house skill: product rules, page jobs, voice, tokens.
 - `coingecko`, `defi-data`, `defi-market-overview`, `token-research`,
