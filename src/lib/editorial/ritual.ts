@@ -127,23 +127,22 @@ function pickDont(date: string): RitualDont {
 function formatDeltaLine(d: DayDelta, locale: "pt" | "en"): string {
   const label = locale === "pt" ? d.labelPt : d.labelEn;
   const sign = d.absChange >= 0 ? "+" : "";
-  if (d.unit === "rate") {
-    return `${label}: ${sign}${(d.absChange * 100).toFixed(4)} pp (${(d.curr * 100).toFixed(4)}%)`;
+  const now = locale === "pt" ? "agora" : "now";
+  const vs = locale === "pt" ? "vs. dia anterior" : "vs. previous day";
+  switch (d.unit) {
+    case "rate":
+      return `${label}: ${sign}${(d.absChange * 100).toFixed(4)} pp, ${now} ${(d.curr * 100).toFixed(4)}%`;
+    case "usd_m":
+      return `${label}: ${sign}${d.absChange.toFixed(0)}M USD ${vs}, ${now} ${d.curr.toFixed(0)}M`;
+    case "index":
+      return `${label}: ${sign}${d.absChange.toFixed(0)} ${locale === "pt" ? "pontos" : "points"}, ${now} ${d.curr.toFixed(0)}`;
+    case "pct":
+      return `${label}: ${sign}${d.absChange.toFixed(1)} pp, ${now} ${d.curr.toFixed(1)}%`;
+    case "usd":
+      return `${label}: ${d.pctChange != null ? `${sign}${d.pctChange.toFixed(1)}%` : `${sign}${d.absChange.toFixed(0)} USD`} ${vs}`;
+    default:
+      return `${label}: ${sign}${d.absChange.toFixed(2)} ${vs}`;
   }
-  if (d.unit === "usd_m") {
-    return `${label}: ${sign}${d.absChange.toFixed(0)}M → ${d.curr.toFixed(0)}M`;
-  }
-  if (d.unit === "index" || d.unit === "pct") {
-    const pct =
-      d.pctChange != null ? ` (${sign}${d.pctChange.toFixed(1)}%)` : "";
-    return `${label}: ${sign}${d.absChange.toFixed(d.unit === "index" ? 0 : 1)}${d.unit === "pct" ? " pp" : ""}${pct}`;
-  }
-  if (d.unit === "usd") {
-    const pct =
-      d.pctChange != null ? ` (${sign}${d.pctChange.toFixed(1)}%)` : "";
-    return `${label}: ${sign}${d.pctChange?.toFixed(1) ?? "—"}%${pct}`;
-  }
-  return `${label}: ${sign}${d.absChange.toFixed(2)}`;
 }
 
 function pickMover(
@@ -188,17 +187,17 @@ export function buildDailyRitual(args: {
   const dont = pickDont(date);
 
   const deltaFactPt = quietDay
-    ? "Desde ontem: nada de material nas séries centrais — dia quieto."
-    : `Desde ontem: ${notableDeltas.map((d) => formatDeltaLine(d, "pt")).join(" · ")}`;
+    ? "Desde ontem, nada de material nas séries centrais — dia quieto."
+    : `Desde ontem: ${notableDeltas.map((d) => formatDeltaLine(d, "pt")).join(". ")}.`;
   const deltaFactEn = quietDay
     ? "Since yesterday: nothing material in the core series — a quiet day."
-    : `Since yesterday: ${notableDeltas.map((d) => formatDeltaLine(d, "en")).join(" · ")}`;
+    : `Since yesterday: ${notableDeltas.map((d) => formatDeltaLine(d, "en")).join(". ")}.`;
 
   const moverFactPt = mover
     ? ` Maior movimento: ${mover.symbol} ${mover.change24h >= 0 ? "+" : ""}${mover.change24h.toFixed(1)}%.`
     : "";
 
-  const fact = `BTC ${market.btc.change24h >= 0 ? "+" : ""}${market.btc.change24h.toFixed(2)}% · F&G ${sentiment.fearGreed.value} · Dom ${market.global.btcDominance.toFixed(1)}%. ${deltaFactPt}${moverFactPt}`;
+  const fact = `BTC ${market.btc.change24h >= 0 ? "+" : ""}${market.btc.change24h.toFixed(2)}% · Medo&Ganância ${sentiment.fearGreed.value} · Dominância ${market.global.btcDominance.toFixed(1)}%. ${deltaFactPt}${moverFactPt}`;
 
   const whyItMattersPt = quietDay
     ? `${regime.headlinePt} Dia sem catalisador óbvio nas séries — o trabalho é não inventar narrativa.`

@@ -200,37 +200,37 @@ export function correlateMove(
 
     if (oi != null && Math.abs(oi) >= 3 && sameSign(oi, mover.change24h)) {
       score += 0.18;
-      forPt.push(`OI a mover-se com o preço (Δ ${fmtPct(oi)}) — alavancagem a acompanhar`);
+      forPt.push(`Posições abertas a acompanhar o preço (${fmtPct(oi)}) — a alavancagem segue o movimento`);
       forEn.push(`OI moving with price (Δ ${fmtPct(oi)}) — leverage accompanying the move`);
     } else if (oi != null && Math.abs(oi) >= 3 && !sameSign(oi, mover.change24h)) {
       score += 0.12;
-      forPt.push(`OI em sentido oposto ao preço (Δ ${fmtPct(oi)}) — possível short/long squeeze`);
+      forPt.push(`Posições abertas em sentido contrário ao preço (${fmtPct(oi)}) — pode ser um squeeze de shorts ou de longs`);
       forEn.push(`OI opposite to price (Δ ${fmtPct(oi)}) — possible short/long squeeze`);
     } else if (oi == null) {
-      againstPt.push("Sem variação de OI disponível para este activo");
+      againstPt.push("Sem dados de posições abertas para este activo hoje");
       againstEn.push("No OI change available for this asset");
     }
 
     if (ls != null && up && ls >= 1.5) {
       score += 0.08;
-      forPt.push(`L/S elevado (${ls.toFixed(2)}) — contas long crowding`);
+      forPt.push(`Rácio long/short elevado (${ls.toFixed(2)}) — muitas contas posicionadas para a subida`);
       forEn.push(`Elevated L/S (${ls.toFixed(2)}) — long account crowding`);
     } else if (ls != null && !up && ls <= 0.75) {
       score += 0.08;
-      forPt.push(`L/S baixo (${ls.toFixed(2)}) — contas short crowding`);
+      forPt.push(`Rácio long/short baixo (${ls.toFixed(2)}) — muitas contas posicionadas para a queda`);
       forEn.push(`Low L/S (${ls.toFixed(2)}) — short account crowding`);
     }
 
     if (abs < 3) {
       score -= 0.1;
-      againstPt.push("Movimento pequeno — sinal de derivados pouco discriminativo");
+      againstPt.push("Movimento pequeno — os derivados dizem pouco sobre ele");
       againstEn.push("Small move — derivatives signal is weakly discriminative");
     }
 
     hyps.push({
       id: "leverage",
-      labelPt: "Consistente com fluxo de alavancagem (derivados)",
-      labelEn: "Consistent with leveraged / derivatives flow",
+      labelPt: "Fluxo de derivados e alavancagem",
+      labelEn: "Derivatives & leverage flow",
       confidence: clamp01(score),
       forPt,
       forEn,
@@ -251,40 +251,40 @@ export function correlateMove(
     let score = 0.1;
 
     if (!(isBtc || isEth)) {
-      againstPt.push("ETF spot BTC/ETH não aplicam directamente a este activo");
+      againstPt.push("Os ETFs de BTC/ETH não se aplicam directamente a este activo");
       againstEn.push("Spot BTC/ETH ETFs do not apply directly to this asset");
       score = 0.05;
     } else if (etf == null) {
-      againstPt.push("Snapshot ETF indisponível — não há evidência spot institucional hoje");
+      againstPt.push("Dados de ETF indisponíveis — sem evidência institucional hoje");
       againstEn.push("ETF snapshot unavailable — no institutional spot evidence today");
       score = 0.08;
     } else {
       if (up && etf > 50) {
         score += 0.28;
-        forPt.push(`Entradas ETF combinadas +${etf.toFixed(0)}M USD — procura spot institucional`);
+        forPt.push(`ETFs com entradas combinadas de +${etf.toFixed(0)}M USD — procura institucional à vista`);
         forEn.push(`Combined ETF inflows +${etf.toFixed(0)}M USD — institutional spot demand`);
       } else if (!up && etf < -50) {
         score += 0.28;
-        forPt.push(`Saídas ETF combinadas ${etf.toFixed(0)}M USD — oferta spot institucional`);
+        forPt.push(`ETFs com saídas combinadas de ${etf.toFixed(0)}M USD — oferta institucional à vista`);
         forEn.push(`Combined ETF outflows ${etf.toFixed(0)}M USD — institutional spot supply`);
       } else if (up && etf < -50) {
-        againstPt.push("ETF a sair enquanto o preço sobe — menos consistente com bid spot");
+        againstPt.push("ETFs em saída enquanto o preço sobe — menos consistente com procura à vista");
         againstEn.push("ETF outflows while price rises — less consistent with spot bid");
         score -= 0.05;
       } else if (!up && etf > 50) {
-        againstPt.push("ETF a entrar enquanto o preço cai — pressão pode ser alavancagem/outro");
+        againstPt.push("ETFs em entrada enquanto o preço cai — a pressão pode vir de alavancagem ou de outra fonte");
         againstEn.push("ETF inflows while price falls — pressure may be leverage/other");
         score -= 0.05;
       } else {
-        againstPt.push(`Fluxo ETF perto de neutro (${etf.toFixed(0)}M) — pouco explicativo`);
+        againstPt.push(`Fluxo de ETF perto de zero (${etf.toFixed(0)}M) — explica pouco`);
         againstEn.push(`Near-flat ETF flow (${etf.toFixed(0)}M) — weakly explanatory`);
       }
     }
 
     hyps.push({
       id: "spot-etf",
-      labelPt: "Consistente com fluxo spot / institucional (ETF)",
-      labelEn: "Consistent with spot / institutional (ETF) flow",
+      labelPt: "Procura ou oferta institucional (ETFs)",
+      labelEn: "Institutional spot flow (ETFs)",
       confidence: clamp01(score),
       forPt,
       forEn,
@@ -307,27 +307,27 @@ export function correlateMove(
 
     if (corrBtc && gapVsBtc <= 3) {
       score += 0.25;
-      forPt.push(`Move alinhado com BTC (${fmtPct(btc)}, gap ${gapVsBtc.toFixed(1)}pp)`);
+      forPt.push(`Movimento alinhado com o BTC (${fmtPct(btc)} — desvio de ${gapVsBtc.toFixed(1)} pp)`);
       forEn.push(`Aligned with BTC (${fmtPct(btc)}, gap ${gapVsBtc.toFixed(1)}pp)`);
     } else if (!isBtc && gapVsBtc >= 6) {
-      againstPt.push(`Desvio forte vs BTC (gap ${gapVsBtc.toFixed(1)}pp) — menos macro puro`);
+      againstPt.push(`Desvio forte face ao BTC (${gapVsBtc.toFixed(1)} pp) — menos provável ser só o mercado`);
       againstEn.push(`Large gap vs BTC (${gapVsBtc.toFixed(1)}pp) — less pure macro`);
       score -= 0.08;
     }
 
     if (breadth != null && !up && breadth <= 40) {
       score += 0.15;
-      forPt.push(`Amplitude estreita (${breadth}% em alta) — tape frágil de mercado`);
+      forPt.push(`Poucas moedas em alta (${breadth}%) — o mercado está frágil`);
       forEn.push(`Narrow breadth (${breadth}% green) — fragile market tape`);
     } else if (breadth != null && up && breadth >= 65) {
       score += 0.12;
-      forPt.push(`Amplitude larga (${breadth}% em alta) — participação ampla`);
+      forPt.push(`A maioria das moedas em alta (${breadth}%) — participação ampla`);
       forEn.push(`Wide breadth (${breadth}% green) — broad participation`);
     }
 
     if (Math.abs(ctx.marketCapChange24h) >= 2 && sameSign(ctx.marketCapChange24h, mover.change24h)) {
       score += 0.1;
-      forPt.push(`Cap. de mercado ${fmtPct(ctx.marketCapChange24h)} no mesmo sentido`);
+      forPt.push(`Capitalização total ${fmtPct(ctx.marketCapChange24h)} no mesmo sentido`);
       forEn.push(`Market cap ${fmtPct(ctx.marketCapChange24h)} in the same direction`);
     }
 
@@ -339,8 +339,8 @@ export function correlateMove(
 
     hyps.push({
       id: "macro",
-      labelPt: "Consistente com risco macro / mercado amplo",
-      labelEn: "Consistent with broad market / macro risk",
+      labelPt: "O mercado amplo e o contexto macro",
+      labelEn: "Broad market / macro context",
       confidence: clamp01(score),
       forPt,
       forEn,
@@ -364,20 +364,20 @@ export function correlateMove(
 
     if (!isBtc && gapVsBtc >= 5) {
       score += 0.22;
-      forPt.push(`Desvio vs BTC de ${gapVsBtc.toFixed(1)}pp — componente específica do activo`);
+      forPt.push(`Desvio de ${gapVsBtc.toFixed(1)} pp face ao BTC — algo específico do activo`);
       forEn.push(`${gapVsBtc.toFixed(1)}pp gap vs BTC — asset-specific component`);
     } else if (isBtc) {
-      againstPt.push("BTC é a âncora macro — ‘idiosincrático’ aplica-se menos");
+      againstPt.push("O BTC é a âncora do mercado — «factor próprio» faz menos sentido aqui");
       againstEn.push("BTC is the macro anchor — ‘idiosyncratic’ applies less");
       score = 0.08;
     } else {
-      againstPt.push("Movimento próximo do BTC — pouca evidência idiosincrática nos dados");
+      againstPt.push("Movimento colado ao BTC — sem evidência de factor próprio nos dados");
       againstEn.push("Move close to BTC — little idiosyncratic evidence in the data");
     }
 
     if (volVsMcap != null && volVsMcap >= 0.25) {
       score += 0.15;
-      forPt.push(`Volume/mcap ${(volVsMcap * 100).toFixed(0)}% — rotação / especulação elevada`);
+      forPt.push(`Volume/capitalização em ${(volVsMcap * 100).toFixed(0)}% — rotação ou especulação elevada`);
       forEn.push(`Volume/mcap ${(volVsMcap * 100).toFixed(0)}% — elevated rotation / speculation`);
     }
 
@@ -389,8 +389,8 @@ export function correlateMove(
 
     hyps.push({
       id: "idio",
-      labelPt: "Consistente com factor específico do activo",
-      labelEn: "Consistent with an asset-specific factor",
+      labelPt: "Um factor específico do activo",
+      labelEn: "An asset-specific factor",
       confidence: clamp01(score),
       forPt,
       forEn,
@@ -431,9 +431,10 @@ export function correlateMove(
     conclusionEn =
       "Crossed signals (funding, OI, breadth, ETF, BTC correlation) are not enough for a reliable read. That is honesty, not failure: weak correlation ≠ cause. Revisit when the move and confirmation are clearer.";
   } else {
-    summaryPt = `Leitura líder: ${lead.labelPt} (peso ${Math.round(lead.confidence * 100)}%).`;
-    summaryEn = `Leading read: ${lead.labelEn} (weight ${Math.round(lead.confidence * 100)}%).`;
-    conclusionPt = `${lead.labelPt} é a hipótese mais consistente com os números disponíveis (peso ${Math.round(lead.confidence * 100)}%). Isto é correlação temporal de sinais — não prova de causa. Contradições: ${(lead.againstPt[0] ?? "nenhuma forte assinalada")}.`;
+    const leadLc = lead.labelPt[0].toLowerCase() + lead.labelPt.slice(1);
+    summaryPt = `A leitura mais consistente aponta para ${leadLc} — força do sinal ${Math.round(lead.confidence * 100)}%.`;
+    summaryEn = `Leading read: ${lead.labelEn} (signal strength ${Math.round(lead.confidence * 100)}%).`;
+    conclusionPt = `${lead.labelPt} é a hipótese mais consistente com os números disponíveis (força ${Math.round(lead.confidence * 100)}%). É correlação temporal entre sinais — não prova de causa. Contradições: ${(lead.againstPt[0] ?? "nenhuma forte assinalada")}.`;
     conclusionEn = `${lead.labelEn} is the hypothesis most consistent with available numbers (weight ${Math.round(lead.confidence * 100)}%). This is temporal signal correlation — not proof of cause. Contradictions: ${(lead.againstEn[0] ?? "none strong noted")}.`;
   }
 
