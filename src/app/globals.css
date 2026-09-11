@@ -368,6 +368,23 @@ button {
   scrollbar-width: thin;
 }
 
+/* Right-edge fade — signals the nav strip scrolls on small screens.
+   Masked only under sm where the six items actually overflow. */
+@media (max-width: 639.98px) {
+  .nav-fade {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      black calc(100% - 28px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      black calc(100% - 28px),
+      transparent
+    );
+  }
+}
+
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);

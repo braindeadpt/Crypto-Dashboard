@@ -741,6 +741,7 @@
     "changed": "O que mudou desde ontem",
     "quiet": "Nada de material nas séries centrais — dia quieto. Não inventamos narrativa.",
     "vs": "{from} → {to}",
+    "stale": "Séries paradas em {date} — deltas não são de hoje.",
     "move": "Movimento com contexto",
     "noMove": "Sem movimento absoluto ≥3% nos toppers — sem caso forçado.",
     "caseLink": "Caso & Efeito",

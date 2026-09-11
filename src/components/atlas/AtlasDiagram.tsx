@@ -409,6 +409,123 @@ function diagramFor(slug: string): ReactNode {
           {label(48, 84, "attention story", true)}
         </>
       );
+    case "seed-phrase":
+      return (
+        <>
+          {[0, 1, 2, 3].map((i) => (
+            <rect key={i} x={22 + i * 30} y="34" width="24" height="14" {...muted()} />
+          ))}
+          <path d="M80 54 V64" {...accent()} />
+          <circle cx="80" cy="72" r="6" {...accent()} />
+          {label(22, 30, "word word word word")}
+          {label(46, 92, "12/24 → all keys", true)}
+        </>
+      );
+    case "chave-privada":
+      return (
+        <>
+          <circle cx="56" cy="44" r="12" {...ink()} />
+          <path d="M66 52 L104 78 M96 72 L102 66 M102 76 L108 70" {...accent({ strokeWidth: 2.5 })} />
+          {label(30, 88, "signs every spend", true)}
+        </>
+      );
+    case "entropia":
+      return (
+        <>
+          {[22, 34, 48, 62, 76, 90, 104, 118].map((x, i) => (
+            <circle
+              key={i}
+              cx={x}
+              cy={i % 2 === 0 ? 34 : 56}
+              r="2.5"
+              fill="var(--muted)"
+            />
+          ))}
+          <path d="M70 66 L80 74 L90 66" {...muted()} />
+          <rect x="66" y="76" width="28" height="12" {...accent()} />
+          {label(44, 24, "randomness → seed", true)}
+        </>
+      );
+    case "bip39":
+      return (
+        <>
+          <circle cx="26" cy="48" r="3" fill="var(--muted)" />
+          <circle cx="34" cy="40" r="3" fill="var(--muted)" />
+          <circle cx="30" cy="58" r="3" fill="var(--muted)" />
+          <path d="M40 48 H64" {...muted()} />
+          {[0, 1].map((i) => (
+            <rect key={i} x={66 + i * 30} y="40" width="26" height="16" {...ink()} />
+          ))}
+          {label(68, 52, "w")}
+          {label(98, 52, "w")}
+          {label(40, 84, "entropy → words", true)}
+        </>
+      );
+    case "passphrase":
+      return (
+        <>
+          <rect x="26" y="34" width="52" height="20" {...ink()} />
+          {label(30, 48, "seed")}
+          <text x="88" y="52" fill="var(--accent)" style={{ fontSize: 12, fontFamily: "var(--font-mono)" }}>+1</text>
+          <rect x="104" y="34" width="34" height="20" {...accent()} />
+          {label(30, 78, "each = new wallet", true)}
+        </>
+      );
+    case "hardware-wallet":
+      return (
+        <>
+          <rect x="34" y="26" width="44" height="60" rx="4" {...ink()} />
+          <rect x="42" y="36" width="28" height="16" {...muted()} />
+          <path d="M78 60 H110 L118 48" {...accent()} />
+          {label(44, 48, "keys")}
+          {label(34, 78, "never leaves device", true)}
+        </>
+      );
+    case "multisig":
+      return (
+        <>
+          {[0, 1, 2].map((i) => (
+            <g key={i}>
+              <circle cx={30 + i * 24} cy="34" r="6" {...ink()} />
+              <path d={`M${34 + i * 24} 38 L${44 + i * 24} 48`} {...ink()} />
+            </g>
+          ))}
+          <path d="M30 58 H102" {...muted()} />
+          <rect x="92" y="30" width="34" height="28" {...accent()} />
+          <path d="M104 30 V22 H92 V30" {...accent()} />
+          {label(38, 84, "2-of-3 signs", true)}
+        </>
+      );
+    case "phishing":
+      return (
+        <>
+          <path d="M60 22 V50 Q60 64 74 64 Q88 64 88 50" {...accent({ strokeWidth: 2 })} />
+          <rect x="96" y="40" width="40" height="24" {...muted()} />
+          {label(100, 55, "bait")}
+          {label(24, 88, "urgency = red flag", true)}
+        </>
+      );
+    case "aprovacoes":
+      return (
+        <>
+          <circle cx="36" cy="48" r="14" {...ink()} />
+          <rect x="92" y="32" width="44" height="32" {...accent()} />
+          <path d="M52 48 H88" {...muted({ strokeDasharray: "4 3" })} />
+          {label(28, 48, "tkn")}
+          {label(52, 30, "permission stays", true)}
+          {label(56, 88, "revoke regularly", true)}
+        </>
+      );
+    case "address-poisoning":
+      return (
+        <>
+          <rect x="20" y="30" width="120" height="14" {...ink()} />
+          {label(24, 40, "0x12…ab  real")}
+          <rect x="20" y="54" width="120" height="14" {...accent()} />
+          {label(24, 64, "0x12…ab  fake")}
+          {label(36, 88, "same ends ≠ same addr", true)}
+        </>
+      );
     default:
       return (
         <>

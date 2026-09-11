@@ -55,7 +55,7 @@ export function SiteHeader() {
         </div>
       </div>
       <nav
-        className="obs-shell scroll-x flex gap-0 border-t border-line section-pad"
+        className="obs-shell scroll-x nav-fade flex gap-0 border-t border-line section-pad"
         aria-label={t("aria")}
       >
         {LINKS.map((link) => {

@@ -48,6 +48,12 @@ export function DailyRitualCard({ ritual, className = "" }: Props) {
     loc === "pt" ? ritual.lesson.summaryPt : ritual.lesson.summaryEn;
   const dont = loc === "pt" ? ritual.dont.pt : ritual.dont.en;
 
+  // Slot 2 claims "since yesterday" — flag when the series lag the brief date.
+  const deltaLagDays =
+    ritual.deltasAsOf != null
+      ? (Date.parse(ritual.date) - Date.parse(ritual.deltasAsOf)) / 86_400_000
+      : null;
+
   return (
     <section
       id="ritual"
@@ -109,6 +115,11 @@ export function DailyRitualCard({ ritual, className = "" }: Props) {
                 from: ritual.notableDeltas[0].prevDay,
                 to: ritual.notableDeltas[0].currDay,
               })}
+            </p>
+          )}
+          {deltaLagDays != null && deltaLagDays > 2 && ritual.deltasAsOf && (
+            <p className="mt-1 text-meta text-unsettled">
+              {t("stale", { date: ritual.deltasAsOf })}
             </p>
           )}
         </Slot>

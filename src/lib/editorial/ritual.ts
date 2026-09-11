@@ -52,6 +52,8 @@ export type DailyRitual = {
   quietDay: boolean;
   deltas: DayDelta[];
   notableDeltas: DayDelta[];
+  /** Newest day feeding the deltas (ISO date) — null when no series. */
+  deltasAsOf: string | null;
   mover: RitualMover | null;
   lesson: RitualLesson;
   dont: RitualDont;
@@ -176,6 +178,10 @@ export function buildDailyRitual(args: {
   const { market, regime, sentiment, deltas } = args;
   const date = utcToday();
   const notableDeltas = deltas.filter((d) => d.notable).slice(0, 5);
+  const deltasAsOf = deltas.reduce<string | null>(
+    (max, d) => (max == null || d.currDay > max ? d.currDay : max),
+    null,
+  );
   const mover = pickMover(market, args.cases ?? []);
   const quietDay = notableDeltas.length === 0 && mover == null;
   const lesson = pickLesson(date);
@@ -213,6 +219,7 @@ export function buildDailyRitual(args: {
     quietDay,
     deltas,
     notableDeltas,
+    deltasAsOf,
     mover,
     lesson,
     dont,

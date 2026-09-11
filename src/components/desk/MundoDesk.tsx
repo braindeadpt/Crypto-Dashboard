@@ -142,7 +142,7 @@ export function MundoDesk({ sectors, market, cases }: Props) {
               })}
             </nav>
 
-            <div className="space-y-6">
+            <div className="grid items-start gap-6 xl:grid-cols-2">
               {orderedCases.map((c) => (
                 <CaseEffectStage
                   key={c.id}

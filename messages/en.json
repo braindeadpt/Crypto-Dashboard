@@ -741,6 +741,7 @@
     "changed": "What changed since yesterday",
     "quiet": "Nothing material in the core series — a quiet day. We do not invent a narrative.",
     "vs": "{from} → {to}",
+    "stale": "Series frozen at {date} — deltas aren't from today.",
     "move": "Move with context",
     "noMove": "No absolute move ≥3% among toppers — no forced case.",
     "caseLink": "Case & Effect",
