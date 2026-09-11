@@ -3,6 +3,7 @@ import type { AtlasConcept } from "@/lib/types";
 export const ATLAS: AtlasConcept[] = [
   {
     slug: "bitcoin",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Bitcoin",
     titleEn: "Bitcoin",
@@ -17,6 +18,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "halving",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Halving",
     titleEn: "Halving",
@@ -31,6 +33,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "ciclo-de-4-anos",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Ciclo de 4 anos",
     titleEn: "Four-year cycle",
@@ -45,6 +48,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "volatilidade",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Volatilidade",
     titleEn: "Volatility",
@@ -59,6 +63,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "medo-e-ganancia",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Índice Medo e Ganância",
     titleEn: "Fear & Greed Index",
@@ -73,6 +78,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "funding-rate",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Funding rate",
     titleEn: "Funding rate",
@@ -87,6 +93,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "open-interest",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Open interest",
     titleEn: "Open interest",
@@ -101,6 +108,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "liquidacao",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Liquidação",
     titleEn: "Liquidation",
@@ -115,13 +123,14 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "alavancagem",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Alavancagem",
     titleEn: "Leverage",
     summaryPt: "Exposição maior do que o capital depositado — amplifica ganhos e perdas.",
     summaryEn: "More exposure than deposited capital — amplifies gains and losses.",
     bodyPt:
-      "10× sobre um movimento de 10% apaga a conta. Para literacia: se não consegue explicar a liquidação price, não deve usar alavancagem.",
+      "10× sobre um movimento de 10% apaga a conta. Para literacia: se não consegue explicar o preço de liquidação, não deve usar alavancagem.",
     bodyEn:
       "10× on a 10% move can wipe the account. Literacy test: if you can't explain liquidation price, you shouldn't use leverage.",
     relatedMetrics: ["funding-rate"],
@@ -129,6 +138,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "dominancia-btc",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Dominância BTC",
     titleEn: "BTC dominance",
@@ -143,6 +153,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "altcoins",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Altcoins",
     titleEn: "Altcoins",
@@ -157,6 +168,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "ethereum",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Ethereum",
     titleEn: "Ethereum",
@@ -171,6 +183,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "defi",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "DeFi",
     titleEn: "DeFi",
@@ -185,6 +198,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "tvl",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "TVL",
     titleEn: "TVL",
@@ -199,6 +213,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "stablecoins",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Stablecoins",
     titleEn: "Stablecoins",
@@ -213,6 +228,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "dex",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "DEX",
     titleEn: "DEX",
@@ -227,6 +243,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "gas",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Gas",
     titleEn: "Gas",
@@ -241,6 +258,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "camada-2",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Camada 2 (L2)",
     titleEn: "Layer 2 (L2)",
@@ -255,6 +273,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "staking",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Staking",
     titleEn: "Staking",
@@ -454,6 +473,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "mica",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "MiCA",
     titleEn: "MiCA",
@@ -468,6 +488,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "risco",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Risco",
     titleEn: "Risk",
@@ -482,20 +503,22 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "etf-spot",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "ETF spot de Bitcoin",
     titleEn: "Bitcoin spot ETF",
     summaryPt: "Fundo cotado que detém BTC e espelha o preço no mercado tradicional.",
     summaryEn: "Listed fund holding BTC that tracks price in traditional markets.",
     bodyPt:
-      "Fluxos de ETF tornaram-se um catalisador macro. Não estão no MVP de dados ao vivo da CLAREZA (fase 2), mas entram na narrativa do ciclo institucional.",
+      "Fluxos de ETF tornaram-se um catalisador macro. A CLAREZA mostra os fluxos diários BTC/ETH/SOL (Farside) no Fluxos — barras por dia, somas de 5 e 20 dias.",
     bodyEn:
-      "ETF flows became a macro catalyst. Not in CLAREZA's live MVP data (phase 2), but part of the institutional cycle narrative.",
+      "ETF flows became a macro catalyst. CLAREZA shows daily BTC/ETH/SOL flows (Farside) in Fluxos — per-day bars, 5- and 20-day sums.",
     relatedMetrics: [],
     relatedSlugs: ["bitcoin", "ciclo-de-4-anos"],
   },
   {
     slug: "on-chain",
+    asOf: "2026-09-11",
     level: "advanced",
     titlePt: "Dados on-chain",
     titleEn: "On-chain data",
@@ -510,6 +533,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "market-cap",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Market cap",
     titleEn: "Market cap",
@@ -524,6 +548,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "liquidez",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Liquidez",
     titleEn: "Liquidity",
@@ -538,6 +563,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "ordem-de-mercado",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "Ordem de mercado vs limite",
     titleEn: "Market vs limit order",
@@ -552,6 +578,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "dyor",
+    asOf: "2026-09-11",
     level: "beginner",
     titlePt: "DYOR",
     titleEn: "DYOR",
@@ -566,6 +593,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "correlacao",
+    asOf: "2026-09-11",
     level: "advanced",
     titlePt: "Correlação",
     titleEn: "Correlation",
@@ -580,6 +608,7 @@ export const ATLAS: AtlasConcept[] = [
   },
   {
     slug: "narrative",
+    asOf: "2026-09-11",
     level: "intermediate",
     titlePt: "Narrativa de mercado",
     titleEn: "Market narrative",
