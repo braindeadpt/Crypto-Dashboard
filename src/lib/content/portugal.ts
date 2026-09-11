@@ -66,7 +66,7 @@ export const PORTUGAL_CONTENT = {
     {
       qPt: "Comprei cripto mas nunca vendi — tenho de declarar?",
       qEn: "I bought crypto but never sold — do I have to declare it?",
-      aPt: "A mera aquisição e detenção não é, por si, facto tributável de mais-valia. Declaras quando existe alienação onerosa (vender por fiat/bens/serviços) ou rendimento (juros, rewards). Confirma no ano em causa.",
+      aPt: "A mera aquisição e detenção não são, por si, factos tributáveis de mais-valia. Declaras quando existe alienação onerosa (vender por fiat/bens/serviços) ou rendimento (juros, rewards). Confirma no ano em causa.",
       aEn: "Merely buying and holding is not, by itself, a taxable capital-gains event. You declare when there is an onerous disposal (selling for fiat/goods/services) or income (interest, rewards). Confirm for the relevant year.",
     },
     {
@@ -202,7 +202,7 @@ export const PORTUGAL_CONTENT = {
       bodyEn:
         "“Not your keys, not your coins” still holds — but self-custody needs discipline (backup, phishing, inheritance). Regulated CASP custody swaps technical risk for counterparty and operational risk. Neither is zero risk. The choice is risk management, not “right vs wrong”.",
       howToPt: [
-        "Se usas exchange: activa 2FA, lista de allowlist de levantamentos, e testa um levantamento pequeno.",
+        "Se usas exchange: activa 2FA e a lista de levantamentos autorizados, e testa um levantamento pequeno.",
         "Se self-custody: testa recuperação da seed num dispositivo offline de ensaio; nunca fotografes a seed para a cloud.",
         "Documenta quem herda o acesso (procedimento familiar) — risco operacional real, não só «hack».",
       ],
@@ -291,7 +291,7 @@ export const PORTUGAL_CONTENT = {
       titleEn: "The 365-day rule",
       asOf: "2026-09-11",
       bodyPt:
-        "Segundo o folheto AT, o saldo entre mais e menos-valias de alienação onerosa de criptoactivos (que não sejam valores mobiliários) é tributado — mas quando a detenção for ≥365 dias, o regime prevê exclusão de tributação. Contam-se os dias entre aquisição e alienação. Atenção às condições: residente fiscal em Portugal, o activo não ser valor mobiliário, e não ser rendimento de actividade profissional — e a excepções previstas (ex.: rendimento associado à alienação, situações de offshore no cadeia de valor). O período de detenção anterior a 2023 conta para a regra (transição).",
+        "Segundo o folheto AT, o saldo entre mais e menos-valias de alienação onerosa de criptoactivos (que não sejam valores mobiliários) é tributado — mas quando a detenção for ≥365 dias, o regime prevê exclusão de tributação. Contam-se os dias entre aquisição e alienação. Atenção às condições: residente fiscal em Portugal, o activo não ser valor mobiliário, e não ser rendimento de actividade profissional — e a excepções previstas (ex.: rendimento associado à alienação, situações de offshore na cadeia de valor). O período de detenção anterior a 2023 conta para a regra (transição).",
       bodyEn:
         "Per the AT leaflet, the net balance of gains/losses from onerous disposal of crypto-assets (that are not securities) is taxed — but when held ≥365 days, the regime provides exclusion from taxation. Days run from acquisition to disposal. Mind the conditions: Portuguese tax residence, the asset not being a security, and it not being professional-activity income — plus foreseen exceptions (e.g., income tied to the disposal, offshore situations in the value chain). Holding periods before 2023 count (transition).",
       howToPt: [
@@ -396,7 +396,7 @@ export const PORTUGAL_CONTENT = {
           titlePt: "Exemplo — três factos, três caminhos",
           titleEn: "Example — three facts, three paths",
           bodyPt:
-            "Vender BTC por euros → potencial Cat. G. Juros de um depósito de cripto → pode ser Cat. E. Mineração como profissão → pode ser Cat. B. O mesmo portfólio pode gerar três enquadramentos distintos — separar é metade do trabalho.",
+            "Vender BTC por euros → potencial Cat. G. Juros de um depósito de cripto → pode ser Cat. E. Mineração como profissão → pode ser Cat. B. O mesmo portefólio pode gerar três enquadramentos distintos — separar é metade do trabalho.",
           bodyEn:
             "Selling BTC for euros → potential Cat. G. Interest from a crypto deposit → possibly Cat. E. Mining as a profession → possibly Cat. B. The same portfolio can yield three different frameworks — separating is half the work.",
         },
