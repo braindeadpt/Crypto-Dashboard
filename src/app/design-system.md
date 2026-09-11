@@ -10,9 +10,9 @@ Pergunta de teste: *parece um instrumento com escala, ou mais um dashboard SaaS?
 | **Fraunces** (display) | Serif óptica com soft/opsz — autoridade de publicação financeira, não de terminal neon. Distingue títulos e o número-herói. |
 | **IBM Plex Sans** (UI) | Neutra, precisa, com carácter. Evita Inter / system-ui. Boa em densidade. |
 | **IBM Plex Mono** (dados) | Família irmã do Plex; `tabular-nums` para números que não dançam. |
-| **Tema claro (papel) como assinatura** | ~100% dos produtos crypto são escuros. Papel *frio* de livro-razão (`#e6e9e4`), não cream+terracota genérico. |
-| **Tema escuro em graphite** | Sessões longas; evita preto absoluto + verde néon (lista negra). |
-| **Acento = azul de calibração** | Interacção / marca. Separado de sobe/desce e de regime. |
+| **Tema escuro «Noite» como assinatura** | Azul-violeta profundo (`#05070e`), não preto absoluto + néon (lista negra). O tema claro («Dia», papel frio) existe para leitura diurna. |
+| **Acento = violeta de instrumento** | `#9b6cff` (Noite) / `#5b2bd9` (Dia). Marca, links, live. Separado de sobe/desce e de regime. |
+| **Ênfase = ciano** | `--accent-2` (`#22e6ff`/`#0a7ea8`) — destaques secundários, campo ambiental. |
 | **Direcção = teal / âmbar + ▲▼** | Mais seguro para daltonismo do que verde/vermelho isolados. |
 | **Foco = tinta/papel invertido** | Anel de acessibilidade distinto do acento. |
 | **Elevação por superfície + sombra curta** | Poucos níveis claros; sem glassmorphism / blur. |
@@ -74,6 +74,13 @@ Pares principais (aproximação WCAG sobre sRGB):
 | down / bg | ~5.1:1 | ~8.3:1 |
 
 Faint sobre bg (~3.8:1 claro / ~4.1:1 escuro) só para chrome terciário (rótulos de instrumento). Texto operacional usa `muted` ou `ink`.
+
+## Ambient field
+
+`AmbientField` (home hero) — canvas decorativo de partículas + ligações,
+tingido pelos tokens `--accent`/`--accent-2`, com fade nas bordas
+(`.field-fade`). Regras: `aria-hidden`, `pointer-events-none`, um frame
+estático sob `prefers-reduced-motion`, nunca compete com a leitura.
 
 ## Referência viva
 

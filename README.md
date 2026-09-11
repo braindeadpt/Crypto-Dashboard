@@ -20,7 +20,7 @@ People open CoinGecko + TradingView + Fear&Greed + Coinglass + DefiLlama + X + l
 
 - Next.js App Router + TypeScript + Tailwind CSS v4
 - `next-intl` (PT-PT default + EN)
-- Free data: CoinGecko, Binance Futures public, DefiLlama, Alternative.me
+- Free data: CoinGecko, Binance Futures public, DefiLlama, Alternative.me (Fear & Greed), mempool.space (Bitcoin), Etherscan API V2 (EVM), Farside (ETF flows)
 - Optional LLM brief enrichment via `OPENAI_API_KEY`
 
 ## Run locally
@@ -65,11 +65,12 @@ Copy `.env.example` → `.env.local` and set `OPENAI_API_KEY` to enrich `/api/br
 
 | Path | Role |
 |------|------|
-| `/[locale]` | Agora — ritual + N1/N2 |
+| `/[locale]` | Agora — hero + Pulso + readings + briefing |
 | `/[locale]/mundo` | Case & Effect + sectors |
 | `/[locale]/fluxos` | Liquidity, ETF, leverage pulse |
-| `/[locale]/contexto` | Cycle, atlas index, Portugal |
-| `/[locale]/instrumento` | Full tape / charts / N3 |
+| `/[locale]/contexto` | Cycle, Atlas, Segurança, Portugal |
+| `/[locale]/instrumento` | Full tape / charts / analyst board |
+| `/[locale]/carteira` | Read-only wallet lookup (EVM + BTC) |
 | `/[locale]/caso/[id]` | Case detail |
 | `/[locale]/atlas/[slug]` | Atlas article |
 | `/[locale]/brief` | Ritual bookmark |
@@ -97,7 +98,23 @@ messages/           # pt.json + en.json
 
 Educational market orientation only. Not financial advice. Liquidation weather is an **educational estimate** from public Binance futures data, not Coinglass-grade exchange heatmaps.
 
+## For AI agents
+
+This repo is built to be worked on by multiple LLMs and platforms:
+
+- `AGENTS.md` — the agent contract (non-negotiables, commands, boundaries)
+- `.agents/skills/` — Agent Skills standard: `crypto-info-site` (house
+  rules), CoinGecko/DefiLlama data-API skills, Vercel/Anthropic design
+  skills
+- `.devin/mcp_config.json` — optional CoinGecko + DefiLlama MCP servers
+- `CLAUDE.md` → `@AGENTS.md`; `.cursor/`, `.claude/` are local-only
+  junctions to `.agents/skills/`
+- Canonical docs live in `docs/`; `src/app/design-system.md` is the
+  design reference (mirrored live at `/estilo`)
+
 ## Roadmap (continuity)
 
-Phase 2: local watchlist / Trilho, decision journal, ETF flows, credibility dial  
-Phase 3: optional auth, public portfolio addresses, PDF brief export
+Done: watchlist, ETF flows, Bitcoin + EVM wallet lookup, Atlas review
+dates, deterministic + LLM briefs, OG images, RSS feed.
+Phase 3: optional auth, public portfolio addresses, PDF brief export,
+read-only portfolio + fiscality module (`docs/VISION-tax-module.md`).
