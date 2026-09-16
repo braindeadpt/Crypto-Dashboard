@@ -1,10 +1,7 @@
 "use client";
 
-import { PercentileTwin } from "@/components/jargon/PercentileTwin";
 import type { HistoryMetricId } from "@/lib/history/metrics";
 import type { MetricContextApi } from "@/lib/history/context";
-import { formatContextSentence } from "@/lib/history/format";
-import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 
 type HistoryApiResponse = {
@@ -52,36 +49,4 @@ export function useHistoryContexts(): Partial<
   }, []);
 
   return metrics;
-}
-
-type HintProps = {
-  metric: HistoryMetricId;
-  liveValue?: number;
-  stretched?: boolean;
-  className?: string;
-  /** Instrument tape: allow p71 · 90d; elsewhere prefer plain sentence */
-  technical?: boolean;
-};
-
-/** Compact history twin under a tape/row number — jargon dictionary, not bare pN. */
-export function MetricHistoryHint({
-  metric,
-  stretched = true,
-  className = "",
-  technical = false,
-}: HintProps) {
-  const locale = useLocale();
-  const metrics = useHistoryContexts();
-  const ctx = metrics[metric];
-  if (!ctx) return null;
-
-  const title = formatContextSentence(ctx, locale === "pt" ? "pt" : "en", {
-    stretchedLabel: stretched,
-  });
-
-  return (
-    <span className={className} title={title}>
-      <PercentileTwin context={ctx} technical={technical} />
-    </span>
-  );
 }

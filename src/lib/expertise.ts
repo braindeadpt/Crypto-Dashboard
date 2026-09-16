@@ -41,44 +41,34 @@ export function expertiseRank(level: ExpertiseLevel): number {
  * Sections with minLevel require at least that expertise.
  */
 export type DensitySection =
-  | "explanations"
   | "readings"
   | "tapeExtended"
   | "reguaExpanded"
   | "boardSecondary"
-  | "boardYieldsMemes"
   | "rotation30d"
   | "sectorTable"
   | "liquidityTop"
-  | "liquidityLeverageDetail"
-  | "etfHistory"
   | "derivsTable"
   | "atlasFull"
   | "contextoPortugal"
   | "contextoSeguranca"
-  | "contextoBrief"
   | "methodSources";
 
 const RULES: Record<
   DensitySection,
   { min?: ExpertiseLevel; max?: ExpertiseLevel }
 > = {
-  explanations: { max: "operator" }, // citizen + operator
   readings: { max: "operator" },
   tapeExtended: { min: "operator" },
   reguaExpanded: { min: "operator" },
   boardSecondary: { min: "operator" },
-  boardYieldsMemes: { min: "analyst" },
   rotation30d: { min: "operator" },
   sectorTable: { min: "analyst" },
   liquidityTop: { min: "operator" },
-  liquidityLeverageDetail: { min: "analyst" },
-  etfHistory: { min: "analyst" },
   derivsTable: { min: "operator" },
   atlasFull: { min: "operator" },
   contextoPortugal: {}, // orientação legal/fiscal serve todos os níveis
   contextoSeguranca: { min: "operator" },
-  contextoBrief: { min: "analyst" },
   methodSources: { min: "analyst" },
 };
 

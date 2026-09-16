@@ -2,10 +2,10 @@
 
 import type { SeriesPoint } from "@/lib/stats";
 import { formatUsd } from "@/lib/format";
+import { useTranslations } from "next-intl";
 
 type Props = {
   series: SeriesPoint[];
-  locale: "pt" | "en";
   width?: number;
   height?: number;
 };
@@ -16,16 +16,15 @@ type Props = {
  */
 export function StableSupplyChart({
   series,
-  locale,
   width = 720,
   height = 220,
 }: Props) {
+  const t = useTranslations("liquidity");
+
   if (series.length < 2) {
     return (
       <p className="border border-line bg-surface p-4 text-meta text-muted">
-        {locale === "pt"
-          ? "Série de oferta ainda insuficiente."
-          : "Supply series still insufficient."}
+        {t("supplyShort")}
       </p>
     );
   }
@@ -52,10 +51,10 @@ export function StableSupplyChart({
   const first = series[0];
   const up = last.v >= first.v;
 
-  const aria =
-    locale === "pt"
-      ? `Oferta agregada de stablecoins: ${formatUsd(last.v, true)} · série ${series.length} dias.`
-      : `Aggregate stablecoin supply: ${formatUsd(last.v, true)} · ${series.length}-day series.`;
+  const aria = t("supplyAria", {
+    value: formatUsd(last.v, true),
+    days: series.length,
+  });
 
   return (
     <svg

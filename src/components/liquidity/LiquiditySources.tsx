@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 
 type Props = {
   data: LiquiditySnapshot;
-  locale: "pt" | "en";
 };
 
 type Channel = {
@@ -23,7 +22,7 @@ type Channel = {
  * Spot (ETF $), on-chain fuel (stable Δ7d $), leverage (funding / OI — state, not $ flow).
  * Labels use jargon twins — no bare ETF / Funding / OI.
  */
-export function LiquiditySources({ data, locale }: Props) {
+export function LiquiditySources({ data }: Props) {
   const t = useTranslations("jargon");
   const tLiq = useTranslations("liquidity");
 
@@ -122,7 +121,7 @@ export function LiquiditySources({ data, locale }: Props) {
           fill="var(--faint)"
           style={{ fontSize: 9, fontFamily: "var(--font-mono)" }}
         >
-          {locale === "pt" ? "saída / curto" : "out / short"}
+          {tLiq("outShort")}
         </text>
         <text
           x={mid + 8}
@@ -131,7 +130,7 @@ export function LiquiditySources({ data, locale }: Props) {
           fill="var(--faint)"
           style={{ fontSize: 9, fontFamily: "var(--font-mono)" }}
         >
-          {locale === "pt" ? "entrada / longo" : "in / long"}
+          {tLiq("inShort")}
         </text>
 
         {channels.map((ch, i) => {

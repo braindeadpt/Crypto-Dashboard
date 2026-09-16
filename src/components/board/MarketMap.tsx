@@ -50,7 +50,7 @@ function volumeBg(ratio: number): string {
 }
 
 function tileForeground(bg: "strong" | "weak"): string {
-  return bg === "strong" ? "var(--bg)" : "var(--fg)";
+  return bg === "strong" ? "var(--bg)" : "var(--ink)";
 }
 
 export function MarketMap({
@@ -198,7 +198,7 @@ export function MarketMap({
                     "px-2 py-0.5 font-mono text-[10px] transition",
                     layer === l
                       ? "bg-accent text-bg"
-                      : "bg-surface text-faint hover:text-fg",
+                      : "bg-surface text-faint hover:text-ink",
                   )}
                 >
                   {t(`layer.${l}`)}
@@ -227,7 +227,7 @@ export function MarketMap({
                     "px-2 py-0.5 font-mono text-[10px] transition",
                     win === w
                       ? "bg-accent text-bg"
-                      : "bg-surface text-faint hover:text-fg",
+                      : "bg-surface text-faint hover:text-ink",
                   )}
                 >
                   {w}
@@ -240,7 +240,7 @@ export function MarketMap({
       <div
         ref={wrapRef}
         className={cn(
-          "relative w-full overflow-hidden border-y border-line bg-base",
+          "relative w-full overflow-hidden border-y border-line bg-bg",
           tall ? "h-[380px] sm:h-[560px]" : "h-[320px] sm:h-[420px]",
         )}
         role="img"
@@ -291,7 +291,7 @@ export function MarketMap({
       <figcaption className="mt-2 flex min-h-6 flex-wrap items-center gap-x-4 gap-y-1 border-t border-line pt-2 font-mono text-[11px] text-faint">
         {shown ? (
           <>
-            <span className="font-semibold text-fg">{shown.name}</span>
+            <span className="font-semibold text-ink">{shown.name}</span>
             <span className="tabular-nums">{formatUsd(shown.price)}</span>
             {layer === "price" && (
               <span
@@ -309,7 +309,7 @@ export function MarketMap({
                 className={cn(
                   "tabular-nums",
                   tileLook(shown).dir == null
-                    ? "text-fg"
+                    ? "text-ink"
                     : tileLook(shown).dir! >= 0
                       ? "delta-up"
                       : "delta-down",

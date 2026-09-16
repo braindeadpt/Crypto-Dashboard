@@ -90,7 +90,7 @@ export function LiquidityDesk({ initial, embedded = false }: Props) {
       <section className="mt-5">
         <h2 className="text-label text-faint">{t("supplyTitle")}</h2>
         <p className="mb-2 text-meta text-muted">{t("supplyHint")}</p>
-        <StableSupplyChart series={s.series} locale={loc} />
+        <StableSupplyChart series={s.series} />
         <div className="mt-3 max-w-xl">
           <p className="text-label text-faint">{t("reguaLabel")}</p>
           <Regua
@@ -107,7 +107,7 @@ export function LiquidityDesk({ initial, embedded = false }: Props) {
       <section className="mt-8">
         <h2 className="text-label text-faint">{t("originsTitle")}</h2>
         <p className="mb-2 text-meta text-muted">{t("originsHint")}</p>
-        <LiquiditySources data={initial} locale={loc} />
+        <LiquiditySources data={initial} />
       </section>
 
       {/* Top stables */}

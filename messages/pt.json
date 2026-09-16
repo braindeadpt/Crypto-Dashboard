@@ -1,7 +1,6 @@
 {
   "meta": {
     "title": "CLAREZA Crypto — Observatório de mercado",
-    "description": "Observatório de mercado crypto para operadores: preços, derivados, liquidações ao vivo, DeFi e contexto — em português de Portugal.",
     "tagline": "Observatório de mercado",
     "disclaimer": "Isto não constitui aconselhamento financeiro. Dados de mercado para observação e acompanhamento operacional."
   },
@@ -81,14 +80,11 @@
     "eth": "Ethereum",
     "dominance": "Dominância BTC",
     "totalMcap": "Capitalização total",
-    "volume24h": "Volume 24h",
     "movers": "Maiores movimentos",
     "gainers": "Em alta",
     "losers": "Em baixa",
-    "withCause": "contexto",
     "rank": "Activo",
     "price": "Preço",
-    "change24h": "24h",
     "marketCap": "Capitalização",
     "belowFold": "Top por capitalização",
     "volume": "Volume 24h",
@@ -125,17 +121,6 @@
     "timelinePrev": "Anterior",
     "timelineNext": "Seguinte"
   },
-  "sentiment": {
-    "title": "Sentimento",
-    "subtitle": "Sentimento de mercado e alavancagem — lidos em conjunto.",
-    "fearGreed": "Medo e Ganância",
-    "funding": "Funding rate",
-    "openInterest": "Open interest",
-    "liquidationWeather": "Liquidações ao vivo",
-    "longBias": "Mais longs",
-    "shortBias": "Mais shorts",
-    "neutral": "Neutro"
-  },
   "defi": {
     "title": "DeFi",
     "subtitle": "TVL, blockchains e stablecoins — com contexto operacional.",
@@ -143,9 +128,11 @@
     "protocols": "Protocolos",
     "chains": "Blockchains",
     "stablecoins": "Stablecoins",
-    "whatIsTvl": "O que é TVL?",
     "change1d": "1d",
     "change7d": "7d",
+    "fees24h": "Taxas 24h",
+    "tvlMeaning": "TVL agregado DefiLlama (/v2/historicalChainTvl) — reduz dupla contagem vs soma de protocolos.",
+    "tvlMethod": "DefiLlama /v2/historicalChainTvl último ponto (fallback: soma /v2/chains)",
     "yields": "Melhores yields",
     "yieldsHint": "Pools ordenadas por APY — ⚡ inclui recompensa de token (mais volátil). Fonte: DefiLlama yields.",
     "pool": "Pool",
@@ -163,19 +150,6 @@
     "d1": "Δ 1d (ponderado)",
     "source": "Fonte: DefiLlama · snapshot diário · Δ1d = média ponderada pelo TVL dos protocolos na cadeia",
     "empty": "Sem dados de cadeias neste momento — o snapshot diário ainda não correu."
-  },
-  "brief": {
-    "title": "Resumo do dia",
-    "subtitle": "Facto → Porque importa → Incerteza → O que vigiar.",
-    "fact": "Facto",
-    "why": "Porque importa",
-    "uncertainty": "Incerteza",
-    "watch": "O que vigiar",
-    "sources": "Fontes",
-    "credibility": "Credibilidade",
-    "archive": "Arquivo",
-    "empty": "O resumo de hoje ainda está a ser preparado. Volta em breve.",
-    "generated": "Gerado"
   },
   "portugal": {
     "title": "Portugal",
@@ -257,8 +231,6 @@
   },
   "case": {
     "title": "Caso & Efeito",
-    "indexTitle": "Porque é que isto se mexeu?",
-    "indexSubtitle": "Hipóteses com evidência a favor e contra — correlação de sinais, nunca causa inventada.",
     "observation": "O que aconteceu",
     "hypotheses": "Hipóteses",
     "evidence": "Evidência (números)",
@@ -285,19 +257,12 @@
     "sectorLinkTitle": "Sectores onde este activo aparece",
     "sectorLinkHint": "Contexto de mapa — não explica o movimento por si."
   },
-  "lab": {
-    "title": "Lab",
-    "subtitle": "Grelha densa de métricas operacionais.",
-    "locked": "Lab disponível para todos os operadores."
-  },
   "explain": {
-    "value": "Valor",
     "meaning": "Significado",
     "method": "Método de cálculo",
     "raw": "Fonte",
     "updated": "Actualizado",
-    "learnMore": "Explicar",
-    "abbrHint": "Abreviatura"
+    "learnMore": "Explicar"
   },
   "jargon": {
     "oi": {
@@ -411,10 +376,8 @@
   "common": {
     "loading": "A carregar…",
     "error": "Não foi possível obter os dados.",
-    "retry": "Tentar novamente",
     "source": "Fonte",
     "stale": "Os dados podem estar desactualizados",
-    "noData": "Sem dados",
     "close": "Fechar"
   },
   "age": {
@@ -445,8 +408,6 @@
     "liveConnecting": "A ligar…",
     "liveReconnecting": "A reconectar…",
     "liveOffline": "Desligado",
-    "marketNow": "Mercado agora",
-    "openCharts": "Abrir gráficos",
     "derivatives": "Derivados BTC",
     "postureLabel": "Postura",
     "stressLabel": "Stress",
@@ -469,8 +430,6 @@
     "yields": "Yields",
     "noMemes": "Sem dados de memes neste momento.",
     "noYields": "Sem pools de yield neste momento.",
-    "defiTvl": "TVL DeFi",
-    "topProtocols": "Principais protocolos",
     "stables": "Stablecoins",
     "posture": {
       "calm": "Calmo",
@@ -484,7 +443,6 @@
       "neutral": "Neutro"
     },
     "etfSpot": "ETF spot · procura institucional",
-    "openEtf": "Abrir ETF",
     "etfUnit": "US",
     "spotVsLev": "Spot vs alavancagem",
     "spotVsLevHint": "ETF spot (institucional) vs funding / OI / L:S (perpétuos)",
@@ -503,7 +461,6 @@
     "pegOk": "Sem despegue relevante nas stables USD (±0,15%). Yield-bearing excluídos.",
     "yieldsSortHint": "Ordenado por APY · TVL ≥ 1M · reward assinalado",
     "chartLoading": "A carregar candles…",
-    "chartFail": "Falha ao carregar gráfico",
     "chartTable": "Tabela acessível",
     "chartCaption": "OHLC {symbol} intervalo {interval}",
     "chartTime": "Hora"
@@ -531,35 +488,6 @@
     "noteVolume": "volume 24h ÷ cap. vs mediana do grupo — violeta mais forte = mais intenso",
     "noteSector": "Δ quota temática a 7 dias · {covered}/{total} mapeados — cinzento = sem sector"
   },
-  "charts": {
-    "title": "Gráficos",
-    "subtitle": "Candles ao vivo via Binance spot — BTC, ETH e SOL.",
-    "source": "Fonte: api.binance.com · klines"
-  },
-  "memes": {
-    "title": "Memes",
-    "subtitle": "Vista multichain: prioriza as blockchains com mais volume e atenção neste momento.",
-    "asset": "Activo",
-    "price": "Preço",
-    "volume": "Volume",
-    "mcap": "Capitalização",
-    "source": "Fonte: CoinGecko · categoria meme-token"
-  },
-  "yields": {
-    "title": "Yields",
-    "subtitle": "Melhores APYs com filtros de risco — não é aconselhamento.",
-    "sortNote": "Ordenação: APY descendente (não por TVL).",
-    "filtersNote": "Filtros: TVL ≥ 1M USD · APY entre 0% e 500% · reward assinalado quando > 0.",
-    "disclaimer": "APY histórico ≠ rendimento futuro. Avalia o risco do protocolo. Reward APY é volátil.",
-    "project": "Projecto",
-    "symbol": "Símbolo",
-    "chain": "Blockchain",
-    "type": "Tipo",
-    "apyBase": "Base",
-    "apyReward": "Reward",
-    "rewardTag": "inclui reward",
-    "source": "Fonte: yields.llama.fi/pools (snapshot reduzido)"
-  },
   "etf": {
     "title": "ETF spot",
     "subtitle": "Fluxos diários líquidos dos ETF spot dos EUA — proxy da procura institucional no spot.",
@@ -578,6 +506,7 @@
     "net": "Líquido",
     "source": "Fonte:",
     "unit": "Valores em milhões de USD (US), convenção Farside.",
+    "spotAsset": "{name} spot",
     "solUnavailable": "Fluxos SOL indisponíveis ou tabela Farside sem dados interpretáveis neste momento.",
     "staleAge": "Snapshot antigo — últimos fluxos de {date}. A página não faz scrape ao vivo.",
     "flowDate": "Fluxos do dia: {date}",
@@ -587,19 +516,6 @@
     "recordsNote": "Recordes e Δ semanal medidos na amostra guardada ({days} dias) — não desde o lançamento.",
     "cumulativeTitle": "Cumulativo da amostra",
     "cumulativeNote": "Soma corrida dos fluxos diários na janela guardada ({days} dias) — não é o total desde o lançamento dos ETF."
-  },
-  "history": {
-    "band": {
-      "extreme_low": "extremo baixo",
-      "low": "baixo",
-      "normal": "normal",
-      "high": "alto",
-      "extreme_high": "extremo alto",
-      "insufficient": "amostra curta"
-    },
-    "percentileOf": "percentil {p} dos últimos {days} dias",
-    "moreStretched": "só {pct}% dos dias estiveram mais esticados",
-    "incomplete": "Ainda só {days} dias de histórico — contexto incompleto."
   },
   "pulso": {
     "title": "O Pulso",
@@ -617,39 +533,6 @@
       "storm": "Tempestade",
       "weird": "Misto"
     }
-  },
-  "regua": {
-    "title": "A Régua",
-    "median": "Mediana",
-    "short": "Amostra curta"
-  },
-  "sectors": {
-    "eyebrow": "Onde o capital está a rodar",
-    "title": "Sectores",
-    "subtitle": "Mapa temático por capitalização e rotação de quota — a pergunta «o que está a acontecer no mundo crypto agora?» sem a distorção do top 25 genérico.",
-    "readingLabel": "Leitura do dia",
-    "stale": "Snapshot antigo — a página não chama a CoinGecko no render.",
-    "historyDays": "{days} dias de histórico persistido",
-    "source": "Fonte: CoinGecko /coins/categories",
-    "megaLabel": "Infra (fora do mapa)",
-    "mapTitle": "Mapa temático",
-    "mapHint": "Área = capitalização. Cor + ▲▼ = variação 24h. Clica para ver activos.",
-    "mapLegend": "L1 / smart-contract fora do mapa — dominariam a área.",
-    "rotationTitle": "Rotação",
-    "rotationHint": "Variação da quota relativa no mapa temático vs período anterior — para onde a força se move.",
-    "share": "{pct}% do mapa temático",
-    "clear": "Fechar",
-    "changeContext": "Variação 24h na distribuição histórica",
-    "observeOnly": "Observação apenas — sem causalidade nem recomendação.",
-    "coinsTitle": "Activos no sector",
-    "coinsLoading": "A carregar activos…",
-    "coinsError": "Não foi possível obter activos deste sector.",
-    "coinsEmpty": "Sem activos devolvidos para esta categoria.",
-    "colSector": "Sector",
-    "colMcap": "Cap.",
-    "colShare": "Quota",
-    "empty": "Ainda não há snapshot de sectores.",
-    "emptyHint": "Corre o cron refresh-heavy ou npx tsx scripts/ingest-sectors.ts."
   },
   "liquidity": {
     "eyebrow": "De onde vem o dinheiro",
@@ -676,7 +559,11 @@
     "stablecoinsLabel": "Stablecoins (on-chain)",
     "stableDetail": "Δ7d {delta} · nível {level}",
     "sourcesAria": "Origens de liquidez: fundos cotados no mercado à vista, variação de oferta de stablecoins, e estado de alavancagem.",
-    "sourcesFootnote": "Barras não são comparáveis em dólares entre canais: alavancagem é estado (custo da alavancagem e posições abertas), não fluxo monetário."
+    "sourcesFootnote": "Barras não são comparáveis em dólares entre canais: alavancagem é estado (custo da alavancagem e posições abertas), não fluxo monetário.",
+    "outShort": "saída / curto",
+    "inShort": "entrada / longo",
+    "supplyShort": "Série de oferta ainda insuficiente.",
+    "supplyAria": "Oferta agregada de stablecoins: {value} · série {days} dias."
   },
   "expertise": {
     "label": "Densidade",
@@ -868,10 +755,7 @@
     "watch": "A vigiar",
     "spark7d": "BTC · 7 dias",
     "vitalsCap": "Cap. total",
-    "vitalsVol": "Volume 24h",
     "vitalsDom": "Dom. BTC",
-    "driver": "Puxa mais",
-    "noData": "Sem dados suficientes para esta leitura.",
     "partial": "Leitura parcial — falta: {missing}.",
     "audit": "Como é calculada",
     "auditMissing": "em falta",
@@ -889,37 +773,6 @@
     },
     "money": {
       "label": "Dinheiro"
-    }
-  },
-  "questions": {
-    "actTitle": "A evidência",
-    "actNote": "um sinal por pergunta",
-    "noSignal": "Sem sinal disponível.",
-    "money": {
-      "q": "O dinheiro está a entrar ou a sair?",
-      "cta": "Ver fluxos"
-    },
-    "risk": {
-      "q": "Há risco de cascata?",
-      "cta": "Ver derivados"
-    },
-    "breadth": {
-      "q": "A subida é ampla ou de meia dúzia?"
-    },
-    "why": {
-      "q": "O que se mexeu, e porquê?",
-      "a": "As hipóteses para cada movimento do dia, com a evidência a favor e contra.",
-      "cta": "Abrir Caso & Efeito"
-    },
-    "rotation": {
-      "q": "Onde está o dinheiro a rodar?",
-      "a": "Que sectores ganham e perdem quota nos últimos dias.",
-      "cta": "Ver sectores"
-    },
-    "broken": {
-      "q": "Há algo partido?",
-      "a": "Stablecoins fora do valor devido e custo da rede.",
-      "cta": "Ver liquidez"
     }
   },
   "regimeDecomp": {
@@ -945,10 +798,7 @@
     "postureWeirdCond": "contradição detectada (regras abaixo) e score ≥ {weirdMin}",
     "colPosture": "Postura",
     "colCond": "Condição",
-    "colSignal": "Sinal",
-    "colMeasures": "O que mede",
     "colSource": "Fonte",
-    "colRules": "Regras → pontos (ganha a primeira que passa)",
     "weirdTitle": "Postura «misto» — sinais em contradição",
     "weirdIntro": "Se alguma destas condições se verifica e o score atinge {weirdMin}, a postura passa a «misto».",
     "directionIntro": "Para onde vai o mercado — escala −100 a +100.",

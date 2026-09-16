@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { YieldPool } from "@/lib/data/yields";
 import type { DefiSnapshot } from "@/lib/types";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 export function DefiDesk({
   data,
@@ -19,7 +19,6 @@ export function DefiDesk({
   yieldsAt?: string | null;
 }) {
   const t = useTranslations("defi");
-  const locale = useLocale();
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-6 enter">
@@ -45,12 +44,8 @@ export function DefiDesk({
               {formatUsd(data.totalTvl, true)}
             </span>
           }
-          meaning={
-            locale === "pt"
-              ? "TVL agregado DefiLlama (/v2/historicalChainTvl) — reduz dupla contagem vs soma de protocolos."
-              : "DefiLlama aggregate TVL (/v2/historicalChainTvl) — reduces double-counting vs summing protocols."
-          }
-          method="DefiLlama /v2/historicalChainTvl last point (fallback: sum /v2/chains)"
+          meaning={t("tvlMeaning")}
+          method={t("tvlMethod")}
           source="DefiLlama"
           updatedAt={data.updatedAt}
         />
@@ -61,7 +56,7 @@ export function DefiDesk({
         )}
         {data.fees24h != null && (
           <p className="mt-3 font-mono text-sm text-muted">
-            {locale === "pt" ? "Taxas 24h" : "Fees 24h"}:{" "}
+            {t("fees24h")}:{" "}
             <span className="text-ink">{formatUsd(data.fees24h, true)}</span>
             {data.feesChange1d != null && (
               <span className={`ml-2 ${deltaClass(data.feesChange1d)}`}>

@@ -385,13 +385,6 @@ button {
   }
 }
 
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-instrument);
-  box-shadow: var(--elev-1);
-}
-
 .panel-hero {
   background: var(--surface-2);
   border: 1px solid var(--line-strong);
@@ -423,15 +416,6 @@ button {
   background: var(--bg-elevated);
   border: 1px solid var(--line);
   border-radius: var(--radius-instrument);
-  box-shadow: var(--elev-0);
-}
-
-/* Quietest tier — reference material. A hairline, no box. */
-.panel-tertiary {
-  background: transparent;
-  border: 0;
-  border-top: 1px solid var(--line);
-  border-radius: 0;
   box-shadow: var(--elev-0);
 }
 
@@ -678,26 +662,6 @@ button {
   animation-duration: var(--dur-slow);
 }
 
-@keyframes stream-fade {
-  0% {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  12% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  88% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-.stream-row {
-  animation: stream-fade 5s var(--ease-in-out) infinite;
-}
-
 @keyframes chart-draw {
   from {
     stroke-dashoffset: 240;
@@ -735,7 +699,6 @@ button {
   .threshold-flash,
   .enter,
   .enter-sequence > *,
-  .stream-row,
   .chart-path,
   .alert-pulse,
   .skeleton::after,
@@ -762,76 +725,6 @@ button {
   ::view-transition-new(*) {
     animation: none !important;
   }
-}
-
-.crosshair-layer {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-}
-.crosshair-v,
-.crosshair-h {
-  position: absolute;
-  background: var(--crosshair);
-  opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-out);
-}
-.crosshair-layer.is-active .crosshair-v,
-.crosshair-layer.is-active .crosshair-h {
-  opacity: 1;
-}
-.crosshair-v {
-  top: 0;
-  bottom: 0;
-  width: 1px;
-}
-.crosshair-h {
-  left: 0;
-  right: 0;
-  height: 1px;
-}
-.crosshair-ring {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  margin: -9px 0 0 -9px;
-  border: 1px solid var(--crosshair);
-  border-radius: var(--radius-instrument);
-  opacity: 0;
-  transition: opacity var(--dur-fast) var(--ease-out);
-}
-.crosshair-layer.is-active .crosshair-ring {
-  opacity: 1;
-}
-@media (hover: none) {
-  .crosshair-layer {
-    display: none;
-  }
-}
-
-.eyebrow {
-  font-family: var(--font-mono), monospace;
-  font-size: var(--text-label);
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--faint);
-}
-
-.panel-solid {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-instrument);
-}
-
-.rise-in,
-.flash-once,
-.cycle-fill {
-  animation: none;
-}
-.cycle-fill {
-  background: var(--accent);
 }
 
 .section-pad {

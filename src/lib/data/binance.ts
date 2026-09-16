@@ -38,11 +38,6 @@ export async function fetchOpenInterest(symbol = "BTCUSDT") {
   });
 }
 
-export async function fetchMarkPrice(symbol = "BTCUSDT") {
-  const f = await fetchFundingRate(symbol);
-  return f.markPrice;
-}
-
 export type KlineBar = {
   time: number;
   open: number;

@@ -71,14 +71,14 @@ export function EtfDesk({
       </header>
 
       <div className="mt-6 grid gap-3 lg:grid-cols-3">
-        <AssetCard title="Bitcoin spot" flows={data.btc} />
-        <AssetCard title="Ethereum spot" flows={data.eth} />
+        <AssetCard title={t("spotAsset", { name: "Bitcoin" })} flows={data.btc} />
+        <AssetCard title={t("spotAsset", { name: "Ethereum" })} flows={data.eth} />
         {data.sol?.latest ? (
-          <AssetCard title="Solana spot" flows={data.sol} />
+          <AssetCard title={t("spotAsset", { name: "Solana" })} flows={data.sol} />
         ) : (
           <div className="border border-line bg-surface p-4">
             <p className="font-mono text-[0.65rem] uppercase tracking-wider text-faint">
-              Solana spot
+              {t("spotAsset", { name: "Solana" })}
             </p>
             <p className="mt-3 text-sm text-muted">{t("solUnavailable")}</p>
           </div>
