@@ -67,18 +67,22 @@ Copy `.env.example` → `.env.local` and set `OPENAI_API_KEY` to enrich `/api/br
 
 | Path | Role |
 |------|------|
-| `/[locale]` | Agora — hero + Pulso + readings + briefing |
-| `/[locale]/mundo` | Case & Effect + sectors |
+| `/[locale]` | Agora — hero + market map + Pulso + readings + briefing |
+| `/[locale]/mercado` | Full market: treemap (1h/24h/7d), movers, top-40 |
 | `/[locale]/fluxos` | Liquidity, ETF, leverage pulse |
-| `/[locale]/contexto` | Cycle, Atlas, Segurança, Portugal |
-| `/[locale]/instrumento` | Full tape / charts / analyst board |
-| `/[locale]/carteira` | Read-only wallet lookup (EVM + BTC) |
+| `/[locale]/defi` | TVL, protocols, stablecoins/peg, top yields |
+| `/[locale]/cadeias` | Chains ranked by TVL, share, weighted Δ1d |
+| `/[locale]/casos` | Case & Effect + sectors |
+| `/[locale]/aprender` | Cycle, Atlas, Segurança, Portugal |
+| `/[locale]/ferramentas` | Read-only wallet lookup (EVM + BTC) |
+| `/[locale]/mesa` | Full tape / charts / analyst board |
 | `/[locale]/caso/[id]` | Case detail |
 | `/[locale]/atlas/[slug]` | Atlas article |
 | `/[locale]/brief` | Ritual bookmark |
 | `/[locale]/estilo` | Design system |
 
-Legacy aliases (`/mercado`, `/ciclo`, `/etf`, …) **308 →** the canonicals above (see `next.config.ts`).
+Legacy aliases (`/mundo`, `/contexto`, `/instrumento`, `/carteira`,
+`/ciclo`, `/etf`, …) **308 →** the canonicals above (see `next.config.ts`).
 
 
 ## Architecture

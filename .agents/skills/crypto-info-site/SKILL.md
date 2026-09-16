@@ -26,8 +26,8 @@ financeiros, sem hype. O plano-mestre vive em `docs/PLANO-CLAREZA.md`.
 
 ## Páginas e o trabalho de cada uma
 
-Arquitectura alvo (ver `docs/PLANO-CLAREZA.md` §3); slugs actuais entre
-parênteses durante a migração — os antigos fazem 308 para os novos.
+Arquitectura canónica (ver `docs/PLANO-CLAREZA.md` §3); os slugs antigos
+fazem 308 para estes.
 
 - **Agora** (`/`) — o mercado em segundos: hero BTC (manchete + preços
   live + campo ambiental), mapa do mercado (treemap), Pulso (radar de
@@ -39,12 +39,12 @@ parênteses durante a migração — os antigos fazem 308 para os novos.
   alavancagem, F&G.
 - **DeFi** (`/defi`) — TVL, chains, protocolos, yields, bridges.
 - **Cadeias** (`/cadeias`) — blockchains comparadas.
-- **Casos** (`/casos`, actual `/mundo`) — Causa & Efeito + memecoins.
-- **Aprender** (`/aprender`, actual `/contexto`) — Atlas, literacia,
-  segurança, Portugal (fiscal aponta sempre para TOC).
-- **Ferramentas** (`/ferramentas`, actual `/carteira`) — verificação de
-  carteiras EVM/BTC e utilitários. Nunca pede chaves nem seed phrases.
-- **Mesa** (`/mesa`, actual `/instrumento`) — o board denso do analista.
+- **Casos** (`/casos`) — Causa & Efeito + rotação sectorial.
+- **Aprender** (`/aprender`) — Atlas, literacia, segurança, Portugal
+  (fiscal aponta sempre para TOC).
+- **Ferramentas** (`/ferramentas`) — verificação de carteiras EVM/BTC e
+  utilitários. Nunca pede chaves nem seed phrases.
+- **Mesa** (`/mesa`) — o board denso do analista.
 
 ## Voz e idioma
 

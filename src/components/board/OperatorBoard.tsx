@@ -64,6 +64,13 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
         btc={{ px: btcPx, chg: btcChg, spark: market.btc.sparkline7d }}
         eth={{ px: ethPx, chg: ethChg }}
         sol={{ px: solPx, chg: solChg }}
+        intensity={regime.score / 100}
+        vitals={{
+          cap: market.global.totalMarketCap,
+          capChg: market.global.marketCapChange24h,
+          vol: market.global.totalVolume,
+          dom: market.global.btcDominance,
+        }}
       />
 
       {/* NÍVEL 1.5 — o mapa: o mercado inteiro de relance, antes do detalhe */}
@@ -74,7 +81,7 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
       {/* Bento: o radar é instrumento de operador — Essencial recebe só as
           três leituras em linguagem comum. */}
       <div
-        className={`mt-3 grid items-stretch gap-3 ${
+        className={`mt-3 grid items-start gap-3 ${
           level !== "citizen" ? "lg:grid-cols-12" : ""
         }`}
       >

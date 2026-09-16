@@ -46,6 +46,30 @@ export function ReadingCard({ reading }: { reading: Reading }) {
         {displayValue(reading)}
       </p>
 
+      {/* Régua da leitura — onde o valor cai na sua escala. */}
+      {reading.confidence > 0 && (
+        <div
+          className="mt-2 h-1 w-full rounded-sm bg-surface-3"
+          role="presentation"
+        >
+          {(() => {
+            const isRisk = reading.id === "risk";
+            const pos = isRisk
+              ? reading.value
+              : (reading.value + 100) / 2;
+            return (
+              <div
+                className={`h-full rounded-sm ${toneFor(reading)}`}
+                style={{
+                  width: `${Math.max(3, Math.min(100, pos))}%`,
+                  backgroundColor: "currentColor",
+                }}
+              />
+            );
+          })()}
+        </div>
+      )}
+
       <p className="mt-2 text-body leading-snug text-ink">{sentence}</p>
 
       {/* Confiança e lacunas: a leitura nunca finge estar completa. */}

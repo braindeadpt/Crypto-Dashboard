@@ -34,22 +34,26 @@ Brazilian Portuguese, or stacks redundant cards. Don't.
 
 ## Pages — each has one job
 
-Target IA is in `docs/PLANO-CLAREZA.md` §3; slugs below are the current
-ones — migration renames with 308s (`/mundo`→casos, `/contexto`→aprender,
-`/instrumento`→mesa, `/carteira`→ferramentas, plus new `/mercado`,
-`/defi`, `/cadeias`).
+Target IA is in `docs/PLANO-CLAREZA.md` §3 — the thematic routes below are
+the live canonical slugs. IA-v2 renames carry 308s (`mundo`→casos,
+`contexto`→aprender, `instrumento`→mesa, `carteira`→ferramentas) plus the
+historical aliases.
 
-- `/` **Agora** — the market in seconds: hero (headline + live prices +
-  AmbientField), market treemap, Pulso radar (operator+), three readings,
-  5-slot briefing. Each datum appears **once**.
-- `/mundo` — Caso & Efeito case files + sector rotation.
+- `/` **Agora** — the market in seconds: hero (headline + vitals + live
+  prices + regime-reactive AmbientField), market treemap, Pulso radar
+  (operator+), three readings, 5-slot briefing. Each datum appears **once**.
+- `/mercado` — the full market: vitals strip, MarketMap treemap (1h/24h/7d
+  colour window), gainers/losers, top-40 table with 7d sparklines.
 - `/fluxos` — where money comes from: stablecoins, ETF flows, leverage, F&G.
-- `/contexto` — education ground: cycle, Atlas, Segurança, Portugal.
-- `/instrumento` — the analyst's full board (dense by design).
-- `/carteira` — read-only wallet lookup (EVM + BTC). Never asks for keys.
+- `/defi` — global TVL, top protocols, stablecoins/peg watch, top yields.
+- `/cadeias` — blockchains ranked by TVL with share bars + weighted Δ1d.
+- `/casos` — Caso & Efeito case files + sector rotation.
+- `/aprender` — education ground: cycle, Atlas, Segurança, Portugal.
+- `/ferramentas` — read-only wallet lookup (EVM + BTC). Never asks for keys.
+- `/mesa` — the analyst's full board (dense by design).
 - `/atlas/[slug]`, `/caso/[id]`, `/brief`, `/estilo` — article, case detail,
   ritual bookmark, living design reference.
-- 16 legacy aliases 308 → canonicals (`next.config.ts`).
+- 16 legacy aliases + 4 IA-v2 renames 308 → canonicals (`next.config.ts`).
 
 ## Voice — PT-PT europeu
 

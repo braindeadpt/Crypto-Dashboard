@@ -490,7 +490,8 @@
     "aria": "Mapa do mercado: rectângulos por activo, tamanho proporcional à capitalização, cor conforme a variação de 24 horas",
     "cap": "Cap.",
     "hint": "Toca ou passa o rato para detalhe · tamanho = capitalização · cor = variação 24h",
-    "hintShort": "tamanho = cap. · cor = Δ24h"
+    "hintShort": "tamanho = cap. · cor = variação",
+    "windowAria": "Janela temporal da cor"
   },
   "charts": {
     "title": "Gráficos",
@@ -644,7 +645,7 @@
   },
   "instrumento": {
     "eyebrow": "Nível 3 · detalhe operacional",
-    "title": "Instrumento",
+    "title": "Mesa",
     "subtitle": "Tape completa, réguas, spot vs alavancagem, gráfico, derivados, yields e actividade DEX — tudo o que saiu da entrada.",
     "empty": "Não foi possível carregar o instrumento. Tenta novamente em breve.",
     "openFull": "Abrir instrumento",
@@ -676,7 +677,7 @@
   },
   "mundo": {
     "eyebrow": "O que se mexeu — e o que os sinais permitem ler",
-    "title": "Mundo",
+    "title": "Casos",
     "subtitle": "Caso & Efeito no centro: hipóteses com evidência a favor e contra. Sectores respondem onde o capital roda — sem confundir correlação com causa.",
     "readingLabel": "Leitura de sectores",
     "casesTitle": "Caso & Efeito",
@@ -711,7 +712,7 @@
   },
   "contexto": {
     "eyebrow": "Mapa, não GPS",
-    "title": "Contexto",
+    "title": "Aprender",
     "subtitle": "Ciclo, aprendizagem e enquadramento em Portugal — para ler o mercado com memória.",
     "walletBridge": "Carteira está live: cola um endereço público e vê saldos e actividade — read-only, nada guardado no servidor. Ver VISION para o módulo fiscal.",
     "noCycle": "Ciclo indisponível neste momento.",
@@ -720,7 +721,7 @@
   },
   "carteira": {
     "eyebrow": "Read-only · sem custódia",
-    "title": "Carteira",
+    "title": "Ferramentas",
     "subtitle": "Cola um endereço público e vê saldo, tokens e actividade. Sem login, sem chaves privadas — um endereço público é só leitura.",
     "privacy": "Não guardamos nada no servidor: o endereço é consultado em tempo real e esquecido. Endereços guardados e a tua chave API ficam só neste navegador (localStorage).",
     "addressLabel": "Endereço público (0x…)",
@@ -812,6 +813,9 @@
     "todayEyebrow": "O mercado hoje",
     "watch": "A vigiar",
     "spark7d": "BTC · 7 dias",
+    "vitalsCap": "Cap. total",
+    "vitalsVol": "Volume 24h",
+    "vitalsDom": "Dom. BTC",
     "driver": "Puxa mais",
     "noData": "Sem dados suficientes para esta leitura.",
     "partial": "Leitura parcial — falta: {missing}.",

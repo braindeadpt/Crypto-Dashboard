@@ -2,17 +2,23 @@
 
 import { useEffect, useRef } from "react";
 
-const COUNT = 42;
 const LINK_DIST = 92;
 
 /**
  * Ambient data-field behind the hero — the controlled "wow".
  *
- * Purely decorative: drifting particles + faint links, tinted with the
- * accent tokens so it follows Dia/Noite. Renders one static frame under
- * prefers-reduced-motion; never intercepts input; hidden from AT.
+ * Reactive to the market regime: `intensity` (0..1, from regime.score)
+ * drives particle density, drift speed and link opacity — calm reads
+ * sparse and slow, storm reads dense and fast. Still decorative, still
+ * reduced-motion safe, never intercepts input, hidden from AT.
  */
-export function AmbientField({ className = "" }: { className?: string }) {
+export function AmbientField({
+  intensity = 0.5,
+  className = "",
+}: {
+  intensity?: number;
+  className?: string;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -33,18 +39,24 @@ export function AmbientField({ className = "" }: { className?: string }) {
       const n = parseInt(m.length === 3 ? m.replace(/./g, "$&$&") : m, 16);
       return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
     };
-    const dotColor = rgba(accent, 0.55);
-    const dotColor2 = rgba(accent2, 0.45);
-    const lineColor = rgba(accent2, 0.09);
+
+    // O campo reage ao regime: mais denso, mais rápido, mais ligado.
+    const t = Math.max(0, Math.min(1, intensity));
+    const count = Math.round(28 + t * 44);
+    const speed = 0.0002 + t * 0.00055;
+    const linkAlpha = 0.05 + t * 0.09;
+    const dotColor = rgba(accent, 0.45 + t * 0.2);
+    const dotColor2 = rgba(accent2, 0.35 + t * 0.2);
+    const lineColor = rgba(accent2, linkAlpha);
 
     let w = 0;
     let h = 0;
     let raf = 0;
-    const parts = Array.from({ length: COUNT }, (_, i) => ({
+    const parts = Array.from({ length: count }, (_, i) => ({
       x: Math.random(),
       y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.00035,
-      vy: (Math.random() - 0.5) * 0.00035,
+      vx: (Math.random() - 0.5) * speed,
+      vy: (Math.random() - 0.5) * speed,
       r: Math.random() * 1.5 + 0.7,
       alt: i % 3 === 0,
     }));
@@ -110,7 +122,7 @@ export function AmbientField({ className = "" }: { className?: string }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [intensity]);
 
   return (
     <canvas

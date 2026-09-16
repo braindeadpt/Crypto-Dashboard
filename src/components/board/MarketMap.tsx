@@ -16,6 +16,14 @@ import { cn, formatPct, formatUsd } from "@/lib/format";
 const MAX_TILES = 40;
 const CHANGE_CLAMP = 8;
 
+type Window = "1h" | "24h" | "7d";
+
+function windowChange(a: AssetQuote, w: Window): number {
+  if (w === "1h") return a.change1h ?? 0;
+  if (w === "7d") return a.change7d ?? 0;
+  return a.change24h;
+}
+
 function tileBackground(change: number): string {
   const chg = Math.max(-CHANGE_CLAMP, Math.min(CHANGE_CLAMP, change));
   const strength = Math.min(90, 10 + Math.abs(chg) * 10);
@@ -32,6 +40,7 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [active, setActive] = useState<AssetQuote | null>(null);
+  const [win, setWin] = useState<Window>("24h");
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -59,9 +68,33 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
 
   return (
     <figure className="m-0">
-      <p className="mb-2 flex items-baseline justify-between text-label text-faint">
+      <p className="mb-2 flex items-baseline justify-between gap-3 text-label text-faint">
         <span>{t("title")}</span>
-        <span className="tabular-nums">{t("hintShort")}</span>
+        <span className="flex items-center gap-2">
+          <span className="hidden tabular-nums sm:inline">{t("hintShort")}</span>
+          <span
+            className="flex overflow-hidden rounded-[2px] border border-line"
+            role="group"
+            aria-label={t("windowAria")}
+          >
+            {(["1h", "24h", "7d"] as const).map((w) => (
+              <button
+                key={w}
+                type="button"
+                onClick={() => setWin(w)}
+                aria-pressed={win === w}
+                className={cn(
+                  "px-2 py-0.5 font-mono text-[10px] transition",
+                  win === w
+                    ? "bg-accent text-bg"
+                    : "bg-surface text-faint hover:text-fg",
+                )}
+              >
+                {w}
+              </button>
+            ))}
+          </span>
+        </span>
       </p>
       <div
         ref={wrapRef}
@@ -71,6 +104,7 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
       >
         {tiles.map(({ asset, rect }) => {
           const { x, y, w, h } = rect;
+          const chg = windowChange(asset, win);
           const both = w > 68 && h > 46;
           const symbolOnly = !both && w > 30 && h > 24;
           return (
@@ -80,15 +114,15 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
               onMouseEnter={() => setActive(asset)}
               onFocus={() => setActive(asset)}
               onClick={() => setActive(asset)}
-              aria-label={`${asset.name} ${formatPct(asset.change24h)}`}
+              aria-label={`${asset.name} ${formatPct(chg)}`}
               className="absolute border border-bg/70 text-left outline-none transition-[left,top,width,height,background-color] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-accent"
               style={{
                 left: x,
                 top: y,
                 width: w,
                 height: h,
-                backgroundColor: tileBackground(asset.change24h),
-                color: tileForeground(asset.change24h),
+                backgroundColor: tileBackground(chg),
+                color: tileForeground(chg),
               }}
             >
               {both && (
@@ -97,7 +131,7 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
                     {asset.symbol.toUpperCase()}
                   </span>
                   <span className="mt-0.5 block font-mono text-[10px] tabular-nums opacity-90">
-                    {formatPct(asset.change24h)}
+                    {formatPct(chg)}
                   </span>
                 </span>
               )}
@@ -118,10 +152,11 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
             <span
               className={cn(
                 "tabular-nums",
-                shown.change24h >= 0 ? "delta-up" : "delta-down",
+                windowChange(shown, win) >= 0 ? "delta-up" : "delta-down",
               )}
             >
-              {shown.change24h >= 0 ? "▲" : "▼"} {formatPct(shown.change24h)}
+              {windowChange(shown, win) >= 0 ? "▲" : "▼"}{" "}
+              {formatPct(windowChange(shown, win))}
             </span>
             <span className="tabular-nums">
               {t("cap")} {formatUsd(shown.marketCap, true)}

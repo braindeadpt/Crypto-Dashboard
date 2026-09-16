@@ -490,7 +490,8 @@
     "aria": "Market map: one rectangle per asset, sized by market cap, coloured by 24-hour change",
     "cap": "Cap.",
     "hint": "Tap or hover for detail · size = market cap · colour = 24h change",
-    "hintShort": "size = cap · colour = Δ24h"
+    "hintShort": "size = cap · colour = change",
+    "windowAria": "Colour time window"
   },
   "charts": {
     "title": "Charts",
@@ -644,7 +645,7 @@
   },
   "instrumento": {
     "eyebrow": "Level 3 · operational detail",
-    "title": "Instrument",
+    "title": "Desk",
     "subtitle": "Full tape, rulers, spot vs leverage, chart, derivatives, yields and DEX activity — everything that left the entry.",
     "empty": "Could not load the instrument. Please try again shortly.",
     "openFull": "Open instrument",
@@ -676,7 +677,7 @@
   },
   "mundo": {
     "eyebrow": "What moved — and what the signals allow us to read",
-    "title": "World",
+    "title": "Cases",
     "subtitle": "Case & Effect at the centre: hypotheses with evidence for and against. Sectors answer where capital rotates — without confusing correlation with cause.",
     "readingLabel": "Sector reading",
     "casesTitle": "Case & Effect",
@@ -711,7 +712,7 @@
   },
   "contexto": {
     "eyebrow": "A map, not a GPS",
-    "title": "Context",
+    "title": "Learn",
     "subtitle": "Cycle, learning and Portugal framing — read the market with memory.",
     "walletBridge": "Wallet is live: paste a public address to see balances and activity — read-only, nothing stored server-side. See VISION for the tax module.",
     "noCycle": "Cycle unavailable right now.",
@@ -720,7 +721,7 @@
   },
   "carteira": {
     "eyebrow": "Read-only · no custody",
-    "title": "Wallet",
+    "title": "Tools",
     "subtitle": "Paste a public address and see balance, tokens and activity. No login, no private keys — a public address is read-only.",
     "privacy": "We store nothing server-side: the address is queried live and forgotten. Saved addresses and your API key live only in this browser (localStorage).",
     "addressLabel": "Public address (0x…)",
@@ -812,6 +813,9 @@
     "todayEyebrow": "The market today",
     "watch": "Watching",
     "spark7d": "BTC · 7 days",
+    "vitalsCap": "Total cap",
+    "vitalsVol": "24h volume",
+    "vitalsDom": "BTC dom.",
     "driver": "Main driver",
     "noData": "Not enough data for this reading.",
     "partial": "Partial reading — missing: {missing}.",
