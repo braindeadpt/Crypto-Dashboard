@@ -7,6 +7,7 @@ work on this repo, start at `../AGENTS.md`.
 
 | File | What it is |
 |---|---|
+| `PLANO-CLAREZA.md` | **Master plan v2** — positioning, IA, homepage anatomy, design/motion direction, data map, Pro tier, execution phases |
 | `PLANO-SEGURANCA.md` | Security plan — threat model, boundaries, checklist |
 | `VISION-tax-module.md` | Future read-only portfolio + fiscality module vision |
 

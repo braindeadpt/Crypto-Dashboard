@@ -34,10 +34,14 @@ Brazilian Portuguese, or stacks redundant cards. Don't.
 
 ## Pages — each has one job
 
-- `/` **Agora** — today's answer: hero (headline + live prices + AmbientField),
-  Pulso radar (operator+), three readings (Direcção/Risco/Dinheiro), 5-slot
-  briefing, watchlist. Each datum appears **once** — the page never restates
-  its own story in more cards.
+Target IA is in `docs/PLANO-CLAREZA.md` §3; slugs below are the current
+ones — migration renames with 308s (`/mundo`→casos, `/contexto`→aprender,
+`/instrumento`→mesa, `/carteira`→ferramentas, plus new `/mercado`,
+`/defi`, `/cadeias`).
+
+- `/` **Agora** — the market in seconds: hero (headline + live prices +
+  AmbientField), market treemap, Pulso radar (operator+), three readings,
+  5-slot briefing. Each datum appears **once**.
 - `/mundo` — Caso & Efeito case files + sector rotation.
 - `/fluxos` — where money comes from: stablecoins, ETF flows, leverage, F&G.
 - `/contexto` — education ground: cycle, Atlas, Segurança, Portugal.
@@ -88,8 +92,10 @@ local junctions, gitignored and recreated automatically by the
   generic UI taste; they never override the house rules or the Noite tokens.
 
 MCP servers in `.devin/mcp_config.json`: `coingecko` (npx stdio),
-`defillama` (HTTP), `etherscan` (HTTP, bearer `ETHERSCAN_API_KEY` — the
-only official endpoint is `mcp.etherscan.io/mcp`; never use lookalikes).
+`defillama` (HTTP, OAuth), `etherscan` (HTTP, bearer `ETHERSCAN_API_KEY` —
+the only official endpoint is `mcp.etherscan.io/mcp`; never use
+lookalikes), `bitquery` (HTTP, OAuth 2.1 — 40+ chains on-chain data,
+reserved for the future Pro tier).
 
 ## Commands
 

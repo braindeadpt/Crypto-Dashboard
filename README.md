@@ -1,12 +1,14 @@
-# CLAREZA — Market Orientation Desk
+# CLAREZA — Crypto Market Observatory
 
-**Um briefing. Duas línguas. Zero ruído.**
+**O mercado inteiro em segundos. Duas línguas. Zero ruído.**
 
-CLAREZA is not another price grid. It is a bilingual (PT-PT / EN) daily **market orientation desk**: Front Page ritual → Desk destinations → Lab depth. Built as a portfolio-grade product for learning and daily comprehension — no login, no trade signals.
+CLAREZA is not another price grid. It is a bilingual (PT-PT / EN) **crypto market observatory** for the Portuguese-speaking market: a daily orientation desk where Bitcoin leads, every page has one job, and nothing is invented. No login, no trade signals, no hype.
+
+The full product & design plan lives in [`docs/PLANO-CLAREZA.md`](docs/PLANO-CLAREZA.md).
 
 ## Product thesis
 
-People open CoinGecko + TradingView + Fear&Greed + Coinglass + DefiLlama + X + local news every morning. CLAREZA owns the job those tabs cannot: *what happened, what it means, and what to understand today*.
+People open CoinGecko + TradingView + Fear&Greed + Coinglass + DefiLlama + X + local news every morning. CLAREZA owns the job those tabs cannot: *see the whole market at a glance, understand what happened, and know what it means today*.
 
 ### Original mechanics
 

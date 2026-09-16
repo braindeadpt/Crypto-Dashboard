@@ -1,16 +1,17 @@
 ---
 name: crypto-info-site
-description: Product rules for CLAREZA Crypto — a bilingual (PT-PT/EN) daily market-orientation desk, not a price tracker. Use whenever editing copy, layout, data display or adding features to this repo.
+description: Product rules for CLAREZA Crypto — a bilingual (PT-PT/EN) crypto market observatory for the Portuguese market, not a price tracker. Use whenever editing copy, layout, data display or adding features to this repo.
 ---
 
 # CLAREZA Crypto — regras de produto
 
 ## O que é
 
-Observatório de mercado bilingue (PT-PT primário, EN secundário). Não é um
-agregador de preços nem um tracker: é um briefing diário de ~5 minutos que
-diz o que mudou, porque importa e o que não fazer. Sem sinais de trading,
-sem conselhos financeiros, sem hype.
+Observatório de mercado crypto bilingue (PT-PT primário, EN secundário),
+directionado ao mercado português — do iniciado ao operador. A promessa:
+perceber o mercado inteiro em segundos sem abrir dez tabs. Bitcoin é
+sempre o factor principal. Sem sinais de trading, sem conselhos
+financeiros, sem hype. O plano-mestre vive em `docs/PLANO-CLAREZA.md`.
 
 ## Regra nº1 — nunca inventar dados
 
@@ -25,23 +26,25 @@ sem conselhos financeiros, sem hype.
 
 ## Páginas e o trabalho de cada uma
 
-- **Agora** (`/`) — a resposta de hoje: hero (manchete + preços live +
-  campo ambiental), Pulso (radar de regime, operador+) e as três leituras
-  em linguagem comum (Direcção / Risco / Dinheiro), briefing de 5 slots.
-  Cada dado aparece UMA vez — a página não re-diz a história em cards.
-- **Mundo** (`/mundo`) — Caso & Efeito: o que se mexeu, quanto, hipóteses
-  ranqueadas com evidência a favor e contra; rotação sectorial.
-- **Fluxos** (`/fluxos`) — de onde vem o dinheiro: oferta de stablecoins,
-  fluxos ETF spot, alavancagem (funding, OI, liquidações), F&G histórico.
-- **Contexto** (`/contexto`) — educação e terreno: ciclo, Atlas de
-  conceitos, Segurança (seed/entropia/custódia/phishing), Portugal
-  (regulação e orientação fiscal — com referência a TOC), fontes.
-- **Instrumento** (`/instrumento`) — a mesa completa do analista: tape,
-  réguas com histórico, spot vs alavancagem, gráfico, derivados, yields,
-  actividade DEX. Denso por desenho.
-- **Carteira** (`/carteira`) — consulta read-only de endereços EVM e
-  Bitcoin. Nunca pede chaves privadas nem seed phrases. Explica os dados
-  do explorer em linguagem comum; exporta CSV; agrega endereços locais.
+Arquitectura alvo (ver `docs/PLANO-CLAREZA.md` §3); slugs actuais entre
+parênteses durante a migração — os antigos fazem 308 para os novos.
+
+- **Agora** (`/`) — o mercado em segundos: hero BTC (manchete + preços
+  live + campo ambiental), mapa do mercado (treemap), Pulso (radar de
+  regime, operador+), três leituras em linguagem comum, briefing de
+  5 slots. Cada dado aparece UMA vez.
+- **Mercado** (`/mercado`) — o mapa completo: treemap, dominância BTC,
+  movers, amplitude.
+- **Fluxos** (`/fluxos`) — de onde vem o dinheiro: stablecoins, ETF,
+  alavancagem, F&G.
+- **DeFi** (`/defi`) — TVL, chains, protocolos, yields, bridges.
+- **Cadeias** (`/cadeias`) — blockchains comparadas.
+- **Casos** (`/casos`, actual `/mundo`) — Causa & Efeito + memecoins.
+- **Aprender** (`/aprender`, actual `/contexto`) — Atlas, literacia,
+  segurança, Portugal (fiscal aponta sempre para TOC).
+- **Ferramentas** (`/ferramentas`, actual `/carteira`) — verificação de
+  carteiras EVM/BTC e utilitários. Nunca pede chaves nem seed phrases.
+- **Mesa** (`/mesa`, actual `/instrumento`) — o board denso do analista.
 
 ## Voz e idioma
 
@@ -77,10 +80,10 @@ conteúdo, decide em que nível vive (ExpertiseGate / useExpertise).
 
 Assinatura "Noite": fundo escuro azul-violeta, acento violeta, ciano de
 ênfase, verde/coral para direcção (sempre com glifo ▲▼). Fraunces para
-display, IBM Plex Sans/Mono para corpo e dados. Bordas finas, sem
-border-radius grande, motion subtil com `prefers-reduced-motion`
-respeitado. "Luz" carrega significado (glow = valor extremo), nunca é
-decorativa em chrome.
+display, IBM Plex Sans/Mono para corpo e dados. Bordas finas, radius 2px,
+sem glassmorphism. Motion com significado: entradas coreografadas uma vez
+por sessão, números vivos, view transitions, campo ambiental que reage ao
+regime — `prefers-reduced-motion` desliga tudo, 60fps ou nada.
 
 Anti-padrões proibidos: gradientes roxos de landing page, glassmorphism,
 cards iguais em pilha, números sem contexto, copy de marketing.
