@@ -39,9 +39,11 @@ the live canonical slugs. IA-v2 renames carry 308s (`mundo`→casos,
 `contexto`→aprender, `instrumento`→mesa, `carteira`→ferramentas) plus the
 historical aliases.
 
-- `/` **Agora** — the market in seconds: hero (headline + vitals + live
-  prices + regime-reactive AmbientField), market treemap, Pulso radar
-  (operator+), three readings, 5-slot briefing. Each datum appears **once**.
+- `/` **Agora** — the market in seconds: hero (verifiable headline — each
+  claim opens its source metric), vitals + live prices + regime-reactive
+  AmbientField, market treemap, Pulso radar (operator+), three readings,
+  5-slot briefing (operator+). Each datum appears **once**. Essencial =
+  hero + map + readings only; the dial reveals briefing + watchlist.
 - `/mercado` — the full market: vitals strip, MarketMap treemap with
   switchable colour layer (price 1h/24h/7d, perp funding, volume vs median,
   sector rotation), gainers/losers, top-40 table with 7d sparklines.

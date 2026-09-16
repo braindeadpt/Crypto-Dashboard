@@ -54,7 +54,7 @@ export function OperatorBoard({
   mapLayers,
 }: Props) {
   const ti = useTranslations("instrumento");
-  const { level } = useExpertise();
+  const { level, show } = useExpertise();
 
   const sol = market.top.find((a) => a.id === "solana");
   const live = useLiveTicker({
@@ -128,15 +128,18 @@ export function OperatorBoard({
         </section>
       )}
 
-      {/* 03 — o briefing: cinco entradas fixas, sempre os mesmos slots */}
-      <section className="mt-10">
-        <ActHead
-          title={ti("acts.briefTitle")}
-          note={ti("acts.briefNote")}
-          ageAt={asOf}
-        />
-        <DailyRitualCard ritual={ritual} />
-      </section>
+      {/* 03 — o briefing: cinco entradas fixas, sempre os mesmos slots.
+          R8 — Essencial é hero + mapa + leituras; o briefing fica no Operador. */}
+      {show("boardSecondary") && (
+        <section className="mt-10">
+          <ActHead
+            title={ti("acts.briefTitle")}
+            note={ti("acts.briefNote")}
+            ageAt={asOf}
+          />
+          <DailyRitualCard ritual={ritual} />
+        </section>
+      )}
 
       {/* Aprofundar — cada página tem um trabalho; navegar, não re-ler */}
       <nav
@@ -144,7 +147,7 @@ export function OperatorBoard({
         aria-label={ti("deeperAria")}
       >
         <p className="text-label text-faint">{ti("deeper")}</p>
-        <div className="mt-3 grid gap-px border border-line bg-line sm:grid-cols-3">
+        <div className="mt-3 grid grid-cols-2 gap-px border border-line bg-line sm:grid-cols-3">
           {(
             [
               ["/mercado", ti("deeperMercado")],
@@ -170,13 +173,19 @@ export function OperatorBoard({
             </Link>
           ))}
         </div>
+        {!show("boardSecondary") && (
+          <p className="mt-3 text-meta text-faint">{ti("citizenMore")}</p>
+        )}
       </nav>
 
-      {/* 04 — a lista: instrumento pessoal, local e sem servidor */}
-      <section className="mt-10 board-act">
-        <ActHead title={ti("acts.listTitle")} note={ti("acts.listNote")} />
-        <WatchlistPanel />
-      </section>
+      {/* 04 — a lista: instrumento pessoal, local e sem servidor.
+          R8 — fora do Essencial; o dial sobe para a ter de volta. */}
+      {show("boardSecondary") && (
+        <section className="mt-10 board-act">
+          <ActHead title={ti("acts.listTitle")} note={ti("acts.listNote")} />
+          <WatchlistPanel />
+        </section>
+      )}
     </div>
   );
 }

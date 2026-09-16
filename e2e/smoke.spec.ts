@@ -129,6 +129,33 @@ test.describe("smoke · verifiable headline (R5)", () => {
   });
 });
 
+test.describe("smoke · essential mode (R8)", () => {
+  test("citizen home is hero + map + readings, nothing dense", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem("clareza-expertise", "citizen");
+    });
+    await page.goto("/pt", { waitUntil: "domcontentloaded" });
+    const h1 = page.getByRole("heading", { level: 1 });
+    await expect(h1, "hero headline must render").toBeVisible({
+      timeout: 45_000,
+    });
+    // Essencial = hero + mapa + leituras — briefing e lista ficam no Operador.
+    await expect(page.locator("#ritual")).toBeHidden();
+    await expect(
+      page.getByRole("heading", { name: /A tua lista|Your list/i }),
+    ).toBeHidden();
+    await expect(
+      page.getByRole("group", { name: /Camada de cor|colour layer/i }),
+    ).toBeVisible();
+    // A nota honesta diz onde ficou o resto — nada desaparece em silêncio.
+    await expect(
+      page.getByText(/Modo Essencial|Essential mode/i),
+    ).toBeVisible();
+  });
+});
+
 test.describe("smoke · i18n + nav", () => {
   test("EN locale loads board chrome", async ({ page }) => {
     const response = await page.goto("/en", { waitUntil: "domcontentloaded" });
