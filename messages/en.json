@@ -32,7 +32,7 @@
     "title": "Design system",
     "subtitle": "The Observatory: distinct type roles, separated colour jobs, calibrated elevation, and motion only when it means something.",
     "type": "Typography",
-    "typeHint": "Fraunces (editorial) · IBM Plex Sans (UI) · IBM Plex Mono (data). Scale 12 / 14 / 18 / 24 / 40 / 72.",
+    "typeHint": "Sora (editorial) · IBM Plex Sans (UI) · IBM Plex Mono (data). Scale 12 / 14 / 18 / 24 / 40 / 72.",
     "color": "Colour roles",
     "colorHint": "Accent ≠ direction ≠ regime ≠ focus. Direction always with ▲▼.",
     "elevation": "Elevation",
@@ -92,7 +92,7 @@
     "belowFold": "Top by market cap",
     "volume": "24h volume",
     "ethDominance": "ETH dominance",
-    "spark": "7d",
+    "spark": "7d chart",
     "empty": "Could not fetch market data right now."
   },
   "cycle": {
@@ -652,8 +652,8 @@
     "deeperAria": "Go deeper",
     "deeper": "Go deeper",
     "deeperFluxos": "Flows — where the money comes from",
-    "deeperMundo": "World — what moved and why",
-    "deeperInstrumento": "Instrument — the full board",
+    "deeperMundo": "Cases — what moved and why",
+    "deeperInstrumento": "Desk — the full board",
     "chartHint": "Binance spot",
     "labels": {
       "breadth": "Breadth",

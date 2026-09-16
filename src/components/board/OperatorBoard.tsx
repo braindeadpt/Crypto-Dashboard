@@ -88,9 +88,13 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
         {level !== "citizen" && (
           <Pulso regime={regime} hist={hist} className="lg:col-span-5" />
         )}
+        {/* Ao lado do Pulso, as três leituras empilham — a coluna enche a
+            altura do radar em vez de deixar um vazio por baixo. */}
         <ReadingTrio
           readings={readings}
-          className={level !== "citizen" ? "lg:col-span-7" : ""}
+          className={
+            level !== "citizen" ? "lg:col-span-7 lg:grid-cols-1" : ""
+          }
         />
       </div>
 

@@ -32,7 +32,7 @@
     "title": "Sistema de design",
     "subtitle": "O Observatório: tipografia com papéis distintos, cor com funções separadas, elevação calibrada e movimento só quando há significado.",
     "type": "Tipografia",
-    "typeHint": "Fraunces (editorial) · IBM Plex Sans (UI) · IBM Plex Mono (dados). Escala 12 / 14 / 18 / 24 / 40 / 72.",
+    "typeHint": "Sora (editorial) · IBM Plex Sans (UI) · IBM Plex Mono (dados). Escala 12 / 14 / 18 / 24 / 40 / 72.",
     "color": "Cor e papéis",
     "colorHint": "Acento ≠ direcção ≠ regime ≠ foco. Direcção sempre com ▲▼.",
     "elevation": "Elevação",
@@ -92,7 +92,7 @@
     "belowFold": "Top por capitalização",
     "volume": "Volume 24h",
     "ethDominance": "Dominância ETH",
-    "spark": "7d",
+    "spark": "Gráfico 7d",
     "empty": "Não foi possível obter dados de mercado neste momento."
   },
   "cycle": {
@@ -652,8 +652,8 @@
     "deeperAria": "Aprofundar",
     "deeper": "Aprofundar",
     "deeperFluxos": "Fluxos — de onde vem o dinheiro",
-    "deeperMundo": "Mundo — o que se mexeu e porquê",
-    "deeperInstrumento": "Instrumento — a mesa completa",
+    "deeperMundo": "Casos — o que se mexeu e porquê",
+    "deeperInstrumento": "Mesa — a mesa completa",
     "chartHint": "Spot Binance",
     "labels": {
       "breadth": "Amplitude",
