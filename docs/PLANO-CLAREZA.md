@@ -230,7 +230,7 @@ percentis com gémeo, páginas temáticas.
 | **F5** ✅ | Treemap multi-camada (R4) + ETF flows de primeira classe (R6) | Cor alternável, streaks/cumulativo/record — **entregue 2026-09-16** |
 | **F6** ✅ | "60 segundos" verificável (R5) | Cada afirmação clicável → métrica-fonte — **entregue 2026-09-16** |
 | **F7** ✅ | Essencial mobile-first (R8) + polish final | Nota-10 no telemóvel, não só desktop — **entregue 2026-09-16** |
-| **P1** | Tier Pro: auth leve, Bitquery, carteira profunda | Spec à parte |
+| **P1** | Tier Pro: auth leve, Bitquery, carteira profunda | Spec em `docs/PLANO-P1-PRO.md` |
 
 Regras da faseada: uma fase de cada vez, gates verdes antes de avançar,
 sem pressa — nível máximo de execução é o critério, não velocidade.

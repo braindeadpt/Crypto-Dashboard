@@ -131,6 +131,7 @@ push/PR to `master`. Wallet E2E hits real Bitcoin + EVM APIs.
 - `README.md` — product thesis, routes, run instructions
 - `docs/PLANO-INFORMACAO.md` — structural plan (what exists, where, for whom)
 - `docs/PLANO-SEGURANCA.md` — security plan
+- `docs/PLANO-P1-PRO.md` — Pro tier spec (auth, Bitquery, deep wallet)
 - `docs/VISION-tax-module.md` — future portfolio/fiscality module
 - `src/app/design-system.md` — design tokens and rules
 - `PLANO-*.md`/`*-PROMPTS.md` at `docs/` — July planning archives (historical)
