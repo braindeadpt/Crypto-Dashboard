@@ -2,7 +2,7 @@
 export default function BoardLoading() {
   return (
     <div
-      className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3"
+      className="obs-shell section-pad pb-16 pt-3"
       aria-busy="true"
       aria-label="A carregar"
     >

@@ -189,7 +189,7 @@ export function CarteiraDesk() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pt-6 enter">
+    <div className="obs-shell section-pad pt-6 enter">
       <header className="max-w-3xl">
         <p className="text-label text-faint">{t("eyebrow")}</p>
         <h1 className="mt-1 font-display text-display text-ink">
@@ -202,7 +202,7 @@ export function CarteiraDesk() {
       </header>
 
       <div className="mt-6 max-w-3xl border border-line bg-surface p-5">
-        <label className="text-xs font-semibold uppercase tracking-wide text-faint">
+        <label className="text-label text-faint">
           {t("addressLabel")}
         </label>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
@@ -259,7 +259,7 @@ export function CarteiraDesk() {
 
         {saved.length > 0 && (
           <div className="mt-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+            <p className="text-label text-faint">
               {t("saved")}
             </p>
             <ul className="mt-2 flex flex-wrap gap-1">
@@ -400,7 +400,7 @@ export function CarteiraDesk() {
         <div className="mt-6 grid max-w-5xl gap-4 md:grid-cols-2">
           <section className="border border-line bg-surface p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-faint">
+              <h2 className="text-label text-faint">
                 {t("balance")} · {view.chainName}
               </h2>
               <a
@@ -447,7 +447,7 @@ export function CarteiraDesk() {
           </section>
 
           <section className="border border-line bg-surface p-5">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-faint">
+            <h2 className="text-label text-faint">
               {t("tokens")}
             </h2>
             {view.tokens.length === 0 ? (
@@ -489,7 +489,7 @@ export function CarteiraDesk() {
           </section>
 
           <section className="border border-line bg-surface p-5 md:col-span-2">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-faint">
+            <h2 className="text-label text-faint">
               {t("activity")}
             </h2>
             {view.activity.length === 0 ? (

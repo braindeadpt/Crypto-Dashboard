@@ -27,7 +27,7 @@ export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
 
   return (
     <div>
-      <div className="mx-auto w-full max-w-[1400px] section-pad pt-6">
+      <div className="obs-shell section-pad pt-6">
         <header className="max-w-3xl">
           <p className="text-label text-faint">{t("eyebrow")}</p>
           <h1 className="mt-1 font-display text-display text-ink">{t("title")}</h1>
@@ -47,7 +47,7 @@ export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
 
       <ExpertiseGate section="derivsTable">
         {sentiment && (
-          <section className="mx-auto w-full max-w-[1400px] section-pad pb-12">
+          <section className="obs-shell section-pad pb-12">
             <h2 className="font-display text-title text-ink">
               {t("leverageTitle")}{" "}
               <DataAge

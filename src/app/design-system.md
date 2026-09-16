@@ -7,9 +7,11 @@ Pergunta de teste: *parece um instrumento com escala, ou mais um dashboard SaaS?
 
 | Escolha | Porquê |
 |--------|--------|
-| **Sora** (display) | Serif óptica com soft/opsz — autoridade de publicação financeira, não de terminal neon. Distingue títulos e o número-herói. |
+| **Newsreader** (serif editorial) | A voz de publicação: manchete do dia, títulos de placa, artigos do Atlas. Óptica e delicada — separa "a nossa voz" da "voz do instrumento". |
+| **Sora** (display/UI) | Geométrica com autoridade — títulos de secção, número-herói, chrome. |
 | **IBM Plex Sans** (UI) | Neutra, precisa, com carácter. Evita Inter / system-ui. Boa em densidade. |
 | **IBM Plex Mono** (dados) | Família irmã do Plex; `tabular-nums` para números que não dançam. |
+| **Placas numeradas** | Cada acto é uma placa gravada: número mono, título serif, coordenada à direita, idade da fonte. `.placa-head` + `ActHead` (prop `num`). |
 | **Tema escuro «Noite» como assinatura** | Azul-violeta profundo (`#05070e`), não preto absoluto + néon (lista negra). O tema claro («Dia», papel frio) existe para leitura diurna. |
 | **Acento = violeta de instrumento** | `#9b6cff` (Noite) / `#5b2bd9` (Dia). Marca, links, live. Separado de sobe/desce e de regime. |
 | **Ênfase = ciano** | `--accent-2` (`#22e6ff`/`#0a7ea8`) — destaques secundários, campo ambiental. |
@@ -23,14 +25,16 @@ Pergunta de teste: *parece um instrumento com escala, ou mais um dashboard SaaS?
 
 | Token | px | Uso |
 |-------|-----|-----|
+| `--text-micro` | 10 | Proveniência, rodapés — nunca informação primária |
 | `--text-label` | 12 | Chrome, rótulos mono uppercase |
 | `--text-meta` / `--text-data` | 14 | Captions, figuras tabulares |
 | `--text-body` | 18 | Texto corrido |
 | `--text-title` | 24 | Títulos de secção (Sora) |
-| `--text-display` | 40 | Momentos editoriais |
+| `--text-display` | 40 | Momentos editoriais (Sora) |
 | `--text-hero` | 72 | Número / leitura dominante |
+| `.text-serif-display` | 30→54 fluido | Manchete e títulos de placa (Newsreader) |
 
-Classes: `.text-label` … `.text-hero`, `.font-display`, `.font-mono`.
+Classes: `.text-micro`, `.text-label` … `.text-hero`, `.text-serif-display`, `.font-display`, `.font-mono`.
 
 ## Papéis da cor
 
@@ -46,7 +50,7 @@ Classes: `.text-label` … `.text-hero`, `.font-display`, `.font-mono`.
 Temas: `[data-theme="light"]` (default do script se o sistema for claro) e `[data-theme="dark"]`.  
 Preferência: `localStorage` (`clareza-theme`) → `prefers-color-scheme`.
 
-## Elevação
+## Elevação e superfícies
 
 | Nível | Token / padrão |
 |-------|----------------|
@@ -54,6 +58,10 @@ Preferência: `localStorage` (`clareza-theme`) → `prefers-color-scheme`.
 | 1 raised | `--elev-1` + `--surface` |
 | 2 float | `--elev-2` + `--surface-2` |
 | hero | `--elev-hero` + `.panel-hero` (~20% do ecrã) |
+| placa | `.placa` — superfície gravada: hairline + aresta luminosa `.lum-hero` + numeral |
+| registo | `.registo` — referência/proveniência: fundo quase plano, texto micro |
+
+Layout: `.obs-shell` (container único) + `.section-pad` (ritmo lateral).
 
 ## Movimento
 

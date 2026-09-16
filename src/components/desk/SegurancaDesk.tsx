@@ -14,7 +14,7 @@ export function SegurancaDesk() {
   return (
     <div className="mx-auto max-w-3xl px-4 pb-20 pt-6 md:px-6 enter">
       <header>
-        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+        <h2 className="text-display">
           {t("title")}
         </h2>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
@@ -30,19 +30,19 @@ export function SegurancaDesk() {
         {c.sections.map((s) => (
           <section key={s.id} className="border border-line bg-surface p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="text-xl font-semibold">{t(s.id)}</h3>
+              <h3 className="text-title">{t(s.id)}</h3>
               <p className="font-mono text-xs text-faint">
                 {t("asOf", { date: s.asOf })}
               </p>
             </div>
-            <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-faint">
+            <p className="mt-1 text-label text-faint">
               {t("orientationBadge")}
             </p>
             <p className="mt-3 leading-relaxed text-muted">
               {pt ? s.bodyPt : s.bodyEn}
             </p>
 
-            <h4 className="mt-5 text-xs font-semibold uppercase tracking-wide text-faint">
+            <h4 className="mt-5 text-label text-faint">
               {t("howTo")}
             </h4>
             <ol className="mt-2 list-decimal space-y-2 pl-5 text-sm text-muted">
@@ -53,7 +53,7 @@ export function SegurancaDesk() {
 
             {s.examples.length > 0 && (
               <>
-                <h4 className="mt-5 text-xs font-semibold uppercase tracking-wide text-faint">
+                <h4 className="mt-5 text-label text-faint">
                   {t("examples")}
                 </h4>
                 <ul className="mt-2 space-y-3">
@@ -81,7 +81,7 @@ export function SegurancaDesk() {
               </p>
             )}
 
-            <h4 className="mt-5 text-xs font-semibold uppercase tracking-wide text-faint">
+            <h4 className="mt-5 text-label text-faint">
               {t("sources")}
             </h4>
             <ul className="mt-2 space-y-1">
@@ -106,7 +106,7 @@ export function SegurancaDesk() {
       </div>
 
       <section className="mt-8">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-faint">
+        <h3 className="text-label text-faint">
           {t("links")}
         </h3>
         <ul className="mt-4 space-y-2">

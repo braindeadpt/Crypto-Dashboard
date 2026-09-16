@@ -75,7 +75,7 @@ export function OperatorBoard({
   const solChg = live.quotes.SOLUSDT?.change24h ?? sol?.change24h;
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 enter-sequence">
+    <div className="obs-shell section-pad pb-16 enter-sequence">
       {/* A resposta — masthead, manchete, índice de leituras, tape live */}
       <HeroPanel
         readings={readings}
@@ -102,9 +102,10 @@ export function OperatorBoard({
       {/* Entrada — o que mudou desde a última visita (só aparece com passado) */}
       <SinceLastVisit vitals={visitVitals} />
 
-      {/* 01 — o mapa: amplitude e estrutura do mercado inteiro */}
-      <section className="mt-10">
+      {/* Placa I — a constelação: amplitude e estrutura do mercado inteiro */}
+      <section className="board-act">
         <ActHead
+          num="I"
           title={ti("acts.mapTitle")}
           note={ti("acts.mapNote")}
           ageAt={market.updatedAt}
@@ -112,10 +113,11 @@ export function OperatorBoard({
         <MarketMap assets={market.top} layers={mapLayers} tall showTitle={false} />
       </section>
 
-      {/* 02 — o pulso: instrumento de operador; Essencial já teve a resposta */}
+      {/* Placa II — o pulso: instrumento de operador; Essencial já teve a resposta */}
       {level !== "citizen" && (
-        <section className="mt-10">
+        <section className="board-act">
           <ActHead
+            num="II"
             title={ti("acts.pulseTitle")}
             note={ti("acts.pulseNote")}
             ageAt={asOf}
@@ -128,11 +130,12 @@ export function OperatorBoard({
         </section>
       )}
 
-      {/* 03 — o briefing: cinco entradas fixas, sempre os mesmos slots.
+      {/* Placa III — o briefing: cinco entradas fixas, sempre os mesmos slots.
           R8 — Essencial é hero + mapa + leituras; o briefing fica no Operador. */}
       {show("boardSecondary") && (
-        <section className="mt-10">
+        <section className="board-act">
           <ActHead
+            num="III"
             title={ti("acts.briefTitle")}
             note={ti("acts.briefNote")}
             ageAt={asOf}
@@ -181,8 +184,12 @@ export function OperatorBoard({
       {/* 04 — a lista: instrumento pessoal, local e sem servidor.
           R8 — fora do Essencial; o dial sobe para a ter de volta. */}
       {show("boardSecondary") && (
-        <section className="mt-10 board-act">
-          <ActHead title={ti("acts.listTitle")} note={ti("acts.listNote")} />
+        <section className="board-act">
+          <ActHead
+            num="IV"
+            title={ti("acts.listTitle")}
+            note={ti("acts.listNote")}
+          />
           <WatchlistPanel />
         </section>
       )}

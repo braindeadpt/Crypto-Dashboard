@@ -23,13 +23,13 @@ export function EtfDesk({
 
   return (
     <div
-      className={`mx-auto max-w-[1400px] section-pad pb-20 enter ${embedded ? "pt-8" : "pt-6"}`}
+      className={`obs-shell section-pad pb-20 enter ${embedded ? "pt-8" : "pt-6"}`}
     >
       <header className="max-w-3xl">
         {embedded ? (
           <h2 className="font-display text-title text-ink">{t("title")}</h2>
         ) : (
-          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+          <h1 className="text-title">
             {t("title")}
           </h1>
         )}

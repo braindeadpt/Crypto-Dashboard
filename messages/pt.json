@@ -32,7 +32,7 @@
     "title": "Sistema de design",
     "subtitle": "O Observatório: tipografia com papéis distintos, cor com funções separadas, elevação calibrada e movimento só quando há significado.",
     "type": "Tipografia",
-    "typeHint": "Sora (editorial) · IBM Plex Sans (UI) · IBM Plex Mono (dados). Escala 12 / 14 / 18 / 24 / 40 / 72.",
+    "typeHint": "Newsreader (editorial serif) · Sora (display/UI) · IBM Plex Sans (corpo) · IBM Plex Mono (dados). Escala 10 / 12 / 14 / 18 / 24 / 40 / 72.",
     "color": "Cor e papéis",
     "colorHint": "Acento ≠ direcção ≠ regime ≠ foco. Direcção sempre com ▲▼.",
     "elevation": "Elevação",
@@ -70,8 +70,14 @@
       "body": "Texto de corpo para leitura operacional.",
       "title": "Título de secção",
       "display": "Momento editorial",
-      "hero": "87 432"
-    }
+      "hero": "87 432",
+      "micro": "Micro — proveniência e rodapés 10",
+      "serif": "A manchete do dia, em serif editorial."
+    },
+    "plates": "Placas",
+    "platesHint": "Cada acto é uma placa gravada — número, título serif, coordenada e idade da fonte.",
+    "plateSample": "O mapa do mercado",
+    "plateNote": "A leitura inteira, sem saltos de tab."
   },
   "market": {
     "title": "Mercado",

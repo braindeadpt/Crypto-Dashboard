@@ -91,7 +91,7 @@ export function HeroPanel({
         <AmbientField intensity={intensity} />
         <div className="relative grid gap-8 py-8 md:py-10 lg:grid-cols-12">
           <div className="lg:col-span-8">
-            <h1 className="max-w-[16ch] font-display text-display leading-[1.02] text-ink lg:text-hero">
+            <h1 className="max-w-[17ch] text-serif-display text-ink">
               {claims.length
                 ? claims.map((c, i) => (
                     <Fragment key={i}>
@@ -104,7 +104,7 @@ export function HeroPanel({
                           setOpenClaim(openClaim === i ? null : i)
                         }
                         className={cn(
-                          "cursor-pointer transition-colors hover:text-accent-2",
+                          "claim-mark cursor-pointer transition-colors hover:text-accent-2",
                           openClaim === i && "text-accent-2",
                         )}
                         style={{ font: "inherit", letterSpacing: "inherit" }}
@@ -112,7 +112,7 @@ export function HeroPanel({
                         {isPt ? c.textPt : c.textEn}
                         <sup
                           aria-hidden
-                          className="ml-1 font-mono text-[0.32em] font-normal text-accent-2"
+                          className="ml-1 font-mono text-[0.42em] font-medium text-accent-2"
                         >
                           {i + 1}
                         </sup>

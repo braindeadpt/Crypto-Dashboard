@@ -97,7 +97,7 @@ export function MundoDesk({ sectors, market, cases, asOf }: Props) {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-6 enter">
+    <div className="obs-shell section-pad pb-16 pt-6 enter">
       <header className="max-w-3xl">
         <p className="text-label text-faint">{t("eyebrow")}</p>
         <h1 className="mt-1 font-display text-display text-ink">{t("title")}</h1>
@@ -110,6 +110,7 @@ export function MundoDesk({ sectors, market, cases, asOf }: Props) {
       {/* —— CENTREPIECE: Caso & Efeito —— */}
       <div className="board-act mt-8">
         <ActHead
+          num="I"
           title={t("casesTitle")}
           note={t("casesActNote")}
           ageAt={asOf ?? market.updatedAt}
@@ -170,6 +171,7 @@ export function MundoDesk({ sectors, market, cases, asOf }: Props) {
       {/* —— Where capital rotates — linked to cases —— */}
       <div className="board-act mt-12" id="mundo-sectores">
         <ActHead
+          num="II"
           title={t("sectorsTitle")}
           note={t("sectorsActNote")}
           ageAt={sectors.ingestedAt}

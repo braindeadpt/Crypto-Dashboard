@@ -131,7 +131,7 @@ export function InstrumentDesk({
   const solChg = live.quotes.SOLUSDT?.change24h ?? sol?.change24h;
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter">
+    <div className="obs-shell section-pad pb-16 pt-3 enter">
       <header className="mb-3">
         <p className="text-label text-faint">{ti("eyebrow")}</p>
         <h1 className="font-display text-title text-ink">{ti("title")}</h1>
@@ -265,6 +265,7 @@ export function InstrumentDesk({
       {/* Grelha de réguas */}
       <div className="board-act">
         <ActHead
+          num="I"
           title={ti("acts.whereTitle")}
           note={ti("acts.whereNote")}
           ageAt={oldestIso(
@@ -363,6 +364,7 @@ export function InstrumentDesk({
       {/* Spot vs alavancagem */}
       <div className="board-act">
         <ActHead
+          num="II"
           title={ti("acts.moneyTitle")}
           note={ti("acts.moneyNote")}
           ageAt={oldestIso(etf?.updatedAt, derivs?.updatedAt)}
@@ -499,6 +501,7 @@ export function InstrumentDesk({
       {/* Preço de perto + derivados */}
       <div className="board-act">
         <ActHead
+          num="III"
           title={ti("acts.priceTitle")}
           note={ti("acts.priceNote")}
           ageAt={oldestIso(sentiment.updatedAt, derivs?.updatedAt, asOf)}
@@ -582,6 +585,7 @@ export function InstrumentDesk({
       {/* Mercado amplo */}
       <div className="board-act">
         <ActHead
+          num="IV"
           title={ti("acts.wideTitle")}
           note={ti("acts.wideNote")}
           ageAt={oldestIso(

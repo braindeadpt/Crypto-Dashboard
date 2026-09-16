@@ -16,7 +16,7 @@ export function PhishingQuiz() {
 
   return (
     <section className="border border-line bg-surface p-5">
-      <h3 className="text-xl font-semibold">{t("quizTitle")}</h3>
+      <h3 className="text-title">{t("quizTitle")}</h3>
       <p className="mt-1 text-sm text-muted">{t("quizSubtitle")}</p>
 
       <div className="mt-5 space-y-6">

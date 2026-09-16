@@ -30,7 +30,7 @@ async function HomeBoard({ locale }: { locale: string }) {
   } catch {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <h1 className="text-3xl font-semibold">
+        <h1 className="text-display">
           CLAREZA <span className="text-accent">Crypto</span>
         </h1>
         <p className="mt-3 text-muted">

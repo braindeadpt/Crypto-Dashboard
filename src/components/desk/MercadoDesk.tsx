@@ -24,7 +24,7 @@ export function MercadoDesk({
   const { global: g } = market;
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter-sequence">
+    <div className="obs-shell section-pad pb-16 pt-3 enter-sequence">
       <header className="max-w-2xl pt-2">
         <h1 className="font-display text-display text-ink">{t("title")}</h1>
         <p className="mt-2 text-body text-muted">{t("subtitle")}</p>

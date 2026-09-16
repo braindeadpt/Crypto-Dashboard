@@ -15,27 +15,38 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * pilha de painéis do mesmo peso.
  */
 export function ActHead({
+  num,
   title,
   note,
+  coord,
   ageAt,
   ageStale,
 }: {
+  /** Engraved plate numeral — "I", "II", "III"… the chapter mark. */
+  num?: string;
   title: string;
   note?: string;
+  /** Plate coordinate — right-aligned context (epoch, window, sample). */
+  coord?: string;
   /** Data age of the act's numbers (F2) — ISO of the source snapshot. */
   ageAt?: string | null;
   ageStale?: boolean;
 }) {
   return (
-    <div className="act-head">
-      <h2 className="act-head__title">{title}</h2>
-      {note && <span className="act-head__note">{note}</span>}
-      {ageAt && (
-        <DataAge
-          at={ageAt}
-          stale={ageStale}
-          className="font-mono text-label uppercase tracking-[0.08em]"
-        />
+    <div className="placa-head">
+      {num && <span className="placa-num">{num}</span>}
+      <h2 className="placa-title">{title}</h2>
+      {note && <span className="placa-note">{note}</span>}
+      {(coord || ageAt) && (
+        <span className="placa-coord">
+          {coord}
+          {ageAt && (
+            <>
+              {coord && " · "}
+              <DataAge at={ageAt} stale={ageStale} />
+            </>
+          )}
+        </span>
       )}
     </div>
   );

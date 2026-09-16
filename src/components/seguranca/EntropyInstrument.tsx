@@ -103,7 +103,7 @@ export function EntropyInstrument() {
   return (
     <section className="border border-line bg-surface p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="text-xl font-semibold">{t("title")}</h3>
+        <h3 className="text-title">{t("title")}</h3>
         <p className="font-mono text-xs text-faint">BIP-39</p>
       </div>
       <p className="mt-1 text-sm text-muted">{t("subtitle")}</p>
@@ -113,7 +113,7 @@ export function EntropyInstrument() {
       </p>
 
       <div className="mt-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+        <p className="text-label text-faint">
           {t("source")}
         </p>
         <div className="mt-2 flex flex-wrap gap-1" role="radiogroup">
@@ -227,7 +227,7 @@ export function EntropyInstrument() {
       {result && (
         <div className="mt-5 space-y-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+            <p className="text-label text-faint">
               {t("bitsLabel")} · {result.bits.length}
             </p>
             <p className="mt-1 break-all border border-line bg-bg p-2 font-mono text-xs leading-relaxed text-muted">
@@ -240,7 +240,7 @@ export function EntropyInstrument() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+            <p className="text-label text-faint">
               {t("indicesLabel")}
             </p>
             <p className="mt-1 break-all border border-line bg-bg p-2 font-mono text-xs text-muted">
@@ -249,7 +249,7 @@ export function EntropyInstrument() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+            <p className="text-label text-faint">
               {t("wordsLabel")}
             </p>
             <ol className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4">

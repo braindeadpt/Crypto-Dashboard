@@ -24,7 +24,7 @@ export function AtlasIndex() {
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-6 enter">
       <header className="max-w-2xl">
-        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+        <h2 className="text-display">
           {t("title")}
         </h2>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
@@ -46,10 +46,10 @@ export function AtlasIndex() {
                 className="block h-full border border-line bg-surface p-4 transition hover:border-accent/40 hover:bg-surface-2"
               >
                 <AtlasDiagram slug={c.slug} title={title} className="mb-3 max-w-none" />
-                <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+                <p className="text-label text-faint">
                   {t(c.level)}
                 </p>
-                <h3 className="mt-1 text-lg font-semibold">{title}</h3>
+                <h3 className="mt-1 text-title">{title}</h3>
                 <p className="mt-2 line-clamp-3 text-sm text-muted">
                   {locale === "pt" ? c.summaryPt : c.summaryEn}
                 </p>

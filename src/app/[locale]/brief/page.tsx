@@ -25,7 +25,7 @@ export default async function BriefPage({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-6">
+    <div className="obs-shell section-pad pb-16 pt-6">
       <div className="mx-auto max-w-3xl">
         <DailyRitualCard ritual={data.ritual} />
         <JournalCard />

@@ -27,7 +27,7 @@ export function ContextoDesk({ cycle }: Props) {
 
   return (
     <div className="enter">
-      <div className="mx-auto w-full max-w-[1400px] section-pad pt-6">
+      <div className="obs-shell section-pad pt-6">
         <header className="max-w-3xl">
           <p className="text-label text-faint">{t("eyebrow")}</p>
           <h1 className="mt-1 font-display text-display text-ink">{t("title")}</h1>

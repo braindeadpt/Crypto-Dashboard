@@ -23,7 +23,7 @@ export function DefiDesk({
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-6 enter">
       <header className="max-w-2xl">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+        <h1 className="text-display">
           {t("title")}
         </h1>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
@@ -35,12 +35,12 @@ export function DefiDesk({
       </header>
 
       <div className="card mt-8 p-6">
-        <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+        <p className="text-label text-faint">
           {t("tvl")}
         </p>
         <ExplainThisNumber
           value={
-            <span className="text-4xl font-semibold">
+            <span className="font-mono text-4xl tabular-nums">
               {formatUsd(data.totalTvl, true)}
             </span>
           }
@@ -69,7 +69,7 @@ export function DefiDesk({
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <section className="card p-5">
-          <h2 className="text-lg font-semibold">{t("protocols")}</h2>
+          <h2 className="text-title">{t("protocols")}</h2>
           <ul className="mt-4 divide-y divide-line">
             {data.protocols.map((p) => (
               <li
@@ -95,7 +95,7 @@ export function DefiDesk({
 
         <div className="space-y-4">
           <section className="card p-5">
-            <h2 className="text-lg font-semibold">{t("chains")}</h2>
+            <h2 className="text-title">{t("chains")}</h2>
             <ul className="mt-4 divide-y divide-line">
               {data.chains.map((c) => (
                 <li key={c.name} className="flex justify-between py-2.5 text-sm">
@@ -107,7 +107,7 @@ export function DefiDesk({
           </section>
 
           <section className="card p-5">
-            <h2 className="text-lg font-semibold">{t("stablecoins")}</h2>
+            <h2 className="text-title">{t("stablecoins")}</h2>
             <ul className="mt-4 divide-y divide-line">
               {data.stablecoins.map((s) => (
                 <li
@@ -136,7 +136,7 @@ export function DefiDesk({
 
       {yields.length > 0 && (
         <section className="card mt-6 p-5">
-          <h2 className="text-lg font-semibold">{t("yields")}</h2>
+          <h2 className="text-title">{t("yields")}</h2>
           <p className="mt-1 text-xs text-faint">
             {t("yieldsHint")}
             {yieldsAt && (

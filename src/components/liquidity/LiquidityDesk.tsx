@@ -23,7 +23,7 @@ export function LiquidityDesk({ initial, embedded = false }: Props) {
   const s = initial.stables;
 
   return (
-    <div className={`mx-auto w-full max-w-[1400px] section-pad pb-16 ${embedded ? "pt-4" : "pt-6"} enter`}>
+    <div className={`obs-shell section-pad pb-16 ${embedded ? "pt-4" : "pt-6"} enter`}>
       {!embedded && (
         <header className="max-w-3xl">
           <p className="text-label text-faint">{t("eyebrow")}</p>

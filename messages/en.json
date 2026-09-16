@@ -32,7 +32,7 @@
     "title": "Design system",
     "subtitle": "The Observatory: distinct type roles, separated colour jobs, calibrated elevation, and motion only when it means something.",
     "type": "Typography",
-    "typeHint": "Sora (editorial) · IBM Plex Sans (UI) · IBM Plex Mono (data). Scale 12 / 14 / 18 / 24 / 40 / 72.",
+    "typeHint": "Newsreader (editorial serif) · Sora (display/UI) · IBM Plex Sans (body) · IBM Plex Mono (data). Scale 10 / 12 / 14 / 18 / 24 / 40 / 72.",
     "color": "Colour roles",
     "colorHint": "Accent ≠ direction ≠ regime ≠ focus. Direction always with ▲▼.",
     "elevation": "Elevation",
@@ -70,8 +70,14 @@
       "body": "Body copy for operational reading.",
       "title": "Section title",
       "display": "Editorial moment",
-      "hero": "87 432"
-    }
+      "hero": "87 432",
+      "micro": "Micro — provenance and footers 10",
+      "serif": "The day’s headline, in editorial serif."
+    },
+    "plates": "Plates",
+    "platesHint": "Each act is an engraved plate — number, serif title, coordinate and source age.",
+    "plateSample": "The market map",
+    "plateNote": "The full read, no tab-hopping."
   },
   "market": {
     "title": "Market",

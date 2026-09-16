@@ -124,9 +124,12 @@
 
 :root {
   /*
-   * Type scale (px): 12 / 14 / 18 / 24 / 40 / 72
+   * Type scale (px): 11 / 12 / 14 / 18 / 24 / 40 / 72
    * Audible jumps — instrument labels vs editorial display.
+   * --text-micro is the floor: engraved coordinates and chart legends only.
+   * Nothing below 11px ships.
    */
+  --text-micro: 0.6875rem; /* 11 — coordinates/engraved labels only */
   --text-label: 0.75rem; /* 12 */
   --text-meta: 0.875rem; /* 14 */
   --text-data: 0.875rem; /* 14 — mono tabular */
@@ -170,6 +173,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-display: var(--font-display);
+  --font-serif: var(--font-serif);
   --color-paper: var(--bg);
   --color-paper-elevated: var(--surface);
   --color-ink-soft: var(--muted);
@@ -324,6 +328,25 @@ button {
   font-weight: 550;
 }
 
+/* Coordenada gravada — o chão da escala. Só para legendas de placa,
+ * marcadores de canto e notas de campo. Nunca texto corrido. */
+.text-micro {
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  font-size: var(--text-micro);
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Voz editorial — a manchete e os títulos de placa.
+ * Newsreader óptica: serifa de leitura, contrasta com os instrumentos. */
+.text-serif {
+  font-family: var(--font-serif), Georgia, serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+
 .delta-up {
   color: var(--up);
 }
@@ -434,37 +457,87 @@ button {
   }
 }
 
-/* Cabeçalho de acto — âncora de leitura, com fio luminoso à esquerda */
-.act-head {
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-instrument);
+  box-shadow: var(--elev-1);
+}
+
+/* ——————————————————————————————————————————————————————————
+ * PLACA — o capítulo gravado do observatório
+ *
+ * Cada secção de uma página é uma placa: número romano gravado, título
+ * editorial serifado, coordenada de contexto à direita. O espaçamento
+ * entre placas é o .board-act — nunca margin ad-hoc.
+ * —————————————————————————————————————————————————————————— */
+.placa {
+  position: relative;
+}
+.placa-head {
   display: flex;
   align-items: baseline;
-  gap: 0.75rem;
-  margin-bottom: 0.85rem;
-  padding-left: 0.7rem;
-  border-left: 2px solid var(--accent);
-  box-shadow: -1px 0 12px -4px var(--accent-glow);
+  gap: 0.9rem;
+  margin-bottom: 1.1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
 }
-.act-head__title {
-  font-family: var(--font-display), Sora, sans-serif;
-  font-size: var(--text-title);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+.placa-num {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-micro);
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.placa-title {
+  font-family: var(--font-serif), Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: clamp(1.5rem, 1.05rem + 1.8vw, 2.25rem);
+  font-weight: 480;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
   color: var(--ink);
   margin: 0;
 }
-.act-head__note {
+.placa-note {
   font-family: var(--font-mono), monospace;
   font-size: var(--text-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--faint);
 }
+.placa-coord {
+  margin-left: auto;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  white-space: nowrap;
+}
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-instrument);
-  box-shadow: var(--elev-1);
+/* Manchete editorial — a frase que abre o dia. */
+.text-serif-display {
+  font-family: var(--font-serif), Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: clamp(1.9rem, 1.15rem + 3.2vw, 3.4rem);
+  font-weight: 440;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+/* Afirmação verificável — sublinhado pontilhado marca a affordance;
+ * o recibo abre com a métrica-fonte. */
+.claim-mark {
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in oklab, var(--accent-2) 45%, transparent);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+.claim-mark:hover,
+.claim-mark[aria-expanded="true"] {
+  text-decoration-color: var(--accent-2);
 }
 
 .chip {

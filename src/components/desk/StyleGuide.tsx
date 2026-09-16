@@ -14,6 +14,10 @@ type Labels = {
   motionHint: string;
   direction: string;
   regime: string;
+  plates: string;
+  platesHint: string;
+  plateSample: string;
+  plateNote: string;
   roles: Record<string, string>;
   elev: Record<string, string>;
   typeSamples: Record<string, string>;
@@ -64,6 +68,11 @@ export function StyleGuide({
         <p className="mt-1 text-meta text-muted">{labels.typeHint}</p>
         <div className="mt-6 space-y-6 border border-line bg-surface p-5 shadow-[var(--elev-1)]">
           <TypeRow
+            size="10"
+            className="text-micro text-faint"
+            sample={labels.typeSamples.micro}
+          />
+          <TypeRow
             size="12"
             className="text-label text-faint"
             sample={labels.typeSamples.label}
@@ -93,6 +102,25 @@ export function StyleGuide({
             className="text-hero text-ink"
             sample={labels.typeSamples.hero}
           />
+          <TypeRow
+            size="serif"
+            className="text-serif-display text-ink"
+            sample={labels.typeSamples.serif}
+          />
+        </div>
+      </section>
+
+      {/* Plates — the chapter vocabulary */}
+      <section className="mt-14">
+        <h2 className="text-title text-ink">{labels.plates}</h2>
+        <p className="mt-1 text-meta text-muted">{labels.platesHint}</p>
+        <div className="mt-6 border border-line bg-surface p-5 shadow-[var(--elev-1)]">
+          <div className="placa-head">
+            <span className="placa-num">I</span>
+            <h3 className="placa-title">{labels.plateSample}</h3>
+            <span className="placa-coord">38.72°N · 9.14°W</span>
+          </div>
+          <p className="placa-note">{labels.plateNote}</p>
         </div>
       </section>
 

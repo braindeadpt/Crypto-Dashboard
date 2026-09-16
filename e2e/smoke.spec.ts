@@ -96,8 +96,14 @@ test.describe("smoke · market map layers (R4)", () => {
       timeout: 45_000,
     });
     const funding = group.getByRole("button", { name: /^Funding$/i });
-    await funding.click();
-    await expect(funding).toHaveAttribute("aria-pressed", "true");
+    // SSR-visible button: the first click can land before hydration — retry
+    // until the press registers (setLayer is idempotent, not a toggle).
+    await expect(async () => {
+      await funding.click();
+      await expect(funding).toHaveAttribute("aria-pressed", "true", {
+        timeout: 2_000,
+      });
+    }).toPass({ timeout: 20_000 });
     const sector = group.getByRole("button", { name: /Sector/i });
     await sector.click();
     await expect(sector).toHaveAttribute("aria-pressed", "true");

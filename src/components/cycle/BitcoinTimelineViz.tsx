@@ -35,7 +35,7 @@ export function BitcoinTimelineViz({ className = "" }: { className?: string }) {
   return (
     <div className={className}>
       <div className="flex items-end justify-between gap-3">
-        <h2 className="text-xl font-semibold">{t("timeline")}</h2>
+        <h2 className="text-title">{t("timeline")}</h2>
         <p className="text-meta text-faint">{t("timelineNavHint")}</p>
       </div>
 
@@ -123,7 +123,7 @@ export function BitcoinTimelineViz({ className = "" }: { className?: string }) {
 
       <article className="mt-4 border border-line bg-surface p-4">
         <p className="font-mono text-xs text-faint">{selected.date}</p>
-        <h3 className="mt-1 text-xl font-semibold">
+        <h3 className="mt-1 text-title">
           {locale === "pt" ? selected.titlePt : selected.titleEn}
           {selected.priceHint && (
             <span className="ml-2 text-sm font-normal text-muted">

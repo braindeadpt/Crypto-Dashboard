@@ -18,7 +18,7 @@ export function AtlasArticle({ slug }: { slug: string }) {
       <Link href="/aprender" className="text-sm font-semibold text-accent">
         ← {t("title")}
       </Link>
-      <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-faint">
+      <p className="mt-6 text-label text-faint">
         {t("level")}: {t(concept.level)}
         {concept.asOf && (
           <span className="ml-3 font-normal normal-case">
@@ -26,7 +26,7 @@ export function AtlasArticle({ slug }: { slug: string }) {
           </span>
         )}
       </p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-tight">{title}</h1>
+      <h1 className="mt-2 text-serif-display">{title}</h1>
       <p className="mt-3 text-lg text-muted">
         {locale === "pt" ? concept.summaryPt : concept.summaryEn}
       </p>
@@ -37,7 +37,7 @@ export function AtlasArticle({ slug }: { slug: string }) {
 
       {concept.relatedSlugs.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-faint">
+          <h2 className="text-label text-faint">
             {t("related")}
           </h2>
           <ul className="mt-3 flex flex-wrap gap-2">
