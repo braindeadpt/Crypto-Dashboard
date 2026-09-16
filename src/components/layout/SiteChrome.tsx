@@ -51,9 +51,16 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-line bg-bg-elevated print:hidden">
+    <header
+      className="sticky top-0 z-40 w-full border-b border-line bg-bg-elevated print:hidden"
+      style={{ viewTransitionName: "site-header" }}
+    >
       <div className="obs-shell flex items-center justify-between gap-2 section-pad py-2.5 sm:gap-4 sm:py-3">
-        <Link href="/" className="flex min-w-0 shrink items-center gap-2 sm:gap-3">
+        <Link
+          href="/"
+          transitionTypes={["nav-back"]}
+          className="flex min-w-0 shrink items-center gap-2 sm:gap-3"
+        >
           <LogoMark className="h-7 w-7 shrink-0 sm:h-8 sm:w-8" />
           <span className="min-w-0 leading-tight">
             <span className="block font-display text-[1.05rem] leading-tight text-ink sm:text-title">
@@ -84,6 +91,7 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
+              transitionTypes={[link.href === "/" ? "nav-back" : "nav-forward"]}
               className={cn(
                 "shrink-0 border-b-2 px-3 py-2.5 text-label transition",
                 active

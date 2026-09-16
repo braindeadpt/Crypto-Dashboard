@@ -45,6 +45,10 @@ const nextConfig: NextConfig = {
    * teste do dial falhava sem que a aplicação tivesse defeito.
    */
   allowedDevOrigins: ["127.0.0.1"],
+  experimental: {
+    // View transitions nativas (React <ViewTransition>) entre páginas.
+    viewTransition: true,
+  },
   async redirects() {
     return LEGACY_ALIASES.map(({ from, to }) => ({
       source: `/:locale(pt|en)/${from}`,

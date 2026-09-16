@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatedNumber } from "@/components/board/AnimatedNumber";
 import { MarketMap } from "@/components/board/MarketMap";
 import { Sparkline } from "@/components/board/Sparkline";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
@@ -23,10 +24,10 @@ export function MercadoDesk({ market }: { market: MarketSnapshot }) {
 
       {/* Vitals — quatro números, uma linha */}
       <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-[2px] border border-line bg-line sm:grid-cols-4">
-        <Stat label={t("totalMcap")} value={formatUsd(g.totalMarketCap, true)} delta={g.marketCapChange24h} />
-        <Stat label={t("volume")} value={formatUsd(g.totalVolume, true)} />
-        <Stat label={t("dominance")} value={formatPct(g.btcDominance, 1)} />
-        <Stat label={t("ethDominance")} value={formatPct(g.ethDominance, 1)} />
+        <Stat label={t("totalMcap")} value={g.totalMarketCap} format={(n) => formatUsd(n, true)} delta={g.marketCapChange24h} />
+        <Stat label={t("volume")} value={g.totalVolume} format={(n) => formatUsd(n, true)} />
+        <Stat label={t("dominance")} value={g.btcDominance} format={(n) => formatPct(n, 1)} />
+        <Stat label={t("ethDominance")} value={g.ethDominance} format={(n) => formatPct(n, 1)} />
       </dl>
 
       <div className="mt-4">
@@ -70,17 +71,19 @@ export function MercadoDesk({ market }: { market: MarketSnapshot }) {
 function Stat({
   label,
   value,
+  format,
   delta,
 }: {
   label: string;
-  value: string;
+  value: number | null | undefined;
+  format: (n: number) => string;
   delta?: number | null;
 }) {
   return (
     <div className="bg-surface px-4 py-3">
       <dt className="text-label text-faint">{label}</dt>
       <dd className="mt-1 font-mono text-data text-ink">
-        {value}
+        <AnimatedNumber value={value} format={format} flash />
         {delta != null && (
           <span className={`ml-2 text-label ${deltaClass(delta)}`}>
             {delta >= 0 ? "▲" : "▼"} {formatPct(delta)}

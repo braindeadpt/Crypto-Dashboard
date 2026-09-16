@@ -11,10 +11,13 @@ export function AnimatedNumber({
   value,
   format,
   className,
+  flash = false,
 }: {
   value: number | null | undefined;
   format: (n: number) => string;
   className?: string;
+  /** Flash direccional (tape-flash-up/down) quando o valor muda. */
+  flash?: boolean;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const last = useRef<number | null>(null);
@@ -31,6 +34,12 @@ export function AnimatedNumber({
       last.current = value;
       return;
     }
+    if (flash) {
+      el.classList.remove("tape-flash-up", "tape-flash-down");
+      // Reflow para rearmar a animação CSS em mudanças seguidas.
+      void el.offsetWidth;
+      el.classList.add(value > from ? "tape-flash-up" : "tape-flash-down");
+    }
     const obj = { v: from };
     const tween = gsap.to(obj, {
       v: value,
@@ -44,7 +53,7 @@ export function AnimatedNumber({
     return () => {
       tween.kill();
     };
-  }, [value, format]);
+  }, [value, format, flash]);
 
   return (
     <span ref={ref} className={className}>

@@ -133,24 +133,28 @@ export function HeroPanel({
           </div>
           <TapeCell
             label="ETH"
-            value={eth.px != null ? formatUsd(eth.px) : "—"}
+            value={eth.px}
+            format={formatUsd}
             delta={eth.chg}
           />
           <TapeCell
             label="SOL"
-            value={sol.px != null ? formatUsd(sol.px) : "—"}
+            value={sol.px}
+            format={formatUsd}
             delta={sol.chg}
           />
           {vitals && (
             <>
               <TapeCell
                 label={t("vitalsCap")}
-                value={formatUsd(vitals.cap, true)}
+                value={vitals.cap}
+                format={(n) => formatUsd(n, true)}
                 delta={vitals.capChg}
               />
               <TapeCell
                 label={t("vitalsDom")}
-                value={formatPct(vitals.dom, 1)}
+                value={vitals.dom}
+                format={(n) => formatPct(n, 1)}
               />
             </>
           )}
@@ -163,17 +167,19 @@ export function HeroPanel({
 function TapeCell({
   label,
   value,
+  format,
   delta,
 }: {
   label: string;
-  value: string;
+  value: number | null | undefined;
+  format: (n: number) => string;
   delta?: number | null;
 }) {
   return (
     <div className="py-4 lg:pl-6">
       <p className="text-label text-faint">{label}</p>
       <p className="mt-1 font-mono text-data text-ink">
-        {value}
+        <AnimatedNumber value={value} format={format} flash />
         {delta != null && (
           <span className={`ml-1.5 text-label ${deltaClass(delta)}`}>
             {formatPct(delta)}

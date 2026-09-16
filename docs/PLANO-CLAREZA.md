@@ -1,8 +1,10 @@
-# CLAREZA — Plano de produto e design (v2)
+# CLAREZA — Plano de produto e design (v3)
 
 > Data: 2026-09-16 · Estado: plano aprovado para execução faseada
 > Referência de inspiração: chemistdefi.com (estética de "laboratório",
 > tese signal-vs-noise, Lab de ferramentas) — inspiração, não cópia.
+> v3: integra pesquisa competitiva profunda (ver §11). Escopo completo
+> definido agora; execução por fases, sem pressa, padrão nota-10.
 
 ## 1. O que é
 
@@ -15,13 +17,25 @@ promessa: **clareza** — o que aconteceu, o que significa, o que importa.
 - Sem sinais de trading, sem hype, sem conselhos financeiros
 - Nunca inventar dados — falhas mostram-se, timestamps sempre visíveis
 - Bilingue PT-PT / EN, PT-PT primeiro
+- Read-only declarado: "não queremos saber das tuas posições" é
+  posicionamento, não ausência de feature
 
 ## 2. Posição face às alternativas
 
 CoinGecko/CoinMarketCap = listas de preços. TradingView = gráficos para
-traders. ChemistDeFi = ensaios + lab pessoal. CLAREZA = **a mesa de
-orientação**: síntese + mapa + ferramentas, em português, com honestidade
-sobre o que os dados dizem (e não dizem).
+traders. CoinGlass = posicionamento/derivados. DefiLlama = DeFi denso e
+grátis. Glassnode = biblioteca de métricas on-chain. Farside = tabela nua
+de ETF flows que o mundo inteiro cita. Newsletters = síntese escrita
+assíncrona. FlowPulse = prova de conceito de regime, execução fraca.
+
+CLAREZA = **a mesa de orientação**: síntese de regime decomponível +
+mapa + ferramentas, em português, com honestidade sobre o que os dados
+dizem (e não dizem). Nenhum produto no mundo combina: síntese honesta,
+densidade adaptativa, PT-PT primário e postura read-only sem agenda.
+
+Concorrentes conceptuais a estudar a fundo: **DefiLlama** (ethos
+grátis/transparente/metodologia publicada), **CoinGlass** (camada de
+posicionamento), **FlowPulse** (o que fazer melhor em regime).
 
 ## 3. Arquitectura de informação
 
@@ -77,8 +91,10 @@ Mantemos a identidade (não deitar fora o que funciona):
   verde/coral direccional com glifo ▲▼
 - Sora (display) + IBM Plex Sans + IBM Plex Mono
 - Bordas finas, radius 2px, elevação por superfície
+- Tabular figures (`tnum`) em todos os valores monetários — o "sinal
+  quieto" de ADN financeiro (lição Stripe)
 
-**A camada wow (nova):**
+**A camada wow:**
 
 - **Números vivos** — tickers contam/transicionam quando mudam
   (flash up/down já existe; alargar a todos os valores-chave)
@@ -89,13 +105,21 @@ Mantemos a identidade (não deitar fora o que funciona):
 - **View transitions** entre páginas (elemento partilhado: o módulo que
   expande para a página de destino)
 - **Campo ambiental reactivo** — partículas mais densas/rápidas em
-  tempestade, esparsas em calmo (wow que comunica estado, não decoração)
+  tempestade, esparsas em calmo (wow que comunica estado, não decoração).
+  É a nossa metáfora visual assinatura — o equivalente ao que os blocos
+  da mempool.space são para eles: reconhecível, própria, não copiável
 - **Scroll reveals** discretos nas páginas longas (Aprender, Casos)
 
 Biblioteca: **GSAP** (já há skills internas gsap-* no ambiente) ou
 Motion; decisão na fase de execução — o que interessa é a disciplina:
 motion sempre com significado, `prefers-reduced-motion` desliga tudo,
 sem blur pesado em mobile, 60fps ou nada.
+
+Referências de design a dissecar: **Finviz/Matrix** (breadth visual),
+**Linear** (escada de superfícies escuras + hairlines — extrair
+princípios, nunca a skin), **mempool.space** (metáfora assinatura),
+**Stripe** (tabular figures), **Bloomberg** (conceal complexity:
+densidade ≠ clutter).
 
 ## 6. Módulos de dados por página
 
@@ -140,20 +164,115 @@ Snapshots locais continuam a alimentar histórico e deltas
   touch targets ≥44px, reduced-motion
 - Copy PT-PT revisto: zero brasileirismos, frases reais, nunca
   fragmentos de template
+- **Página de metodologia publicada** (`/metodologia` ou secção em
+  `/aprender`) — pesos das leituras compostas, fontes por métrica,
+  janelas de percentil. O modelo DefiLlama: a confiança vem de poder
+  auditar como o número foi feito
 
-## 9. Fases de execução
+## 9. Escopo completo — backlog de diferenciais
+
+Tudo o que o produto cobre, classificado por estado. O plano cobre
+tudo; a execução é faseada (§10).
+
+### Já construído (manter e polir)
+
+- Treemap de mercado clicável com janela de cor (1h/24h/7d) — Agora, Mercado
+- Campo ambiental reactivo ao regime — Agora
+- Números vivos / AnimatedNumber — valores-chave
+- Leituras compostas Direcção/Risco/Dinheiro + Pulso radar — Agora
+- Briefing editorial 5 slots — Agora, `/brief`
+- Percentis históricos com gémeo em linguagem comum
+  (`jargon.percentile`, `Regua`, `Pulso` — "mais alto que X% dos
+  últimos N dias")
+- Rotas temáticas IA-v2 + 308s — Mercado, Fluxos, DeFi, Cadeias,
+  Casos, Aprender, Ferramentas, Mesa
+- Dial Essencial/Operador/Analista (`useExpertise`/`ExpertiseGate`)
+- Caso & Efeito + rotação sectorial — Casos
+- Verificação de carteiras EVM/BTC — Ferramentas
+- Snapshots locais para histórico e deltas
+
+### Novo — da pesquisa competitiva (§11)
+
+| # | Diferencial | O que é | Porquê ninguém faz |
+|---|---|---|---|
+| R1 | **"Desde a tua última visita"** | Diff de estado na entrada: amplitude 62%→41%, funding normalizou, F&G −14pts. Snapshot dos vitals em localStorage | Transforma observatório estático em ritual diário — o mecanismo de retenção das newsletters sem depender de email |
+| R2 | **História do regime** | Sparkline/evolução do regime nos últimos 30-90d (dos snapshots locais). O estado do mercado como objecto com passado, não só presente | Glassnode tem charts de métricas; ninguém tem "história do estado" como peça de primeira classe |
+| R3 | **Regime decomposto** | O Pulso/Regime mostra a contribuição de cada ingrediente (amplitude, funding, vol, ETF, F&G) — expandível, com lacunas declaradas | F&G viralizou um número sem decomposição; o nosso número explica-se a si próprio |
+| R4 | **Treemap multi-camada** | A cor do mapa alterna: variação de preço, funding, volume anómalo, rotação de sector | CryptoBubbles provou o formato; ninguém o estendeu a "mapa de posicionamento" |
+| R5 | **"60 segundos" verificável** | Parágrafo de síntese gerado a dados em que cada afirmação é clicável e abre a métrica-fonte | Newsletters provam o apetite por síntese; síntese ao vivo com fontes verificáveis é inédito |
+| R6 | **ETF flows de primeira classe** | Streaks, cumulativo, dia-record, Δ semanal — apresentar melhor que a fonte o dado mais citado do ciclo institucional | O mundo inteiro lê uma tabela HTML nua na Farside |
+| R7 | **Frescura sistemática** | Cada módulo com "actualizado há X min" + fonte + aviso explícito de stale | Queixa nº1 em todos os trackers é dado velho apresentado como fresco; transparência operacional é confiança |
+| R8 | **Essencial mobile-first** | O modo Essencial desenhado para telemóvel primeiro — 5 números + 1 frase, não um desktop encolhido | Produtos data-dense são desktop-first; o mercado inteiro em segundos tem de caber num ecrã de bolso |
+| R9 | **Metodologia publicada** | Pesos, fontes e janelas documentadas e linkáveis de cada leitura | Métrica composta opaca é só mais um F&G; decomponível é credibilidade |
+
+### Descartado de propósito (commodity, não diferencia)
+
+Tabela top-100 sem síntese · heatmap sem camada interpretativa · F&G
+embedado como gadget · watchlist/portfolio tracker · alertas de preço ·
+charts TradingView embedados · "AI summary" genérica de preços · feed de
+notícias agregado · qualquer coisa que peça chaves ou posições.
+
+## 10. Fases de execução
+
+O que já saiu (ver `git log`): IA-v2 + 308s, treemap, números vivos,
+campo ambiental reactivo, homepage editorial, leituras + Pulso,
+percentis com gémeo, páginas temáticas.
 
 | Fase | Entrega | Critério de aceite |
 |---|---|---|
-| **D1** | Fundação motion: biblioteca, entrada coreografada, tickers vivos, view transitions | 60fps, reduced-motion limpo, e2e verde |
-| **D2** | Treemap do mercado (componente + dados) na Agora e Mercado | Clicável, sem overflow, mobile ok |
-| **D3** | Reorganização de rotas + headers de página unificados | 308s a funcionar, nav actualizada |
-| **D4** | Páginas temáticas: DeFi, Cadeias, Ferramentas (mãe), Casos | Cada página com o seu trabalho |
-| **D5** | Aprender: Atlas reorganizado + literacia + Portugal | Revisão de datas, copy PT-PT |
-| **D6** | Campo ambiental reactivo ao regime + polish final | Wow controlado, sem gimmick |
+| **F1** ✅ | Fundação motion: entrada coreografada única por sessão, tickers vivos alargados, view transitions | 60fps, reduced-motion limpo, e2e verde — **entregue 2026-09-16** |
+| **F2** | Frescura sistemática (R7): "há X min" + fonte por módulo, aviso de stale explícito | Nenhum número sem idade visível |
+| **F3** | "Desde a tua última visita" (R1) + história do regime (R2) | Diff honesto, regime com passado de 30-90d |
+| **F4** | Regime decomposto (R3) + metodologia publicada (R9) | Cada leitura auditable até à fonte |
+| **F5** | Treemap multi-camada (R4) + ETF flows de primeira classe (R6) | Cor alternável, streaks/cumulativo/record |
+| **F6** | "60 segundos" verificável (R5) | Cada afirmação clicável → métrica-fonte |
+| **F7** | Essencial mobile-first (R8) + polish final | Nota-10 no telemóvel, não só desktop |
 | **P1** | Tier Pro: auth leve, Bitquery, carteira profunda | Spec à parte |
 
-## 10. Anti-padrões (proibido)
+Regras da faseada: uma fase de cada vez, gates verdes antes de avançar,
+sem pressa — nível máximo de execução é o critério, não velocidade.
+
+## 11. Pesquisa competitiva — síntese (2026-09-16)
+
+Pesquisa profunda sobre ~30 produtos (agregadores, on-chain, regime,
+editorial, educação, design). Relatório completo no histórico da
+sessão; conclusões accionáveis:
+
+**O que TODOS fazem (commodity — não perseguir):** tabela top-100,
+heatmap verde/vermelho, página de activo = parede de dados, F&G como
+gadget, watchlist/portfolio, charts TradingView, paywall $30-800/mês no
+que interessa.
+
+**O que ninguém faz bem (as nossas lacunas-alvo):**
+1. Síntese honesta de regime em tempo real — dados existem por todo o
+   lado, "o que significa agora" não existe
+2. Um só ecrã para o mercado inteiro — spot/derivados/on-chain/ETF/
+   mempool/DeFi vivem em 6+ tabs (Koyfin fez isto para macro tradfi;
+   ninguém para crypto)
+3. Read-only sem agenda comercial — CMC é da Binance, academias são
+   funis de exchanges, newsletters vendem premium
+4. Densidade adaptativa real — é ou Lite insultuoso ou Pro esmagador
+5. PT-PT como cidadão de primeira classe — zero produtos sérios de
+   dados crypto em português europeu
+6. Percentis/contexto temporal sistemático — dados absolutos sem
+   posição relativa
+7. Síntese escrita + dashboard vivo fundidos — o "briefing que se
+   actualiza" não existe
+8. Explicabilidade inline — jargão traduzido ao nível do dado
+
+**Armadilhas onde produtos morrem (mitigações já no plano):**
+- Dado stale invisível → R7 frescura sistemática + regra nº1
+- Fontes gratuitas frágeis (Farside é scraping, F&G muda metodologia
+  sem aviso) → cache própria, fallbacks, lacuna declarada
+- Overload sem hierarquia → o dial existe; o Essencial tem de ser
+  radicalmente simples (R8)
+- Síntese lida como "sinal" → disciplina editorial: descrevemos o que
+  aconteceu, nunca previsão nem conselho; disclaimers visíveis
+- Métrica composta opaca → R3/R9 decomposição + metodologia publicada
+- Bear markets matam tráfego de trackers (-70-90%) → bilingue + educação
+  permanente retêm nos invernos
+
+## 12. Anti-padrões (proibido)
 
 - Gradiente roxo de landing, glassmorphism, blob decorativo
 - Cards iguais em pilha sem hierarquia
@@ -161,3 +280,5 @@ Snapshots locais continuam a alimentar histórico e deltas
 - Animação contínua que compete com a leitura (marquee, loop)
 - Número sem contexto, sem timestamp ou sem fonte
 - Fragmento de template como se fosse frase
+- Texto de regime que possa ser lido como previsão ou conselho
+- "Lite mode" que esconde dados em vez de os ordenar por profundidade

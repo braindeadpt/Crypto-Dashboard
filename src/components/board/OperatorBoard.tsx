@@ -111,6 +111,7 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
             <Link
               key={href}
               href={href}
+              transitionTypes={["nav-forward"]}
               className="group bg-surface px-4 py-3 transition hover:bg-surface-2"
             >
               <span className="text-meta text-ink group-hover:text-accent">

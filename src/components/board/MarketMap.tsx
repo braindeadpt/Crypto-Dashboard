@@ -77,7 +77,7 @@ export function MarketMap({
   const shown = active ?? assets.find((a) => a.id === "bitcoin") ?? null;
 
   return (
-    <figure className="m-0">
+    <figure className="m-0" style={{ viewTransitionName: "market-map" }}>
       <p className="mb-2 flex items-baseline justify-between gap-3 text-label text-faint">
         {showTitle ? <span>{t("title")}</span> : <span />}
         <span className="flex items-center gap-2">

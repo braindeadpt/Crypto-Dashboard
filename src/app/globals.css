@@ -602,12 +602,14 @@ button {
     transform: translateY(0);
   }
 }
-.enter {
+/* A entrada só corre na primeira montagem da sessão — o bootstrap de
+   <head> marca <html class="enter-pending"> uma vez (ver src/lib/motion.ts). */
+.enter-pending .enter {
   animation: enter var(--dur-slow) var(--ease-out) both;
 }
 
 /* Entrada coreografada — cada bloco sobe depois do anterior. */
-.enter-sequence > * {
+.enter-pending .enter-sequence > * {
   animation: enter var(--dur-slow) var(--ease-out) both;
 }
 .enter-sequence > *:nth-child(2) { animation-delay: 90ms; }
@@ -615,6 +617,66 @@ button {
 .enter-sequence > *:nth-child(4) { animation-delay: 270ms; }
 .enter-sequence > *:nth-child(5) { animation-delay: 360ms; }
 .enter-sequence > *:nth-child(n + 6) { animation-delay: 450ms; }
+
+/* View transitions entre páginas — links marcados com transitionTypes
+   nav-forward (descer na IA) ou nav-back (voltar à entrada). Deslize
+   curto + fade; o header fica nomeado e fora da animação. */
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--vt-x, 0));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes vt-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(var(--vt-x, 0));
+  }
+}
+::view-transition-old(.nav-forward) {
+  --vt-x: -24px;
+  animation: vt-out var(--dur-med) var(--ease-in-out) both;
+}
+::view-transition-new(.nav-forward) {
+  --vt-x: 24px;
+  animation: vt-in var(--dur-med) var(--ease-out) 60ms both;
+}
+::view-transition-old(.nav-back) {
+  --vt-x: 24px;
+  animation: vt-out var(--dur-med) var(--ease-in-out) both;
+}
+::view-transition-new(.nav-back) {
+  --vt-x: -24px;
+  animation: vt-in var(--dur-med) var(--ease-out) 60ms both;
+}
+
+/* Header: snapshot próprio sem animação — fica fixo durante a transição.
+   O old esconde-se para não haver flash de header duplicado a meio do
+   deslize (padrão da doc oficial do Next). */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* O mapa do mercado é o elemento partilhado entre Agora e Mercado —
+   morph de posição/tamanho gerido pelo view-transition-name. */
+::view-transition-group(market-map) {
+  animation-duration: var(--dur-slow);
+}
 
 @keyframes stream-fade {
   0% {
@@ -691,6 +753,14 @@ button {
   [role="switch"],
   .skip-link {
     transition: none !important;
+  }
+
+  /* View transitions: sem animação — a navegação troca instantâneo.
+     O group também morre, senão o morph do market-map corria na mesma. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

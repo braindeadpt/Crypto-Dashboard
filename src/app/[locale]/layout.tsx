@@ -1,6 +1,8 @@
 import { SiteFooter, SiteHeader } from "@/components/layout/SiteChrome";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { HtmlLang } from "@/components/layout/HtmlLang";
+import { EntryOnce } from "@/components/layout/EntryOnce";
+import { ViewTransition } from "react";
 import { ExpertiseProvider } from "@/components/expertise/ExpertiseProvider";
 import { WatchlistProvider } from "@/components/watchlist/WatchlistProvider";
 import { routing } from "@/i18n/routing";
@@ -32,11 +34,28 @@ export default async function LocaleLayout({
       <ExpertiseProvider>
         <WatchlistProvider>
           <HtmlLang />
+          <EntryOnce />
           <SkipLink />
           <div className="flex min-h-screen w-full min-w-0 flex-col">
             <SiteHeader />
             <main id="main" className="w-full min-w-0 flex-1" tabIndex={-1}>
-              {children}
+              {/* Transições de página: nav-forward/nav-back chegam dos Links
+                  marcados; refresh de dados e montagens sem tipo não animam. */}
+              <ViewTransition
+                enter={{
+                  "nav-forward": "nav-forward",
+                  "nav-back": "nav-back",
+                  default: "none",
+                }}
+                exit={{
+                  "nav-forward": "nav-forward",
+                  "nav-back": "nav-back",
+                  default: "none",
+                }}
+                default="none"
+              >
+                <div>{children}</div>
+              </ViewTransition>
             </main>
             <SiteFooter />
           </div>

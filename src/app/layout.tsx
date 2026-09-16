@@ -2,6 +2,7 @@ import { IBM_Plex_Mono, IBM_Plex_Sans, Sora } from "next/font/google";
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { themeBootstrapScript } from "@/lib/theme";
+import { entryBootstrapScript } from "@/lib/motion";
 import "./globals.css";
 
 /**
@@ -58,6 +59,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{ __html: themeBootstrapScript }}
+        />
+        <script
+          dangerouslySetInnerHTML={{ __html: entryBootstrapScript }}
         />
       </head>
       <body className="antialiased">{children}</body>
