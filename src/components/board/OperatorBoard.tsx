@@ -11,6 +11,7 @@ import { WatchlistPanel } from "@/components/watchlist/WatchlistPanel";
 import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
+import type { MapLayers } from "@/lib/data/mapLayers";
 import type { DailyRitual } from "@/lib/editorial/ritual";
 import type { ReadingSet } from "@/lib/reading";
 import type { RegimeDay } from "@/lib/regime/history";
@@ -31,6 +32,8 @@ type Props = {
   visitVitals: VisitVitals;
   /** Regime com passado — série diária 30–90d + hoje (R2). */
   regimeHistory: { days: RegimeDay[]; updatedAt: string | null };
+  /** Camadas de cor do mapa (R4) — null quando as fontes falham. */
+  mapLayers: MapLayers | null;
 };
 
 /**
@@ -48,6 +51,7 @@ export function OperatorBoard({
   asOf,
   visitVitals,
   regimeHistory,
+  mapLayers,
 }: Props) {
   const ti = useTranslations("instrumento");
   const { level } = useExpertise();
@@ -105,7 +109,7 @@ export function OperatorBoard({
           note={ti("acts.mapNote")}
           ageAt={market.updatedAt}
         />
-        <MarketMap assets={market.top} tall showTitle={false} />
+        <MarketMap assets={market.top} layers={mapLayers} tall showTitle={false} />
       </section>
 
       {/* 02 — o pulso: instrumento de operador; Essencial já teve a resposta */}

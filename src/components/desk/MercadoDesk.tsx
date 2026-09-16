@@ -5,6 +5,7 @@ import { DataAge } from "@/components/explain/DataAge";
 import { MarketMap } from "@/components/board/MarketMap";
 import { Sparkline } from "@/components/board/Sparkline";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
+import type { MapLayers } from "@/lib/data/mapLayers";
 import type { AssetQuote, MarketSnapshot } from "@/lib/types";
 import { useTranslations } from "next-intl";
 
@@ -12,7 +13,13 @@ import { useTranslations } from "next-intl";
  * MERCADO — o mapa completo. O treemap é o protagonista; a tabela por baixo
  * dá o detalhe de quem quer ler números. Cada coluna responde a uma pergunta.
  */
-export function MercadoDesk({ market }: { market: MarketSnapshot }) {
+export function MercadoDesk({
+  market,
+  layers,
+}: {
+  market: MarketSnapshot;
+  layers?: MapLayers | null;
+}) {
   const t = useTranslations("market");
   const { global: g } = market;
 
@@ -33,7 +40,7 @@ export function MercadoDesk({ market }: { market: MarketSnapshot }) {
       </dl>
 
       <div className="mt-4">
-        <MarketMap assets={market.top} />
+        <MarketMap assets={market.top} layers={layers} />
       </div>
 
       {/* Movers — quem mais se mexeu, com contexto */}

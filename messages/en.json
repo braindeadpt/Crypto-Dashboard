@@ -510,11 +510,26 @@
   },
   "marketMap": {
     "title": "Market map",
-    "aria": "Market map: one rectangle per asset, sized by market cap, coloured by 24-hour change",
+    "aria": {
+      "price": "Market map: one rectangle per asset, sized by market cap, coloured by price change in the chosen window",
+      "funding": "Market map: colour follows annualized perpetual funding — grey for assets without a perp",
+      "volume": "Market map: violet intensity follows 24h volume vs the group median",
+      "sector": "Market map: colour follows 7-day thematic share rotation — grey for unmapped assets"
+    },
     "cap": "Cap.",
     "hint": "Tap or hover for detail · size = market cap · colour = 24h change",
     "hintShort": "size = cap · colour = change",
-    "windowAria": "Colour time window"
+    "windowAria": "Colour time window",
+    "layerAria": "Map colour layer",
+    "layer": {
+      "price": "Price",
+      "funding": "Funding",
+      "volume": "Volume",
+      "sector": "Sector"
+    },
+    "noteFunding": "annualized funding (perp) · {covered}/{total} with perp · Binance — grey = no perp",
+    "noteVolume": "24h volume ÷ cap vs group median — stronger violet = more intense",
+    "noteSector": "7-day thematic share delta · {covered}/{total} mapped — grey = no sector"
   },
   "charts": {
     "title": "Charts",
@@ -565,7 +580,13 @@
     "unit": "Values in USD millions (US), Farside convention.",
     "solUnavailable": "SOL flows unavailable or Farside table not parseable right now.",
     "staleAge": "Stale snapshot — last flows from {date}. Page never scrapes live.",
-    "flowDate": "Flow date: {date}"
+    "flowDate": "Flow date: {date}",
+    "weekDelta": "Week Δ (5d vs prior)",
+    "recordIn": "Record inflow",
+    "recordOut": "Record outflow",
+    "recordsNote": "Records and weekly delta measured on the stored sample ({days} days) — not since launch.",
+    "cumulativeTitle": "Sample cumulative",
+    "cumulativeNote": "Running sum of daily flows over the stored window ({days} days) — not the all-time ETF total."
   },
   "history": {
     "band": {
@@ -899,7 +920,7 @@
   },
   "regimeDecomp": {
     "summary": "{active} of {total} signals adding stress",
-    "missingCount": "{count} missing",
+    "missingCount": "· {count} missing",
     "missing": "missing",
     "howLink": "Score methodology →"
   },

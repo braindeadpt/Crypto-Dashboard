@@ -276,9 +276,9 @@ test.describe("E8 · structural audit", () => {
         },
         targets: {
           homePercentSigns: {
-            target: "< 30",
+            target: "< 45 (treemap entra na entrada desde R4)",
             value: home.percentSigns,
-            pass: home.percentSigns < 30,
+            pass: home.percentSigns < 45,
           },
           homeSections: {
             target: "≤ 8",
@@ -331,7 +331,11 @@ test.describe("E8 · structural audit", () => {
       JSON.stringify(report, null, 2),
     );
 
-    expect(home.percentSigns, "home % count").toBeLessThan(30);
+    // Pós-R4/F5: a entrada inclui o treemap de assinatura (cada tile visível
+    // carrega um %) + gémeos de percentil — o baseline "<30" era de uma página
+    // sem mapa. O bound <45 mantém "não é um muro de números" (baseline real:
+    // 105) com folga para oscilação de dados vivos.
+    expect(home.percentSigns, "home % count").toBeLessThan(45);
     expect(aprender.svgs, "aprender SVGs").toBeGreaterThan(0);
     expect(ferramentas.chars, "ferramentas renders content").toBeGreaterThan(200);
     expect(casos.chars, "casos chars grew").toBeGreaterThanOrEqual(

@@ -5,6 +5,7 @@ import { fetchDefiSnapshot } from "@/lib/data/defillama";
 import { fetchDerivativesSnapshot } from "@/lib/data/derivatives";
 import { fetchEtfSnapshot } from "@/lib/data/etf";
 import { fetchLiquiditySnapshot } from "@/lib/data/liquidity";
+import { fetchMapLayers } from "@/lib/data/mapLayersServer";
 import { fetchMarketSnapshot } from "@/lib/data/coingecko";
 import { fetchSentimentSnapshot } from "@/lib/data/sentiment";
 import {
@@ -170,10 +171,13 @@ export async function getFrontPageData() {
     { regime, readings, market, sentiment, defi, caseContext, asOf },
     { deltas },
     regimeHistory,
+    mapLayers,
   ] = await Promise.all([
     getRegimeBundle(),
     getHistoryDayDeltas(),
     getRegimeHistory(),
+    // R4 — camadas de cor do mapa (funding bulk + sectores do disco).
+    fetchMapLayers().catch(() => null),
   ]);
   const cases = buildDailyCases(
     [...market.movers.gainers, ...market.movers.losers],
@@ -212,6 +216,7 @@ export async function getFrontPageData() {
     defi,
     caseContext,
     asOf,
+    mapLayers,
     regimeHistory: { days: historyDays, updatedAt: regimeHistory.updatedAt },
   };
 }

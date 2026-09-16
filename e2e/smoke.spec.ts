@@ -88,6 +88,22 @@ test.describe("smoke · legacy redirects", () => {
   });
 });
 
+test.describe("smoke · market map layers (R4)", () => {
+  test("mercado map switches colour layer", async ({ page }) => {
+    await page.goto("/pt/mercado", { waitUntil: "domcontentloaded" });
+    const group = page.getByRole("group", { name: /Camada de cor|colour layer/i });
+    await expect(group, "map layer toggle must exist").toBeVisible({
+      timeout: 45_000,
+    });
+    const funding = group.getByRole("button", { name: /^Funding$/i });
+    await funding.click();
+    await expect(funding).toHaveAttribute("aria-pressed", "true");
+    const sector = group.getByRole("button", { name: /Sector/i });
+    await sector.click();
+    await expect(sector).toHaveAttribute("aria-pressed", "true");
+  });
+});
+
 test.describe("smoke · i18n + nav", () => {
   test("EN locale loads board chrome", async ({ page }) => {
     const response = await page.goto("/en", { waitUntil: "domcontentloaded" });

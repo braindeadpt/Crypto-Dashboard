@@ -510,11 +510,26 @@
   },
   "marketMap": {
     "title": "Mapa do mercado",
-    "aria": "Mapa do mercado: rectângulos por activo, tamanho proporcional à capitalização, cor conforme a variação de 24 horas",
+    "aria": {
+      "price": "Mapa do mercado: rectângulos por activo, tamanho proporcional à capitalização, cor conforme a variação de preço na janela escolhida",
+      "funding": "Mapa do mercado: cor conforme o funding anualizado dos perpétuos — cinzento para activos sem perp",
+      "volume": "Mapa do mercado: intensidade violeta conforme o volume 24h face à mediana do grupo",
+      "sector": "Mapa do mercado: cor conforme a rotação de quota temática a 7 dias — cinzento para activos sem sector"
+    },
     "cap": "Cap.",
     "hint": "Toca ou passa o rato para detalhe · tamanho = capitalização · cor = variação 24h",
     "hintShort": "tamanho = cap. · cor = variação",
-    "windowAria": "Janela temporal da cor"
+    "windowAria": "Janela temporal da cor",
+    "layerAria": "Camada de cor do mapa",
+    "layer": {
+      "price": "Preço",
+      "funding": "Funding",
+      "volume": "Volume",
+      "sector": "Sector"
+    },
+    "noteFunding": "funding anualizado (perp) · {covered}/{total} com perp · Binance — cinzento = sem perp",
+    "noteVolume": "volume 24h ÷ cap. vs mediana do grupo — violeta mais forte = mais intenso",
+    "noteSector": "Δ quota temática a 7 dias · {covered}/{total} mapeados — cinzento = sem sector"
   },
   "charts": {
     "title": "Gráficos",
@@ -565,7 +580,13 @@
     "unit": "Valores em milhões de USD (US), convenção Farside.",
     "solUnavailable": "Fluxos SOL indisponíveis ou tabela Farside sem dados interpretáveis neste momento.",
     "staleAge": "Snapshot antigo — últimos fluxos de {date}. A página não faz scrape ao vivo.",
-    "flowDate": "Fluxos do dia: {date}"
+    "flowDate": "Fluxos do dia: {date}",
+    "weekDelta": "Δ semana (5d vs ant.)",
+    "recordIn": "Máximo de entrada",
+    "recordOut": "Máximo de saída",
+    "recordsNote": "Recordes e Δ semanal medidos na amostra guardada ({days} dias) — não desde o lançamento.",
+    "cumulativeTitle": "Cumulativo da amostra",
+    "cumulativeNote": "Soma corrida dos fluxos diários na janela guardada ({days} dias) — não é o total desde o lançamento dos ETF."
   },
   "history": {
     "band": {
@@ -899,7 +920,7 @@
   },
   "regimeDecomp": {
     "summary": "{active} de {total} sinais a somar stress",
-    "missingCount": "{count} em falta",
+    "missingCount": "· {count} em falta",
     "missing": "em falta",
     "howLink": "Metodologia do score →"
   },

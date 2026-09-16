@@ -42,9 +42,11 @@ historical aliases.
 - `/` **Agora** — the market in seconds: hero (headline + vitals + live
   prices + regime-reactive AmbientField), market treemap, Pulso radar
   (operator+), three readings, 5-slot briefing. Each datum appears **once**.
-- `/mercado` — the full market: vitals strip, MarketMap treemap (1h/24h/7d
-  colour window), gainers/losers, top-40 table with 7d sparklines.
-- `/fluxos` — where money comes from: stablecoins, ETF flows, leverage, F&G.
+- `/mercado` — the full market: vitals strip, MarketMap treemap with
+  switchable colour layer (price 1h/24h/7d, perp funding, volume vs median,
+  sector rotation), gainers/losers, top-40 table with 7d sparklines.
+- `/fluxos` — where money comes from: stablecoins, ETF flows (streaks,
+  sample cumulative, record days, weekly delta), leverage, F&G.
 - `/defi` — global TVL, top protocols, stablecoins/peg watch, top yields.
 - `/cadeias` — blockchains ranked by TVL with share bars + weighted Δ1d.
 - `/casos` — Caso & Efeito case files + sector rotation.

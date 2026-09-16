@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import type { RegimeResult } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 
 /**
  * R3 — o score de regime explica-se a si próprio.
@@ -22,6 +23,7 @@ export function RegimeDecomposition({
   const t = useTranslations("regimeDecomp");
   const locale = useLocale();
   const isPt = locale === "pt";
+  const [open, setOpen] = useState(defaultOpen);
   const signals = regime.signals ?? [];
   if (!signals.length) return null;
 
@@ -31,7 +33,8 @@ export function RegimeDecomposition({
   return (
     <details
       className="group/decomp mt-3 border border-line"
-      open={defaultOpen || undefined}
+      open={open || undefined}
+      onToggle={(e) => setOpen(e.currentTarget.open)}
     >
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-label text-muted transition hover:text-ink">
         <span>
@@ -50,6 +53,9 @@ export function RegimeDecomposition({
         </span>
       </summary>
 
+      {/* Lista montada só ao abrir — o rasto completo fica fora do textContent
+          inicial da entrada (e do DOM até ser pedido). */}
+      {open && (
       <ul className="border-t border-line">
         {signals.map((s) => {
           const isMissing = s.status === "missing";
@@ -85,7 +91,9 @@ export function RegimeDecomposition({
           );
         })}
       </ul>
+      )}
 
+      {open && (
       <p className="border-t border-line px-3 py-2 text-meta">
         <Link
           href="/metodologia#regime"
@@ -94,6 +102,7 @@ export function RegimeDecomposition({
           {t("howLink")}
         </Link>
       </p>
+      )}
     </details>
   );
 }

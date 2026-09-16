@@ -3,6 +3,11 @@
 import { DataAge } from "@/components/explain/DataAge";
 import { Link } from "@/i18n/navigation";
 import type { EtfAssetFlows, EtfDailyFlow, EtfSnapshot } from "@/lib/data/etf";
+import {
+  etfCumulativeSeries,
+  etfRecordDays,
+  etfWeeklyDelta,
+} from "@/lib/data/etfDerived";
 import { cn, formatUsdMillions } from "@/lib/format";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -80,6 +85,26 @@ export function EtfDesk({
         )}
       </div>
 
+      <p className="mt-2 font-mono text-[0.65rem] text-faint">
+        {t("recordsNote", { days: data.btc.history.length })}
+      </p>
+
+      <CumulativeFlows
+        series={[
+          { label: "BTC", className: "text-accent", flows: data.btc },
+          { label: "ETH", className: "text-accent-2", flows: data.eth },
+          ...(data.sol?.latest
+            ? [
+                {
+                  label: "SOL",
+                  className: "text-up",
+                  flows: data.sol as EtfAssetFlows,
+                },
+              ]
+            : []),
+        ]}
+      />
+
       <section className="mt-6 border border-line bg-surface p-4">
         <h2 className="font-mono text-[0.65rem] uppercase tracking-wider text-faint">
           {t("whyItMatters")}
@@ -128,6 +153,10 @@ function AssetCard({ title, flows }: { title: string; flows: EtfAssetFlows }) {
   const t = useTranslations("etf");
   const latest = flows.latest;
   const prev = flows.previous;
+  const week = etfWeeklyDelta(flows.history);
+  const records = etfRecordDays(flows.history);
+  const weekDelta =
+    week.last5 != null && week.prev5 != null ? week.last5 - week.prev5 : null;
   const tone = !latest
     ? "text-muted"
     : latest.totalUsdM > 0
@@ -187,6 +216,19 @@ function AssetCard({ title, flows }: { title: string; flows: EtfAssetFlows }) {
           }
         />
         <Metric
+          label={t("weekDelta")}
+          value={
+            weekDelta != null ? formatUsdMillions(weekDelta) : "—"
+          }
+          tone={
+            weekDelta != null
+              ? weekDelta >= 0
+                ? "text-up"
+                : "text-down"
+              : ""
+          }
+        />
+        <Metric
           label={t("streak")}
           value={
             flows.streakDays === 0
@@ -195,6 +237,24 @@ function AssetCard({ title, flows }: { title: string; flows: EtfAssetFlows }) {
                 ? t("streakIn", { days: flows.streakDays })
                 : t("streakOut", { days: Math.abs(flows.streakDays) })
           }
+        />
+        <Metric
+          label={t("recordIn")}
+          value={
+            records.inflow
+              ? `${formatUsdMillions(records.inflow.totalUsdM)} · ${records.inflow.dateLabel}`
+              : "—"
+          }
+          tone={records.inflow ? "text-up" : ""}
+        />
+        <Metric
+          label={t("recordOut")}
+          value={
+            records.outflow
+              ? `${formatUsdMillions(records.outflow.totalUsdM)} · ${records.outflow.dateLabel}`
+              : "—"
+          }
+          tone={records.outflow ? "text-down" : ""}
         />
       </div>
 
@@ -217,6 +277,120 @@ function AssetCard({ title, flows }: { title: string; flows: EtfAssetFlows }) {
         </ul>
       )}
     </div>
+  );
+}
+
+/**
+ * Cumulativo da amostra (R6) — a soma corrida por activo, alinhada por data.
+ * A vista que a tabela nua da fonte não tem. A legenda declara o fim da
+ * série; o rodapé declara que a amostra não é o total desde o lançamento.
+ */
+function CumulativeFlows({
+  series,
+}: {
+  series: { label: string; className: string; flows: EtfAssetFlows }[];
+}) {
+  const t = useTranslations("etf");
+  const perSeries = series.map((s) => ({
+    ...s,
+    points: etfCumulativeSeries(s.flows.history),
+  }));
+
+  const dates = [
+    ...new Set(perSeries.flatMap((s) => s.points.map((p) => p.date))),
+  ].sort();
+  if (dates.length < 2) return null;
+
+  const values = perSeries.flatMap((s) => s.points.map((p) => p.cumUsdM));
+  const min = Math.min(0, ...values);
+  const max = Math.max(0, ...values);
+  const span = Math.max(1, max - min);
+
+  const W = 720;
+  const H = 200;
+  const PAD = { l: 8, r: 56, t: 10, b: 20 };
+  const x = (date: string) => {
+    const i = dates.indexOf(date);
+    return PAD.l + (i / (dates.length - 1)) * (W - PAD.l - PAD.r);
+  };
+  const y = (v: number) =>
+    PAD.t + (1 - (v - min) / span) * (H - PAD.t - PAD.b);
+
+  return (
+    <section className="mt-6 border border-line bg-surface p-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="font-mono text-[0.65rem] uppercase tracking-wider text-faint">
+          {t("cumulativeTitle")}
+        </h2>
+        <div className="flex gap-3 font-mono text-[0.65rem]">
+          {perSeries.map((s) => (
+            <span key={s.label} className={s.className}>
+              ● {s.label}{" "}
+              <span className="tabular-nums">
+                {formatUsdMillions(s.points[s.points.length - 1]?.cumUsdM ?? 0)}
+              </span>
+            </span>
+          ))}
+        </div>
+      </div>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="mt-3 w-full"
+        role="img"
+        aria-label={t("cumulativeTitle")}
+      >
+        <line
+          x1={PAD.l}
+          y1={y(0)}
+          x2={W - PAD.r}
+          y2={y(0)}
+          stroke="currentColor"
+          strokeWidth="0.5"
+          className="text-line"
+        />
+        <text
+          x={PAD.l}
+          y={H - 6}
+          className="fill-faint font-mono text-[9px]"
+        >
+          {dates[0]}
+        </text>
+        <text
+          x={W - PAD.r}
+          y={H - 6}
+          textAnchor="end"
+          className="fill-faint font-mono text-[9px]"
+        >
+          {dates[dates.length - 1]}
+        </text>
+        {perSeries.map((s) => (
+          <g key={s.label} className={s.className}>
+            <polyline
+              points={s.points.map((p) => `${x(p.date)},${y(p.cumUsdM)}`).join(" ")}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
+            {(() => {
+              const last = s.points[s.points.length - 1];
+              if (!last) return null;
+              return (
+                <text
+                  x={x(last.date) + 4}
+                  y={y(last.cumUsdM) + 3}
+                  className="fill-current font-mono text-[9px]"
+                >
+                  {s.label}
+                </text>
+              );
+            })()}
+          </g>
+        ))}
+      </svg>
+      <p className="mt-2 font-mono text-[0.65rem] text-faint">
+        {t("cumulativeNote", { days: dates.length })}
+      </p>
+    </section>
   );
 }
 

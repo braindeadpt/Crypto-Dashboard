@@ -176,7 +176,10 @@ tudo; a execução é faseada (§10).
 
 ### Já construído (manter e polir)
 
-- Treemap de mercado clicável com janela de cor (1h/24h/7d) — Agora, Mercado
+- Treemap multi-camada: preço (1h/24h/7d), funding perp, volume vs mediana,
+  rotação de sector — Agora, Mercado
+- ETF flows de primeira classe: streaks, cumulativo da amostra, recordes,
+  Δ semanal — Fluxos
 - Campo ambiental reactivo ao regime — Agora
 - Números vivos / AnimatedNumber — valores-chave
 - Leituras compostas Direcção/Risco/Dinheiro + Pulso radar — Agora
@@ -223,8 +226,8 @@ percentis com gémeo, páginas temáticas.
 | **F1** ✅ | Fundação motion: entrada coreografada única por sessão, tickers vivos alargados, view transitions | 60fps, reduced-motion limpo, e2e verde — **entregue 2026-09-16** |
 | **F2** ✅ | Frescura sistemática (R7): "há X min" + fonte por módulo, aviso de stale explícito | Nenhum número sem idade visível — **entregue 2026-09-16** |
 | **F3** ✅ | "Desde a tua última visita" (R1) + história do regime (R2) | Diff honesto, regime com passado de 30-90d — **entregue 2026-09-16** |
-| **F4** | Regime decomposto (R3) + metodologia publicada (R9) | Cada leitura auditable até à fonte |
-| **F5** | Treemap multi-camada (R4) + ETF flows de primeira classe (R6) | Cor alternável, streaks/cumulativo/record |
+| **F4** ✅ | Regime decomposto (R3) + metodologia publicada (R9) | Cada leitura auditable até à fonte — **entregue 2026-09-16** |
+| **F5** ✅ | Treemap multi-camada (R4) + ETF flows de primeira classe (R6) | Cor alternável, streaks/cumulativo/record — **entregue 2026-09-16** |
 | **F6** | "60 segundos" verificável (R5) | Cada afirmação clicável → métrica-fonte |
 | **F7** | Essencial mobile-first (R8) + polish final | Nota-10 no telemóvel, não só desktop |
 | **P1** | Tier Pro: auth leve, Bitquery, carteira profunda | Spec à parte |

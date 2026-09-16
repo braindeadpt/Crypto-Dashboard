@@ -52,6 +52,7 @@ next-env.d.ts
 /data/perf/
 /data/audit/
 /audit-shots/
+/audit-*/
 
 # local junctions created by `skills` CLI / setup-agent-links — canonical copy is .agents/skills/
 .claude/
