@@ -35,7 +35,17 @@ function tileForeground(change: number): string {
   return Math.abs(change) >= 3.5 ? "var(--bg)" : "var(--fg)";
 }
 
-export function MarketMap({ assets }: { assets: AssetQuote[] }) {
+export function MarketMap({
+  assets,
+  tall = false,
+  showTitle = true,
+}: {
+  assets: AssetQuote[];
+  /** Versão alta para a entrada — o mapa respira mais. */
+  tall?: boolean;
+  /** false quando o pai já tem cabeçalho de acto — evita título duplicado. */
+  showTitle?: boolean;
+}) {
   const t = useTranslations("marketMap");
   const wrapRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
@@ -69,7 +79,7 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
   return (
     <figure className="m-0">
       <p className="mb-2 flex items-baseline justify-between gap-3 text-label text-faint">
-        <span>{t("title")}</span>
+        {showTitle ? <span>{t("title")}</span> : <span />}
         <span className="flex items-center gap-2">
           <span className="hidden tabular-nums sm:inline">{t("hintShort")}</span>
           <span
@@ -98,7 +108,10 @@ export function MarketMap({ assets }: { assets: AssetQuote[] }) {
       </p>
       <div
         ref={wrapRef}
-        className="relative h-[320px] w-full overflow-hidden rounded-[2px] border border-line bg-base sm:h-[420px]"
+        className={cn(
+          "relative w-full overflow-hidden border-y border-line bg-base",
+          tall ? "h-[380px] sm:h-[560px]" : "h-[320px] sm:h-[420px]",
+        )}
         role="img"
         aria-label={t("aria")}
       >

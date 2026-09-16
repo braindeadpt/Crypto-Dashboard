@@ -179,7 +179,7 @@ export function Pulso({ regime, hist, className = "" }: Props) {
 
   return (
     <section
-      className={`pulso panel-hero lum-hero ${className}`}
+      className={`pulso py-2 ${className}`}
       data-posture={regime.posture}
       aria-label={t("title")}
     >

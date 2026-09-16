@@ -654,6 +654,9 @@
     "deeperFluxos": "Flows — where the money comes from",
     "deeperMundo": "Cases — what moved and why",
     "deeperInstrumento": "Desk — the full board",
+    "deeperMercado": "Market — the full map",
+    "deeperAprender": "Learn — Atlas and context",
+    "deeperFerramentas": "Tools — wallets and utilities",
     "chartHint": "Binance spot",
     "labels": {
       "breadth": "Breadth",
@@ -672,7 +675,13 @@
       "wideTitle": "The wider market",
       "wideNote": "movers · on-chain · yield",
       "listTitle": "Your list",
-      "listNote": "local · no server"
+      "listNote": "local · no server",
+      "mapTitle": "The map",
+      "mapNote": "size = market cap · colour = window change",
+      "pulseTitle": "The pulse",
+      "pulseNote": "six axes, one regime",
+      "briefTitle": "The briefing",
+      "briefNote": "five fixed slots · ~5 min"
     }
   },
   "mundo": {

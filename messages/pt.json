@@ -654,6 +654,9 @@
     "deeperFluxos": "Fluxos — de onde vem o dinheiro",
     "deeperMundo": "Casos — o que se mexeu e porquê",
     "deeperInstrumento": "Mesa — a mesa completa",
+    "deeperMercado": "Mercado — o mapa completo",
+    "deeperAprender": "Aprender — Atlas e contexto",
+    "deeperFerramentas": "Ferramentas — carteiras e utilitários",
     "chartHint": "Spot Binance",
     "labels": {
       "breadth": "Amplitude",
@@ -672,7 +675,13 @@
       "wideTitle": "O mercado amplo",
       "wideNote": "movimentos · on-chain · rendimento",
       "listTitle": "A tua lista",
-      "listNote": "local · sem servidor"
+      "listNote": "local · sem servidor",
+      "mapTitle": "O mapa",
+      "mapNote": "tamanho = capitalização · cor = variação na janela",
+      "pulseTitle": "O pulso",
+      "pulseNote": "seis eixos, um regime",
+      "briefTitle": "O briefing",
+      "briefNote": "cinco slots fixos · ~5 min"
     }
   },
   "mundo": {

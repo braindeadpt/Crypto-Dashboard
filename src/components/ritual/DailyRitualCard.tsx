@@ -52,11 +52,7 @@ export function DailyRitualCard({ ritual, className = "" }: Props) {
       : null;
 
   return (
-    <section
-      id="ritual"
-      className={`border border-line bg-bg-elevated p-4 md:p-5 ${className}`}
-      aria-label={t("title")}
-    >
+    <section id="ritual" className={className} aria-label={t("title")}>
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <p className="text-label text-faint">{t("eyebrow")}</p>
@@ -190,9 +186,10 @@ function Slot({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border border-line bg-surface p-3">
+    <div className="border-t border-line py-4">
       <p className="text-label text-faint">
-        <span className="tabular-nums text-accent">{n}.</span> {label}
+        <span className="mr-1.5 font-mono tabular-nums text-accent">{n}</span>
+        {label}
       </p>
       <div className="mt-2">{children}</div>
     </div>

@@ -3,7 +3,6 @@
 import { ActHead } from "@/components/board/boardShared";
 import { HeroPanel } from "@/components/board/HeroPanel";
 import { MarketMap } from "@/components/board/MarketMap";
-import { ReadingTrio } from "@/components/board/ReadingCards";
 import { Pulso } from "@/components/instrument/Pulso";
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
 import { WatchlistPanel } from "@/components/watchlist/WatchlistPanel";
@@ -25,13 +24,11 @@ type Props = {
 };
 
 /**
- * Entrada (E3): Nível 1 responde, Nível 2 mostra a evidência.
+ * Entrada — a página do dia como jornal de instrumento.
  *
- * Ordem deliberada — a resposta primeiro, os números depois. Antes a entrada
- * abria com 105 percentagens e pedia ao leitor que sintetizasse; agora sintetiza
- * o produto e o detalhe vive em /instrumento.
- *
- * Densidade pelo Dial: Essencial = só Nível 1 · Operador/Analista = 1 + 2.
+ * Estrutura editorial, não dashboard: masthead → resposta → tape → mapa →
+ * pulso → briefing. Hairlines em vez de caixas; cada secção é um acto
+ * numerado com um trabalho só. O detalhe vive nas páginas temáticas.
  */
 export function OperatorBoard({ market, regime, ritual, readings }: Props) {
   const ti = useTranslations("instrumento");
@@ -56,8 +53,8 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
   const solChg = live.quotes.SOLUSDT?.change24h ?? sol?.change24h;
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter-sequence">
-      {/* NÍVEL 1 — a resposta: manchete + preço live no mesmo palco */}
+    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 enter-sequence">
+      {/* A resposta — masthead, manchete, índice de leituras, tape live */}
       <HeroPanel
         readings={readings}
         date={ritual.date}
@@ -65,6 +62,7 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
         eth={{ px: ethPx, chg: ethChg }}
         sol={{ px: solPx, chg: solChg }}
         intensity={regime.score / 100}
+        posture={regime.posture}
         vitals={{
           cap: market.global.totalMarketCap,
           capChg: market.global.marketCapChange24h,
@@ -73,65 +71,64 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
         }}
       />
 
-      {/* NÍVEL 1.5 — o mapa: o mercado inteiro de relance, antes do detalhe */}
-      <div className="mt-3">
-        <MarketMap assets={market.top} />
-      </div>
+      {/* 01 — o mapa: amplitude e estrutura do mercado inteiro */}
+      <section className="mt-10">
+        <ActHead title={ti("acts.mapTitle")} note={ti("acts.mapNote")} />
+        <MarketMap assets={market.top} tall showTitle={false} />
+      </section>
 
-      {/* Bento: o radar é instrumento de operador — Essencial recebe só as
-          três leituras em linguagem comum. */}
-      <div
-        className={`mt-3 grid items-start gap-3 ${
-          level !== "citizen" ? "lg:grid-cols-12" : ""
-        }`}
-      >
-        {level !== "citizen" && (
-          <Pulso regime={regime} hist={hist} className="lg:col-span-5" />
-        )}
-        {/* Ao lado do Pulso, as três leituras empilham — a coluna enche a
-            altura do radar em vez de deixar um vazio por baixo. */}
-        <ReadingTrio
-          readings={readings}
-          className={
-            level !== "citizen" ? "lg:col-span-7 lg:grid-cols-1" : ""
-          }
-        />
-      </div>
+      {/* 02 — o pulso: instrumento de operador; Essencial já teve a resposta */}
+      {level !== "citizen" && (
+        <section className="mt-10">
+          <ActHead title={ti("acts.pulseTitle")} note={ti("acts.pulseNote")} />
+          <Pulso regime={regime} hist={hist} />
+        </section>
+      )}
 
-      {/* O ritual passa para depois da resposta: quem quer o briefing lê-o a
-          seguir; quem só quer saber o estado já foi servido acima. */}
-      <DailyRitualCard ritual={ritual} className="mt-3" />
+      {/* 03 — o briefing: cinco entradas fixas, sempre os mesmos slots */}
+      <section className="mt-10">
+        <ActHead title={ti("acts.briefTitle")} note={ti("acts.briefNote")} />
+        <DailyRitualCard ritual={ritual} />
+      </section>
 
-      {/* Cada página tem um trabalho — aprofundar é navegar, não re-ler. */}
+      {/* Aprofundar — cada página tem um trabalho; navegar, não re-ler */}
       <nav
-        className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-4"
+        className="mt-10 border-t border-line pt-4"
         aria-label={ti("deeperAria")}
       >
-        <span className="text-label text-faint">{ti("deeper")}</span>
-        <Link
-          href="/fluxos"
-          className="text-meta text-muted transition hover:text-accent"
-        >
-          {ti("deeperFluxos")} →
-        </Link>
-        <Link
-          href="/casos"
-          className="text-meta text-muted transition hover:text-accent"
-        >
-          {ti("deeperMundo")} →
-        </Link>
-        <Link
-          href="/mesa"
-          className="text-meta text-muted transition hover:text-accent"
-        >
-          {ti("deeperInstrumento")} →
-        </Link>
+        <p className="text-label text-faint">{ti("deeper")}</p>
+        <div className="mt-3 grid gap-px border border-line bg-line sm:grid-cols-3">
+          {(
+            [
+              ["/mercado", ti("deeperMercado")],
+              ["/fluxos", ti("deeperFluxos")],
+              ["/casos", ti("deeperMundo")],
+              ["/aprender", ti("deeperAprender")],
+              ["/ferramentas", ti("deeperFerramentas")],
+              ["/mesa", ti("deeperInstrumento")],
+            ] as const
+          ).map(([href, label]) => (
+            <Link
+              key={href}
+              href={href}
+              className="group bg-surface px-4 py-3 transition hover:bg-surface-2"
+            >
+              <span className="text-meta text-ink group-hover:text-accent">
+                {label}
+              </span>
+              <span className="ml-2 text-faint transition group-hover:text-accent">
+                →
+              </span>
+            </Link>
+          ))}
+        </div>
       </nav>
 
-      <div className="board-act">
+      {/* 04 — a lista: instrumento pessoal, local e sem servidor */}
+      <section className="mt-10 board-act">
         <ActHead title={ti("acts.listTitle")} note={ti("acts.listNote")} />
         <WatchlistPanel />
-      </div>
+      </section>
     </div>
   );
 }
