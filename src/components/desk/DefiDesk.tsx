@@ -3,10 +3,17 @@
 import { ExplainThisNumber } from "@/components/explain/ExplainThisNumber";
 import { Link } from "@/i18n/navigation";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
+import type { YieldPool } from "@/lib/data/yields";
 import type { DefiSnapshot } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
 
-export function DefiDesk({ data }: { data: DefiSnapshot }) {
+export function DefiDesk({
+  data,
+  yields = [],
+}: {
+  data: DefiSnapshot;
+  yields?: YieldPool[];
+}) {
   const t = useTranslations("defi");
   const locale = useLocale();
 
@@ -122,6 +129,45 @@ export function DefiDesk({ data }: { data: DefiSnapshot }) {
           </section>
         </div>
       </div>
+
+      {yields.length > 0 && (
+        <section className="card mt-6 p-5">
+          <h2 className="text-lg font-semibold">{t("yields")}</h2>
+          <p className="mt-1 text-xs text-faint">{t("yieldsHint")}</p>
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[560px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-line text-left text-xs text-faint">
+                  <th className="py-2 pr-3 font-medium">{t("pool")}</th>
+                  <th className="py-2 pr-3 font-medium">{t("chain")}</th>
+                  <th className="py-2 pr-3 text-right font-medium">TVL</th>
+                  <th className="py-2 text-right font-medium">APY</th>
+                </tr>
+              </thead>
+              <tbody>
+                {yields.map((p) => (
+                  <tr key={p.pool} className="border-b border-line last:border-0">
+                    <td className="py-2 pr-3">
+                      <span className="font-medium">{p.project}</span>{" "}
+                      <span className="text-muted">{p.symbol}</span>
+                      {p.apyReward != null && p.apyReward > 0 && (
+                        <span className="ml-1.5 text-[10px] text-faint">⚡</span>
+                      )}
+                    </td>
+                    <td className="py-2 pr-3 text-muted">{p.chain}</td>
+                    <td className="py-2 pr-3 text-right font-mono">
+                      {formatUsd(p.tvlUsd, true)}
+                    </td>
+                    <td className="py-2 text-right font-mono delta-up">
+                      {formatPct(p.apy)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

@@ -2,37 +2,44 @@ import { expect, test, type Page } from "@playwright/test";
 
 const DESTINATIONS = [
   "/pt",
-  "/pt/mundo",
+  "/pt/mercado",
   "/pt/fluxos",
-  "/pt/contexto",
-  "/pt/instrumento",
-  "/pt/carteira",
+  "/pt/defi",
+  "/pt/cadeias",
+  "/pt/casos",
+  "/pt/aprender",
+  "/pt/ferramentas",
+  "/pt/mesa",
   "/pt/brief",
   "/pt/estilo",
 ] as const;
 
 const LEGACY_REDIRECTS = [
-  { from: "/pt/sectores", to: /\/pt\/mundo/ },
-  { from: "/pt/memes", to: /\/pt\/mundo/ },
-  { from: "/pt/caso", to: /\/pt\/mundo/ },
-  { from: "/pt/mercado", to: /\/pt\/mundo/ },
+  // IA v2 renames
+  { from: "/pt/mundo", to: /\/pt\/casos/ },
+  { from: "/pt/contexto", to: /\/pt\/aprender/ },
+  { from: "/pt/instrumento", to: /\/pt\/mesa/ },
+  { from: "/pt/carteira", to: /\/pt\/ferramentas/ },
+  // Historical aliases
+  { from: "/pt/sectores", to: /\/pt\/casos/ },
+  { from: "/pt/memes", to: /\/pt\/casos/ },
+  { from: "/pt/caso", to: /\/pt\/casos/ },
   { from: "/pt/liquidez", to: /\/pt\/fluxos/ },
   { from: "/pt/sentimento", to: /\/pt\/fluxos/ },
-  { from: "/pt/defi", to: /\/pt\/fluxos/ },
   { from: "/pt/yields", to: /\/pt\/fluxos/ },
   { from: "/pt/etf", to: /\/pt\/fluxos/ },
-  { from: "/pt/lab", to: /\/pt\/contexto/ },
-  { from: "/pt/atlas", to: /\/pt\/contexto/ },
-  { from: "/pt/ciclo", to: /\/pt\/contexto/ },
-  { from: "/pt/portugal", to: /\/pt\/contexto/ },
-  { from: "/pt/graficos", to: /\/pt\/instrumento/ },
+  { from: "/pt/lab", to: /\/pt\/aprender/ },
+  { from: "/pt/atlas", to: /\/pt\/aprender/ },
+  { from: "/pt/ciclo", to: /\/pt\/aprender/ },
+  { from: "/pt/portugal", to: /\/pt\/aprender/ },
+  { from: "/pt/graficos", to: /\/pt\/mesa/ },
 ] as const;
 
 async function assertShell(page: Page) {
   await expect(page.getByRole("banner")).toBeVisible();
-  // Brand may wrap; CC mark + nav prove chrome mounted
+  // Brand may wrap; wordmark + nav prove chrome mounted
   await expect(
-    page.getByRole("banner").getByText("CC", { exact: true }),
+    page.getByRole("banner").getByText(/CLAREZA/i).first(),
   ).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: /Navegação|Primary/i }),
@@ -88,14 +95,14 @@ test.describe("smoke · i18n + nav", () => {
     await expect(page.getByText(/Market observatory/i).first()).toBeVisible();
   });
 
-  test("primary nav reaches Mundo", async ({ page }) => {
+  test("primary nav reaches Casos", async ({ page }) => {
     await page.goto("/pt", { waitUntil: "domcontentloaded" });
     await assertShell(page);
     await page
       .getByRole("navigation", { name: /Navegação/i })
-      .getByRole("link", { name: /Mundo/i })
+      .getByRole("link", { name: /Casos/i })
       .click();
-    await expect(page).toHaveURL(/\/pt\/mundo/);
+    await expect(page).toHaveURL(/\/pt\/casos/);
     await assertShell(page);
   });
 });
@@ -167,7 +174,9 @@ test.describe("polish · a11y keyboard + reduced motion", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/pt", { waitUntil: "domcontentloaded" });
     const anim = await page.evaluate(() => {
-      const el = document.querySelector(".enter");
+      const el =
+        document.querySelector(".enter") ??
+        document.querySelector(".enter-sequence > *");
       if (!el) return "none";
       return getComputedStyle(el).animationName;
     });

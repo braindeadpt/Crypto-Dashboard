@@ -7,11 +7,14 @@ const LOCALES = ["pt", "en"] as const;
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPaths = [
     { path: "", priority: 1, changeFrequency: "hourly" as const },
-    { path: "/mundo", priority: 0.8, changeFrequency: "hourly" as const },
+    { path: "/mercado", priority: 0.9, changeFrequency: "hourly" as const },
+    { path: "/casos", priority: 0.8, changeFrequency: "hourly" as const },
     { path: "/fluxos", priority: 0.8, changeFrequency: "hourly" as const },
-    { path: "/contexto", priority: 0.7, changeFrequency: "daily" as const },
-    { path: "/instrumento", priority: 0.6, changeFrequency: "hourly" as const },
-    { path: "/carteira", priority: 0.6, changeFrequency: "daily" as const },
+    { path: "/defi", priority: 0.7, changeFrequency: "hourly" as const },
+    { path: "/cadeias", priority: 0.7, changeFrequency: "hourly" as const },
+    { path: "/aprender", priority: 0.7, changeFrequency: "daily" as const },
+    { path: "/mesa", priority: 0.6, changeFrequency: "hourly" as const },
+    { path: "/ferramentas", priority: 0.6, changeFrequency: "daily" as const },
     { path: "/brief", priority: 0.6, changeFrequency: "hourly" as const },
   ];
 

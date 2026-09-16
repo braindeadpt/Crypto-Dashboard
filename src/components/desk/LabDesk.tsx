@@ -61,7 +61,7 @@ export function LabDesk({
         <Link href="/fluxos" className="text-accent">
           Fluxos →
         </Link>
-        <Link href="/mundo" className="text-accent">
+        <Link href="/casos" className="text-accent">
           Mundo →
         </Link>
         <Link href="/" className="text-accent">

@@ -40,7 +40,7 @@ export async function GET() {
     ...SEGURANCA_CONTENT.sections.map(
       (s) => `<item>
       <title>${esc(`Segurança · ${s.titlePt}`)}</title>
-      <link>${BASE_URL}/pt/contexto</link>
+      <link>${BASE_URL}/pt/aprender</link>
       <guid isPermaLink="false">seguranca-${s.id}</guid>
       <pubDate>${new Date(s.asOf).toUTCString()}</pubDate>
       <description>${esc(s.bodyPt.slice(0, 280))}…</description>

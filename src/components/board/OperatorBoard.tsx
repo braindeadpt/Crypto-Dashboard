@@ -104,13 +104,13 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
           {ti("deeperFluxos")} →
         </Link>
         <Link
-          href="/mundo"
+          href="/casos"
           className="text-meta text-muted transition hover:text-accent"
         >
           {ti("deeperMundo")} →
         </Link>
         <Link
-          href="/instrumento"
+          href="/mesa"
           className="text-meta text-muted transition hover:text-accent"
         >
           {ti("deeperInstrumento")} →

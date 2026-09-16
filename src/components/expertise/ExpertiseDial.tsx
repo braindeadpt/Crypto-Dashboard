@@ -24,8 +24,8 @@ export function ExpertiseDial({ compact = false }: { compact?: boolean }) {
 
   function choose(id: ExpertiseLevel) {
     setLevel(id);
-    if (id === "analyst" && pathname !== "/instrumento") {
-      router.push("/instrumento");
+    if (id === "analyst" && pathname !== "/mesa") {
+      router.push("/mesa");
     }
   }
 

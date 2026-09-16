@@ -573,7 +573,7 @@ export function InstrumentDesk({
       <div className="board-act">
         <ActHead title={ti("acts.wideTitle")} note={ti("acts.wideNote")} />
         <div className={`grid gap-3 ${dex ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}>
-          <Panel title={t("movers")} href="/mundo">
+          <Panel title={t("movers")} href="/casos">
             <div className="grid grid-cols-2 gap-3">
               <MoverCol
                 title={t("gainers")}
@@ -604,7 +604,7 @@ export function InstrumentDesk({
                           href={
                             Math.abs(q.change24h) >= 3
                               ? `/caso/case-${q.id}`
-                              : "/mundo"
+                              : "/casos"
                           }
                           className="font-medium hover:text-accent"
                         >
@@ -623,7 +623,7 @@ export function InstrumentDesk({
           </Panel>
 
           {dex && (
-            <Panel title={t("dexFrenzy")} href="/mundo">
+            <Panel title={t("dexFrenzy")} href="/casos">
               <p className="mb-2 border border-accent/25 bg-accent-dim px-2 py-1.5 font-mono text-[0.65rem] text-accent">
                 {locale === "pt" ? dex.notePt : dex.noteEn}
               </p>

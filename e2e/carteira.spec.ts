@@ -12,7 +12,7 @@ test.describe("carteira · functional", () => {
   test("bitcoin address loads balance and activity (no key needed)", async ({
     page,
   }) => {
-    await page.goto("/pt/carteira", { waitUntil: "domcontentloaded" });
+    await page.goto("/pt/ferramentas", { waitUntil: "domcontentloaded" });
     // Controlled input: fill before hydration and React resets state.
     await page.waitForLoadState("networkidle");
 
@@ -41,7 +41,7 @@ test.describe("carteira · functional", () => {
       !process.env.ETHERSCAN_API_KEY,
       "needs ETHERSCAN_API_KEY (repo secret)",
     );
-    await page.goto("/pt/carteira", { waitUntil: "domcontentloaded" });
+    await page.goto("/pt/ferramentas", { waitUntil: "domcontentloaded" });
     await page.waitForLoadState("networkidle");
 
     await page.getByPlaceholder("0x…").fill(VITALIK_ETH);
@@ -57,7 +57,7 @@ test.describe("carteira · functional", () => {
   test("invalid address shows a format error, not a crash", async ({
     page,
   }) => {
-    await page.goto("/pt/carteira", { waitUntil: "domcontentloaded" });
+    await page.goto("/pt/ferramentas", { waitUntil: "domcontentloaded" });
     await page.waitForLoadState("networkidle");
     await page.getByPlaceholder("0x…").fill("not-an-address");
     await expect(

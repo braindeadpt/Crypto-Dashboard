@@ -111,7 +111,7 @@ async function navTiming(page: Page, route: string): Promise<number> {
 }
 
 test.describe("E8 · structural audit", () => {
-  test("measure home / mundo / contexto and write report", async ({
+  test("measure home / casos / aprender and write report", async ({
     page,
     browser,
   }) => {
@@ -120,14 +120,14 @@ test.describe("E8 · structural audit", () => {
     await gotoExpertise(page, "/pt", "operator");
     const home = await measureVisible(page);
 
-    await gotoExpertise(page, "/pt/mundo", "operator");
-    const mundo = await measureVisible(page);
+    await gotoExpertise(page, "/pt/casos", "operator");
+    const casos = await measureVisible(page);
 
-    await gotoExpertise(page, "/pt/contexto", "operator");
-    const contexto = await measureVisible(page);
+    await gotoExpertise(page, "/pt/aprender", "operator");
+    const aprender = await measureVisible(page);
 
-    await gotoExpertise(page, "/pt/carteira", "operator");
-    const carteira = await measureVisible(page);
+    await gotoExpertise(page, "/pt/ferramentas", "operator");
+    const ferramentas = await measureVisible(page);
 
     await gotoExpertise(page, "/pt", "citizen");
     const homeCitizen = await measureVisible(page);
@@ -139,10 +139,10 @@ test.describe("E8 · structural audit", () => {
     await page.locator("#main").waitFor({ state: "visible", timeout: 45_000 });
     const homeAnalyst = await measureVisible(page);
 
-    await gotoExpertise(page, "/pt/mundo", "citizen");
-    const mundoCitizen = await measureVisible(page);
-    await gotoExpertise(page, "/pt/mundo", "analyst");
-    const mundoAnalyst = await measureVisible(page);
+    await gotoExpertise(page, "/pt/casos", "citizen");
+    const casosCitizen = await measureVisible(page);
+    await gotoExpertise(page, "/pt/casos", "analyst");
+    const casosAnalyst = await measureVisible(page);
 
     const coldCtx = await browser.newContext();
     const coldPage = await coldCtx.newPage();
@@ -224,8 +224,8 @@ test.describe("E8 · structural audit", () => {
       homeSections: 15,
       homeChars: 6820,
       homeSvgs: 21,
-      mundoChars: 1445,
-      contextoSvgs: 0,
+      casosChars: 1445,
+      aprenderSvgs: 0,
       coldMsApprox: 5000,
       warmMsApprox: 300,
     };
@@ -235,9 +235,9 @@ test.describe("E8 · structural audit", () => {
       before,
       after: {
         home,
-        mundo,
-        contexto,
-        carteira,
+        casos,
+        aprender,
+        ferramentas,
         dial: {
           homeCitizen: {
             chars: homeCitizen.chars,
@@ -252,13 +252,13 @@ test.describe("E8 · structural audit", () => {
             sections: homeAnalyst.sections,
             path: homeAnalyst.path,
           },
-          mundoCitizen: {
-            chars: mundoCitizen.chars,
-            sections: mundoCitizen.sections,
+          casosCitizen: {
+            chars: casosCitizen.chars,
+            sections: casosCitizen.sections,
           },
-          mundoAnalyst: {
-            chars: mundoAnalyst.chars,
-            sections: mundoAnalyst.sections,
+          casosAnalyst: {
+            chars: casosAnalyst.chars,
+            sections: casosAnalyst.sections,
           },
         },
         perf: { coldMs, warmMs },
@@ -285,20 +285,20 @@ test.describe("E8 · structural audit", () => {
             value: home.sections,
             pass: home.sections <= 8,
           },
-          mundoCharsGrew: {
-            target: `> ${before.mundoChars} ×1.5`,
-            value: mundo.chars,
-            pass: mundo.chars >= before.mundoChars * 1.5,
+          casosCharsGrew: {
+            target: `> ${before.casosChars} ×1.5`,
+            value: casos.chars,
+            pass: casos.chars >= before.casosChars * 1.5,
           },
-          contextoSvgs: {
+          aprenderSvgs: {
             target: "> 0",
-            value: contexto.svgs,
-            pass: contexto.svgs > 0,
+            value: aprender.svgs,
+            pass: aprender.svgs > 0,
           },
-          carteiraLoads: {
+          ferramentasLoads: {
             target: "chars > 200",
-            value: carteira.chars,
-            pass: carteira.chars > 200,
+            value: ferramentas.chars,
+            pass: ferramentas.chars > 200,
           },
           btcPriceHits: {
             target: "1×",
@@ -332,10 +332,10 @@ test.describe("E8 · structural audit", () => {
     );
 
     expect(home.percentSigns, "home % count").toBeLessThan(30);
-    expect(contexto.svgs, "contexto SVGs").toBeGreaterThan(0);
-    expect(carteira.chars, "carteira renders content").toBeGreaterThan(200);
-    expect(mundo.chars, "mundo chars grew").toBeGreaterThanOrEqual(
-      before.mundoChars * 1.5,
+    expect(aprender.svgs, "aprender SVGs").toBeGreaterThan(0);
+    expect(ferramentas.chars, "ferramentas renders content").toBeGreaterThan(200);
+    expect(casos.chars, "casos chars grew").toBeGreaterThanOrEqual(
+      before.casosChars * 1.5,
     );
     expect(mobile.overflow, "no horizontal overflow at 375").toBe(false);
     expect(contrast.light.inkBg).toBeGreaterThanOrEqual(4.5);
@@ -349,9 +349,9 @@ test.describe("E8 · structural audit", () => {
       "dial changes home density",
     ).toBeTruthy();
     expect(
-      mundoCitizen.chars !== mundoAnalyst.chars ||
-        mundoCitizen.sections !== mundoAnalyst.sections,
-      "dial changes mundo density",
+      casosCitizen.chars !== casosAnalyst.chars ||
+        casosCitizen.sections !== casosAnalyst.sections,
+      "dial changes casos density",
     ).toBeTruthy();
     expect(home.btcPriceHits, "BTC price not tripled").toBeLessThanOrEqual(1);
     expect(home.stressHits, "Stress once on entrance (Pulso only)").toBeLessThanOrEqual(1);

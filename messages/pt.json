@@ -7,13 +7,14 @@
   },
   "nav": {
     "now": "Agora",
-    "world": "Mundo",
+    "market": "Mercado",
     "flows": "Fluxos",
-    "context": "Contexto",
-    "instrument": "Instrumento",
-    "wallet": "Carteira",
-    "walletSoon": "Em breve: cola um endereço público — sem chaves, sem armazenamento no servidor.",
-    "soon": "em breve",
+    "defi": "DeFi",
+    "chains": "Cadeias",
+    "cases": "Casos",
+    "learn": "Aprender",
+    "tools": "Ferramentas",
+    "desk": "Mesa",
     "aria": "Navegação principal"
   },
   "theme": {
@@ -88,7 +89,11 @@
     "price": "Preço",
     "change24h": "24h",
     "marketCap": "Capitalização",
-    "belowFold": "Top por capitalização"
+    "belowFold": "Top por capitalização",
+    "volume": "Volume 24h",
+    "ethDominance": "Dominância ETH",
+    "spark": "7d",
+    "empty": "Não foi possível obter dados de mercado neste momento."
   },
   "cycle": {
     "title": "Ciclo e história",
@@ -139,7 +144,24 @@
     "stablecoins": "Stablecoins",
     "whatIsTvl": "O que é TVL?",
     "change1d": "1d",
-    "change7d": "7d"
+    "change7d": "7d",
+    "yields": "Melhores yields",
+    "yieldsHint": "Pools ordenadas por APY — ⚡ inclui recompensa de token (mais volátil). Fonte: DefiLlama yields.",
+    "pool": "Pool",
+    "chain": "Cadeia",
+    "empty": "Sem dados DeFi neste momento — o snapshot diário ainda não correu."
+  },
+  "cadeias": {
+    "title": "Cadeias",
+    "subtitle": "Blockchains comparadas pelo capital que lá vive — TVL, quota e tendência.",
+    "totalTvl": "TVL total DeFi",
+    "count": "Cadeias listadas",
+    "leader": "Cadeia líder",
+    "chain": "Cadeia",
+    "share": "Quota do TVL",
+    "d1": "Δ 1d (ponderado)",
+    "source": "Fonte: DefiLlama · snapshot diário · Δ1d = média ponderada pelo TVL dos protocolos na cadeia",
+    "empty": "Sem dados de cadeias neste momento — o snapshot diário ainda não correu."
   },
   "brief": {
     "title": "Resumo do dia",

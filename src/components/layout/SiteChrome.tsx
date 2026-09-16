@@ -13,15 +13,36 @@ import { ThemeToggle } from "./ThemeToggle";
  * `wallet` is reserved (VISION) — shown disabled so the IA already has a slot.
  */
 const LINKS: {
-  href: "/" | "/mundo" | "/fluxos" | "/contexto" | "/instrumento" | "/carteira";
-  key: "now" | "world" | "flows" | "context" | "instrument" | "wallet";
+  href:
+    | "/"
+    | "/mercado"
+    | "/fluxos"
+    | "/defi"
+    | "/cadeias"
+    | "/casos"
+    | "/aprender"
+    | "/ferramentas"
+    | "/mesa";
+  key:
+    | "now"
+    | "market"
+    | "flows"
+    | "defi"
+    | "chains"
+    | "cases"
+    | "learn"
+    | "tools"
+    | "desk";
 }[] = [
   { href: "/", key: "now" },
-  { href: "/mundo", key: "world" },
+  { href: "/mercado", key: "market" },
   { href: "/fluxos", key: "flows" },
-  { href: "/contexto", key: "context" },
-  { href: "/instrumento", key: "instrument" },
-  { href: "/carteira", key: "wallet" },
+  { href: "/defi", key: "defi" },
+  { href: "/cadeias", key: "chains" },
+  { href: "/casos", key: "cases" },
+  { href: "/aprender", key: "learn" },
+  { href: "/ferramentas", key: "tools" },
+  { href: "/mesa", key: "desk" },
 ];
 
 export function SiteHeader() {

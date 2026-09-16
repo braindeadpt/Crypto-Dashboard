@@ -7,11 +7,11 @@ import { test } from "@playwright/test";
 test.skip(!!process.env.CI, "audit utility — screenshots, not assertions");
 const DESKTOP = [
   "/pt",
-  "/pt/mundo",
+  "/pt/casos",
   "/pt/fluxos",
-  "/pt/contexto",
-  "/pt/instrumento",
-  "/pt/carteira",
+  "/pt/aprender",
+  "/pt/mesa",
+  "/pt/ferramentas",
   "/pt/brief",
   "/pt/atlas/bitcoin",
   "/pt/atlas/seed-phrase",
@@ -19,7 +19,7 @@ const DESKTOP = [
   "/en",
 ] as const;
 
-const MOBILE = ["/pt", "/pt/contexto", "/pt/carteira", "/pt/fluxos"] as const;
+const MOBILE = ["/pt", "/pt/aprender", "/pt/ferramentas", "/pt/fluxos"] as const;
 
 const name = (p: string) => p.replaceAll("/", "_").replace(/^_+|_+$/g, "");
 
@@ -54,16 +54,16 @@ test.describe("audit shots", () => {
     });
   }
 
-  // citizen vs analyst contexto — density dial check
+  // citizen vs analyst aprender — density dial check
   for (const lv of ["citizen", "analyst"] as const) {
-    test(`contexto ${lv}`, async ({ page }) => {
+    test(`aprender ${lv}`, async ({ page }) => {
       await page.addInitScript((l) => {
         localStorage.setItem("clareza-expertise", l);
       }, lv);
-      await page.goto("/pt/contexto", { waitUntil: "networkidle" });
+      await page.goto("/pt/aprender", { waitUntil: "networkidle" });
       await page.waitForTimeout(800);
       await page.screenshot({
-        path: `audit-shots/contexto-${lv}.png`,
+        path: `audit-shots/aprender-${lv}.png`,
         fullPage: true,
       });
     });

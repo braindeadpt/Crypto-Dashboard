@@ -13,24 +13,27 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
  * - /brief — ritual bookmark (same card as Agora, intentional URL)
  */
 const LEGACY_ALIASES: ReadonlyArray<{ from: string; to: string }> = [
-  // → /mundo
-  { from: "sectores", to: "mundo" },
-  { from: "memes", to: "mundo" },
-  { from: "caso", to: "mundo" },
-  { from: "mercado", to: "mundo" },
-  // → /fluxos
+  // Renomeações IA v2 — slugs antigos → novos
+  { from: "mundo", to: "casos" },
+  { from: "contexto", to: "aprender" },
+  { from: "instrumento", to: "mesa" },
+  { from: "carteira", to: "ferramentas" },
+  // Aliases históricos → /casos
+  { from: "sectores", to: "casos" },
+  { from: "memes", to: "casos" },
+  { from: "caso", to: "casos" },
+  // Aliases históricos → /fluxos
   { from: "liquidez", to: "fluxos" },
   { from: "sentimento", to: "fluxos" },
-  { from: "defi", to: "fluxos" },
   { from: "yields", to: "fluxos" },
   { from: "etf", to: "fluxos" },
-  // → /contexto
-  { from: "lab", to: "contexto" },
-  { from: "atlas", to: "contexto" },
-  { from: "ciclo", to: "contexto" },
-  { from: "portugal", to: "contexto" },
-  // → /instrumento
-  { from: "graficos", to: "instrumento" },
+  // Aliases históricos → /aprender
+  { from: "lab", to: "aprender" },
+  { from: "atlas", to: "aprender" },
+  { from: "ciclo", to: "aprender" },
+  { from: "portugal", to: "aprender" },
+  // Aliases históricos → /mesa
+  { from: "graficos", to: "mesa" },
 ];
 
 const nextConfig: NextConfig = {
