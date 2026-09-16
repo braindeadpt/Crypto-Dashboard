@@ -1,5 +1,6 @@
 "use client";
 
+import { DataAge } from "@/components/explain/DataAge";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { DefiSnapshot } from "@/lib/types";
 import { useTranslations } from "next-intl";
@@ -29,6 +30,11 @@ export function CadeiasDesk({ defi }: { defi: DefiSnapshot }) {
       <header className="max-w-2xl pt-2">
         <h1 className="font-display text-display text-ink">{t("title")}</h1>
         <p className="mt-2 text-body text-muted">{t("subtitle")}</p>
+        <DataAge
+          at={defi.updatedAt}
+          stale={defi.stale}
+          className="mt-2 block text-meta"
+        />
       </header>
 
       <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-[2px] border border-line bg-line sm:grid-cols-3">

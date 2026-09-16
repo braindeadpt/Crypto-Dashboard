@@ -52,6 +52,7 @@ async function HomeBoard({ locale }: { locale: string }) {
         regime={data.regime}
         ritual={data.ritual}
         readings={data.readings}
+        asOf={data.asOf}
       />
     </>
   );

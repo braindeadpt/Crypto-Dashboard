@@ -1,5 +1,6 @@
 "use client";
 
+import { DataAge } from "@/components/explain/DataAge";
 import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import type { JargonTermId } from "@/lib/jargon";
 import { cn } from "@/lib/format";
@@ -68,6 +69,7 @@ export function ExplainThisNumber({
           {value}
         </div>
         <p className="mt-2 max-w-sm text-meta text-muted">{meaning}</p>
+        {updatedAt && <DataAge at={updatedAt} className="mt-1 block text-meta" />}
       </div>
     );
   }

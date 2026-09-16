@@ -1,6 +1,7 @@
 "use client";
 
 import { useWatchlist } from "@/components/watchlist/WatchlistProvider";
+import { DataAge } from "@/components/explain/DataAge";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
@@ -22,6 +23,7 @@ export function WatchlistPanel({ className = "" }: { className?: string }) {
     assets,
     quotes,
     quotesLoading,
+    quotesAt,
     max,
     add,
     remove,
@@ -212,6 +214,12 @@ export function WatchlistPanel({ className = "" }: { className?: string }) {
       </ul>
       <p className="mt-3 text-meta text-faint">
         {t("count", { n: assets.length, max })}
+        {quotesAt && (
+          <>
+            {" · "}
+            <DataAge at={quotesAt} warnAfterMs={2 * 60_000} />
+          </>
+        )}
       </p>
     </section>
   );

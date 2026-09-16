@@ -416,6 +416,14 @@
     "noData": "Sem dados",
     "close": "Fechar"
   },
+  "age": {
+    "now": "agora",
+    "minutes": "há {n} min",
+    "hours": "há {n} h",
+    "days": "há {n} d",
+    "stale": "desactualizado",
+    "live": "live"
+  },
   "board": {
     "live": "Ao vivo",
     "liveConnecting": "A ligar…",

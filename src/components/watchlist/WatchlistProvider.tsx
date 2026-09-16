@@ -26,6 +26,8 @@ type WatchlistContextValue = {
   assets: WatchAsset[];
   quotes: AssetQuote[];
   quotesLoading: boolean;
+  /** When the current quotes were fetched — visible data age (F2). */
+  quotesAt: string | null;
   max: number;
   add: (asset: Omit<WatchAsset, "addedAt">) => "ok" | "full" | "dup";
   remove: (id: string) => void;
@@ -38,6 +40,7 @@ type WatchlistContextValue = {
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
 
 const quoteMemo = new Map<string, AssetQuote[]>();
+const quoteAtMemo = new Map<string, string>();
 const inflight = new Map<string, Promise<AssetQuote[]>>();
 
 function loadQuotes(idsKey: string): Promise<AssetQuote[]> {
@@ -55,6 +58,7 @@ function loadQuotes(idsKey: string): Promise<AssetQuote[]> {
     .catch(() => [] as AssetQuote[])
     .then((quotes) => {
       quoteMemo.set(idsKey, quotes);
+      quoteAtMemo.set(idsKey, new Date().toISOString());
       inflight.delete(idsKey);
       return quotes;
     });
@@ -125,6 +129,7 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
       assets,
       quotes: idsKey ? quotes : [],
       quotesLoading: Boolean(idsKey) && !quoteMemo.has(idsKey),
+      quotesAt: idsKey ? (quoteAtMemo.get(idsKey) ?? null) : null,
       max: WATCHLIST_MAX,
       add,
       remove,
@@ -150,6 +155,7 @@ export function useWatchlist(): WatchlistContextValue {
       assets: listWatchAssets(),
       quotes: [],
       quotesLoading: false,
+      quotesAt: null,
       max: WATCHLIST_MAX,
       add: () => "full",
       remove: () => {},

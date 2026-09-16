@@ -3,8 +3,10 @@
 import { AmbientField } from "@/components/ambient/AmbientField";
 import { AnimatedNumber } from "@/components/board/AnimatedNumber";
 import { Sparkline } from "@/components/board/Sparkline";
+import { DataAge } from "@/components/explain/DataAge";
 import { LOW_CONFIDENCE, type ReadingSet } from "@/lib/reading";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
+import type { LiveTickerConnection } from "@/lib/hooks/useLiveTicker";
 import type { MarketPosture } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -28,6 +30,9 @@ export function HeroPanel({
   intensity = 0.5,
   posture,
   vitals,
+  snapshotAt,
+  readingsAt,
+  live,
 }: {
   readings: ReadingSet;
   date: string;
@@ -43,8 +48,15 @@ export function HeroPanel({
     vol: number;
     dom: number;
   };
+  /** CoinGecko snapshot age — seed dos preços e fonte dos vitals (F2). */
+  snapshotAt?: string | null;
+  /** Idade das três leituras — input mais velho do bundle (F2). */
+  readingsAt?: string | null;
+  /** Estado do ticker live — quando "live", a tape mostra o último tick. */
+  live?: { connection: LiveTickerConnection; lastUpdate: number | null };
 }) {
   const t = useTranslations("readings");
+  const ta = useTranslations("age");
   const tp = useTranslations("pulso");
   const locale = useLocale();
   const isPt = locale === "pt";
@@ -89,6 +101,11 @@ export function HeroPanel({
             ).map(([n, r]) => (
               <ReadingRow key={r.id} n={n} reading={r} />
             ))}
+            {readingsAt && (
+              <p className="pt-2 text-meta">
+                <DataAge at={readingsAt} />
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -159,6 +176,23 @@ export function HeroPanel({
             </>
           )}
         </div>
+        {(snapshotAt || live) && (
+          <div className="flex items-center justify-between gap-3 border-t border-line px-1 py-1.5">
+            <span className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-faint">
+              CoinGecko <DataAge at={snapshotAt} />
+            </span>
+            {live?.connection === "live" && live.lastUpdate != null && (
+              <span className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-accent">
+                {ta("live")} ·{" "}
+                {new Date(live.lastUpdate).toLocaleTimeString(undefined, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

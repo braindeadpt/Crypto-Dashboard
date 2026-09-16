@@ -1,5 +1,6 @@
 "use client";
 
+import { DataAge } from "@/components/explain/DataAge";
 import { Link } from "@/i18n/navigation";
 import type { EtfAssetFlows, EtfDailyFlow, EtfSnapshot } from "@/lib/data/etf";
 import { cn, formatUsdMillions } from "@/lib/format";
@@ -36,12 +37,14 @@ export function EtfDesk({
                 (data.ingestedAt
                   ? new Date(data.ingestedAt).toLocaleDateString(locale)
                   : "—"),
-            })}
+            })}{" "}
+            <DataAge at={data.ingestedAt || data.updatedAt} stale />
           </p>
         )}
         {!data.stale && data.btc.latest && (
           <p className="mt-2 font-mono text-[0.65rem] text-faint">
-            {t("flowDate", { date: data.btc.latest.dateLabel })}
+            {t("flowDate", { date: data.btc.latest.dateLabel })} ·{" "}
+            <DataAge at={data.updatedAt} />
           </p>
         )}
         <div

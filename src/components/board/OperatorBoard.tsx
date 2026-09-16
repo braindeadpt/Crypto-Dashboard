@@ -21,6 +21,8 @@ type Props = {
   regime: RegimeResult;
   ritual: DailyRitual;
   readings: ReadingSet;
+  /** Oldest input behind regime/readings/ritual — the honest data age (F2). */
+  asOf: string | null;
 };
 
 /**
@@ -30,7 +32,13 @@ type Props = {
  * pulso → briefing. Hairlines em vez de caixas; cada secção é um acto
  * numerado com um trabalho só. O detalhe vive nas páginas temáticas.
  */
-export function OperatorBoard({ market, regime, ritual, readings }: Props) {
+export function OperatorBoard({
+  market,
+  regime,
+  ritual,
+  readings,
+  asOf,
+}: Props) {
   const ti = useTranslations("instrumento");
   const { level } = useExpertise();
 
@@ -63,6 +71,12 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
         sol={{ px: solPx, chg: solChg }}
         intensity={regime.score / 100}
         posture={regime.posture}
+        snapshotAt={market.updatedAt}
+        readingsAt={asOf}
+        live={{
+          connection: live.connection,
+          lastUpdate: live.lastUpdate,
+        }}
         vitals={{
           cap: market.global.totalMarketCap,
           capChg: market.global.marketCapChange24h,
@@ -73,21 +87,33 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
 
       {/* 01 — o mapa: amplitude e estrutura do mercado inteiro */}
       <section className="mt-10">
-        <ActHead title={ti("acts.mapTitle")} note={ti("acts.mapNote")} />
+        <ActHead
+          title={ti("acts.mapTitle")}
+          note={ti("acts.mapNote")}
+          ageAt={market.updatedAt}
+        />
         <MarketMap assets={market.top} tall showTitle={false} />
       </section>
 
       {/* 02 — o pulso: instrumento de operador; Essencial já teve a resposta */}
       {level !== "citizen" && (
         <section className="mt-10">
-          <ActHead title={ti("acts.pulseTitle")} note={ti("acts.pulseNote")} />
+          <ActHead
+            title={ti("acts.pulseTitle")}
+            note={ti("acts.pulseNote")}
+            ageAt={asOf}
+          />
           <Pulso regime={regime} hist={hist} />
         </section>
       )}
 
       {/* 03 — o briefing: cinco entradas fixas, sempre os mesmos slots */}
       <section className="mt-10">
-        <ActHead title={ti("acts.briefTitle")} note={ti("acts.briefNote")} />
+        <ActHead
+          title={ti("acts.briefTitle")}
+          note={ti("acts.briefNote")}
+          ageAt={asOf}
+        />
         <DailyRitualCard ritual={ritual} />
       </section>
 

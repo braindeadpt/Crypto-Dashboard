@@ -416,6 +416,14 @@
     "noData": "No data",
     "close": "Close"
   },
+  "age": {
+    "now": "just now",
+    "minutes": "{n} min ago",
+    "hours": "{n} h ago",
+    "days": "{n} d ago",
+    "stale": "stale",
+    "live": "live"
+  },
   "board": {
     "live": "Live",
     "liveConnecting": "Connecting…",

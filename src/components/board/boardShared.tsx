@@ -1,6 +1,7 @@
 "use client";
 
 import { Regua } from "@/components/instrument/Regua";
+import { DataAge } from "@/components/explain/DataAge";
 import { Link } from "@/i18n/navigation";
 import type { MetricContextApi } from "@/lib/history/context";
 import { deltaClass, formatPct, formatUsdMillions } from "@/lib/format";
@@ -13,11 +14,29 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * Cabeçalho de acto. A board lê-se em actos — sem estas âncoras a página é uma
  * pilha de painéis do mesmo peso.
  */
-export function ActHead({ title, note }: { title: string; note?: string }) {
+export function ActHead({
+  title,
+  note,
+  ageAt,
+  ageStale,
+}: {
+  title: string;
+  note?: string;
+  /** Data age of the act's numbers (F2) — ISO of the source snapshot. */
+  ageAt?: string | null;
+  ageStale?: boolean;
+}) {
   return (
     <div className="act-head">
       <h2 className="act-head__title">{title}</h2>
       {note && <span className="act-head__note">{note}</span>}
+      {ageAt && (
+        <DataAge
+          at={ageAt}
+          stale={ageStale}
+          className="font-mono text-label uppercase tracking-[0.08em]"
+        />
+      )}
     </div>
   );
 }

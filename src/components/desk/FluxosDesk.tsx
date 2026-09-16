@@ -1,5 +1,6 @@
 "use client";
 
+import { DataAge } from "@/components/explain/DataAge";
 import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
 import { EtfDesk } from "@/components/desk/EtfDesk";
 import { LiquidityDesk } from "@/components/liquidity/LiquidityDesk";
@@ -47,7 +48,13 @@ export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
       <ExpertiseGate section="derivsTable">
         {sentiment && (
           <section className="mx-auto w-full max-w-[1400px] section-pad pb-12">
-            <h2 className="font-display text-title text-ink">{t("leverageTitle")}</h2>
+            <h2 className="font-display text-title text-ink">
+              {t("leverageTitle")}{" "}
+              <DataAge
+                at={sentiment.updatedAt}
+                className="align-middle text-meta font-normal"
+              />
+            </h2>
             <ExpertiseGate section="readings">
               <p className="mt-1 text-meta text-muted">{t("leverageHint")}</p>
             </ExpertiseGate>

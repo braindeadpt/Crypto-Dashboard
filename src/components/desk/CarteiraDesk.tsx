@@ -13,6 +13,7 @@ import {
   removeSavedAddress,
   setEtherscanKey,
 } from "@/lib/local/addresses";
+import { DataAge } from "@/components/explain/DataAge";
 import { downloadBlob } from "@/lib/local/store";
 import { cn, formatUsd } from "@/lib/format";
 import { useTranslations } from "next-intl";
@@ -422,6 +423,11 @@ export function CarteiraDesk() {
                 ≈ {formatUsd(view.nativeUsd)}
               </p>
             )}
+            <DataAge
+              at={view.updatedAt}
+              warnAfterMs={5 * 60_000}
+              className="mt-1 block font-mono text-[0.62rem]"
+            />
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"

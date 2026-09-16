@@ -208,7 +208,13 @@ export async function fetchTokenPricesUsd(
   );
 }
 
-export async function fetchTrendingCoins(): Promise<TrendingCoin[]> {
+export type TrendingResult = {
+  coins: TrendingCoin[];
+  /** When the upstream list was fetched — cached entries keep the real age. */
+  updatedAt: string;
+};
+
+export async function fetchTrendingCoins(): Promise<TrendingResult> {
   return cachedFetch("market:trending", 180_000, async () => {
     try {
       const data = await cg<{
@@ -226,16 +232,19 @@ export async function fetchTrendingCoins(): Promise<TrendingCoin[]> {
         }[];
       }>("/search/trending");
 
-      return (data.coins ?? []).slice(0, 8).map((c) => ({
-        id: c.item.id,
-        name: c.item.name,
-        symbol: c.item.symbol.toUpperCase(),
-        rank: c.item.market_cap_rank,
-        score: c.item.score,
-        change24h: c.item.data?.price_change_percentage_24h?.usd ?? null,
-      }));
+      return {
+        coins: (data.coins ?? []).slice(0, 8).map((c) => ({
+          id: c.item.id,
+          name: c.item.name,
+          symbol: c.item.symbol.toUpperCase(),
+          rank: c.item.market_cap_rank,
+          score: c.item.score,
+          change24h: c.item.data?.price_change_percentage_24h?.usd ?? null,
+        })),
+        updatedAt: new Date().toISOString(),
+      };
     } catch {
-      return [];
+      return { coins: [], updatedAt: new Date().toISOString() };
     }
   });
 }

@@ -21,7 +21,13 @@ import type { DerivativesSnapshot } from "@/lib/data/derivatives";
 import type { DexFrenzySnapshot } from "@/lib/data/dex";
 import type { EtfSnapshot } from "@/lib/data/etf";
 import type { MempoolFees } from "@/lib/data/mempool";
-import { deltaClass, formatPct, formatUsd, formatUsdMillions } from "@/lib/format";
+import {
+  deltaClass,
+  formatPct,
+  formatUsd,
+  formatUsdMillions,
+  oldestIso,
+} from "@/lib/format";
 import type {
   DefiSnapshot,
   MarketSnapshot,
@@ -57,6 +63,12 @@ type Props = {
   dex: DexFrenzySnapshot | null;
   trending: TrendingCoin[];
   mempool: MempoolFees | null;
+  /** Oldest bundle input — age of regime/sentiment-derived numbers (F2). */
+  asOf?: string | null;
+  /** Yields disk snapshot age (F2). */
+  yieldsAt?: string | null;
+  /** Trending list fetch age (F2). */
+  trendingAt?: string | null;
 };
 
 /**
@@ -73,6 +85,9 @@ export function InstrumentDesk({
   dex,
   trending,
   mempool,
+  asOf,
+  yieldsAt,
+  trendingAt,
 }: Props) {
   const t = useTranslations("board");
   const ti = useTranslations("instrumento");
@@ -248,7 +263,17 @@ export function InstrumentDesk({
 
       {/* Grelha de réguas */}
       <div className="board-act">
-        <ActHead title={ti("acts.whereTitle")} note={ti("acts.whereNote")} />
+        <ActHead
+          title={ti("acts.whereTitle")}
+          note={ti("acts.whereNote")}
+          ageAt={oldestIso(
+            derivs?.updatedAt,
+            sentiment.updatedAt,
+            defi?.updatedAt,
+            mempool?.updatedAt,
+            etf?.updatedAt,
+          )}
+        />
         <section className="panel-secondary p-3 md:p-4">
           <h2 className="sr-only">{ti("acts.rulerSr")}</h2>
           <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -336,7 +361,11 @@ export function InstrumentDesk({
 
       {/* Spot vs alavancagem */}
       <div className="board-act">
-        <ActHead title={ti("acts.moneyTitle")} note={ti("acts.moneyNote")} />
+        <ActHead
+          title={ti("acts.moneyTitle")}
+          note={ti("acts.moneyNote")}
+          ageAt={oldestIso(etf?.updatedAt, derivs?.updatedAt)}
+        />
         <section className="panel-secondary p-3 md:p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-label text-faint">{t("spotVsLev")}</h2>
@@ -468,7 +497,11 @@ export function InstrumentDesk({
 
       {/* Preço de perto + derivados */}
       <div className="board-act">
-        <ActHead title={ti("acts.priceTitle")} note={ti("acts.priceNote")} />
+        <ActHead
+          title={ti("acts.priceTitle")}
+          note={ti("acts.priceNote")}
+          ageAt={oldestIso(sentiment.updatedAt, derivs?.updatedAt, asOf)}
+        />
         <div className="grid gap-3 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.85fr)]">
           <section className="min-w-0 self-start border border-line bg-surface lum-panel">
             <div className="grid grid-cols-1 items-center gap-2 border-b border-line px-3 py-2 sm:grid-cols-[1fr_auto_1fr]">
@@ -571,7 +604,17 @@ export function InstrumentDesk({
 
       {/* Mercado amplo */}
       <div className="board-act">
-        <ActHead title={ti("acts.wideTitle")} note={ti("acts.wideNote")} />
+        <ActHead
+          title={ti("acts.wideTitle")}
+          note={ti("acts.wideNote")}
+          ageAt={oldestIso(
+            market.updatedAt,
+            dex?.updatedAt,
+            yieldsAt,
+            trendingAt,
+            defi?.updatedAt,
+          )}
+        />
         <div className={`grid gap-3 ${dex ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}>
           <Panel title={t("movers")} href="/casos">
             <div className="grid grid-cols-2 gap-3">

@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatedNumber } from "@/components/board/AnimatedNumber";
+import { DataAge } from "@/components/explain/DataAge";
 import { MarketMap } from "@/components/board/MarketMap";
 import { Sparkline } from "@/components/board/Sparkline";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
@@ -20,6 +21,7 @@ export function MercadoDesk({ market }: { market: MarketSnapshot }) {
       <header className="max-w-2xl pt-2">
         <h1 className="font-display text-display text-ink">{t("title")}</h1>
         <p className="mt-2 text-body text-muted">{t("subtitle")}</p>
+        <DataAge at={market.updatedAt} className="mt-2 block text-meta" />
       </header>
 
       {/* Vitals — quatro números, uma linha */}

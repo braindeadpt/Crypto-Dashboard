@@ -13,6 +13,7 @@ import {
 } from "@/lib/editorial/ritual";
 import { getHistoryDayDeltas } from "@/lib/history/deltas";
 import { buildReadingSet } from "@/lib/reading";
+import { oldestIso } from "@/lib/format";
 import { computeBreadthPct, computeRegime } from "@/lib/regime/engine";
 import type { ReadingSet } from "@/lib/reading";
 import type { DefiSnapshot, RegimeResult } from "@/lib/types";
@@ -64,6 +65,8 @@ export async function getRegimeBundle(): Promise<{
   sentiment: Awaited<ReturnType<typeof fetchSentimentSnapshot>>;
   defi: DefiSnapshot | null;
   caseContext: CaseContext;
+  /** Idade honesta dos artefactos computados — o input mais velho (F2). */
+  asOf: string | null;
 }> {
   const [marketRaw, sentiment, etf, derivs, defi, liquidity] =
     await Promise.all([
@@ -148,12 +151,23 @@ export async function getRegimeBundle(): Promise<{
     tvlChange1dPct: defi?.change1d ?? null,
   });
 
-  return { regime, readings, market, sentiment, defi, caseContext };
+  const asOf = oldestIso(
+    market.updatedAt,
+    sentiment.updatedAt,
+    etf?.updatedAt,
+    derivs?.updatedAt,
+    defi?.updatedAt,
+    liquidity?.ingestedAt,
+  );
+
+  return { regime, readings, market, sentiment, defi, caseContext, asOf };
 }
 
 export async function getFrontPageData() {
-  const [{ regime, readings, market, sentiment, defi, caseContext }, { deltas }] =
-    await Promise.all([getRegimeBundle(), getHistoryDayDeltas()]);
+  const [
+    { regime, readings, market, sentiment, defi, caseContext, asOf },
+    { deltas },
+  ] = await Promise.all([getRegimeBundle(), getHistoryDayDeltas()]);
   const cases = buildDailyCases(
     [...market.movers.gainers, ...market.movers.losers],
     caseContext,
@@ -179,5 +193,6 @@ export async function getFrontPageData() {
     cycle,
     defi,
     caseContext,
+    asOf,
   };
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { DataAge } from "@/components/explain/DataAge";
 import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
 import { Regua } from "@/components/instrument/Regua";
 import { LiquiditySources } from "@/components/liquidity/LiquiditySources";
@@ -40,9 +41,11 @@ export function LiquidityDesk({ initial, embedded = false }: Props) {
         <section className="panel-hero mt-5 p-4 md:p-5" aria-live="polite">
           <p className="text-label text-faint">{t("readingLabel")}</p>
           <p className="mt-2 max-w-3xl text-body text-ink text-balance">{reading}</p>
-          {initial.stale && (
-            <p className="mt-2 text-meta text-warn">{t("stale")}</p>
-          )}
+          <DataAge
+            at={initial.ingestedAt}
+            stale={initial.stale}
+            className="mt-2 block text-meta"
+          />
         </section>
       </ExpertiseGate>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { DataAge } from "@/components/explain/DataAge";
 import { BitcoinTimelineViz } from "@/components/cycle/BitcoinTimelineViz";
 import { CycleHistoryViz } from "@/components/cycle/CycleHistoryViz";
 import { CyclePhaseViz } from "@/components/cycle/CyclePhaseViz";
@@ -18,6 +19,7 @@ export function CycleDesk({ cycle }: { cycle: CycleSnapshot }) {
           {t("title")}
         </h2>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
+        <DataAge at={cycle.updatedAt} className="mt-2 block text-meta" />
       </header>
 
       <section className="mt-8 border border-line bg-surface p-6">

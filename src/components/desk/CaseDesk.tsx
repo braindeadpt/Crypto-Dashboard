@@ -1,6 +1,7 @@
 "use client";
 
 import { CaseEffectStage } from "@/components/cases/CaseEffectStage";
+import { DataAge } from "@/components/explain/DataAge";
 import { Link } from "@/i18n/navigation";
 import type { CaseFile } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
@@ -16,9 +17,12 @@ export function CaseDesk({ caseFile }: { caseFile: CaseFile }) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-20 pt-6 md:px-6 enter">
-      <Link href="/casos" className="text-meta text-accent">
-        ← {t("back")}
-      </Link>
+      <div className="flex items-baseline justify-between gap-3">
+        <Link href="/casos" className="text-meta text-accent">
+          ← {t("back")}
+        </Link>
+        <DataAge at={caseFile.createdAt} className="text-meta" />
+      </div>
 
       <CaseEffectStage caseFile={caseFile} className="mt-6" showOpenLink={false} />
 

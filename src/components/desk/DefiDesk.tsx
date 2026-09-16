@@ -1,5 +1,6 @@
 "use client";
 
+import { DataAge } from "@/components/explain/DataAge";
 import { ExplainThisNumber } from "@/components/explain/ExplainThisNumber";
 import { Link } from "@/i18n/navigation";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
@@ -10,9 +11,12 @@ import { useLocale, useTranslations } from "next-intl";
 export function DefiDesk({
   data,
   yields = [],
+  yieldsAt,
 }: {
   data: DefiSnapshot;
   yields?: YieldPool[];
+  /** Age of the yields snapshot — separate disk blob (F2). */
+  yieldsAt?: string | null;
 }) {
   const t = useTranslations("defi");
   const locale = useLocale();
@@ -24,6 +28,11 @@ export function DefiDesk({
           {t("title")}
         </h1>
         <p className="mt-2 text-muted">{t("subtitle")}</p>
+        <DataAge
+          at={data.updatedAt}
+          stale={data.stale}
+          className="mt-2 block text-meta"
+        />
       </header>
 
       <div className="card mt-8 p-6">
@@ -133,7 +142,15 @@ export function DefiDesk({
       {yields.length > 0 && (
         <section className="card mt-6 p-5">
           <h2 className="text-lg font-semibold">{t("yields")}</h2>
-          <p className="mt-1 text-xs text-faint">{t("yieldsHint")}</p>
+          <p className="mt-1 text-xs text-faint">
+            {t("yieldsHint")}
+            {yieldsAt && (
+              <>
+                {" · "}
+                <DataAge at={yieldsAt} />
+              </>
+            )}
+          </p>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[560px] border-collapse text-sm">
               <thead>

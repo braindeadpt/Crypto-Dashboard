@@ -37,6 +37,7 @@ export default async function MundoPage({
       sectors={sectors}
       market={market}
       cases={front?.cases ?? []}
+      asOf={front?.asOf ?? null}
     />
   );
 }

@@ -29,12 +29,14 @@ type Props = {
   sectors: SectorsSnapshot;
   market: MarketSnapshot;
   cases: CaseFile[];
+  /** Oldest input behind the daily cases — honest data age (F2). */
+  asOf?: string | null;
 };
 
 /**
  * MUNDO — Case & Effect is the centrepiece; sectors answer where capital rotates.
  */
-export function MundoDesk({ sectors, market, cases }: Props) {
+export function MundoDesk({ sectors, market, cases, asOf }: Props) {
   const t = useTranslations("mundo");
   const tCase = useTranslations("case");
   const locale = useLocale();
@@ -107,7 +109,11 @@ export function MundoDesk({ sectors, market, cases }: Props) {
 
       {/* —— CENTREPIECE: Caso & Efeito —— */}
       <div className="board-act mt-8">
-        <ActHead title={t("casesTitle")} note={t("casesActNote")} />
+        <ActHead
+          title={t("casesTitle")}
+          note={t("casesActNote")}
+          ageAt={asOf ?? market.updatedAt}
+        />
         <ExpertiseGate section="readings">
           <p className="mb-4 max-w-2xl text-meta text-muted">{t("casesHint")}</p>
         </ExpertiseGate>
@@ -163,7 +169,12 @@ export function MundoDesk({ sectors, market, cases }: Props) {
 
       {/* —— Where capital rotates — linked to cases —— */}
       <div className="board-act mt-12" id="mundo-sectores">
-        <ActHead title={t("sectorsTitle")} note={t("sectorsActNote")} />
+        <ActHead
+          title={t("sectorsTitle")}
+          note={t("sectorsActNote")}
+          ageAt={sectors.ingestedAt}
+          ageStale={sectors.stale}
+        />
         <ExpertiseGate section="readings">
           <p className="mb-3 max-w-2xl text-meta text-muted">{t("sectorsHint")}</p>
         </ExpertiseGate>

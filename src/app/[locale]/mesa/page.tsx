@@ -41,7 +41,7 @@ export default async function InstrumentoPage({
       source: "error",
     })),
     fetchDerivativesSnapshot().catch(() => null),
-    fetchTrendingCoins().catch(() => []),
+    fetchTrendingCoins().catch(() => ({ coins: [], updatedAt: "" })),
     fetchMempoolFees().catch(() => null),
     fetchEtfSnapshot().catch(() => null),
     fetchDexFrenzy().catch(() => null),
@@ -54,11 +54,14 @@ export default async function InstrumentoPage({
       regime={data.regime}
       defi={data.defi}
       yields={yieldsBundle.pools}
+      yieldsAt={yieldsBundle.updatedAt}
       etf={etf}
       derivs={derivs}
       dex={dex}
-      trending={trending}
+      trending={trending.coins}
+      trendingAt={trending.updatedAt}
       mempool={mempool}
+      asOf={data.asOf}
     />
   );
 }

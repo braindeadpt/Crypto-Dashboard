@@ -29,5 +29,11 @@ export default async function DefiPage({
     );
   }
 
-  return <DefiDesk data={defi} yields={yields?.pools ?? []} />;
+  return (
+    <DefiDesk
+      data={defi}
+      yields={yields?.pools ?? []}
+      yieldsAt={yields?.updatedAt ?? null}
+    />
+  );
 }

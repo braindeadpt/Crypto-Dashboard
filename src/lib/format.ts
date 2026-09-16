@@ -49,6 +49,22 @@ export function formatNumber(value: number, digits = 2): string {
   }).format(value);
 }
 
+/**
+ * Oldest timestamp wins: for computed artefacts (regime, readings) the honest
+ * data age is the stalest input, not the render time.
+ */
+export function oldestIso(
+  ...isos: Array<string | null | undefined>
+): string | null {
+  let oldest: number | null = null;
+  for (const iso of isos) {
+    if (!iso) continue;
+    const t = Date.parse(iso);
+    if (Number.isFinite(t) && (oldest == null || t < oldest)) oldest = t;
+  }
+  return oldest == null ? null : new Date(oldest).toISOString();
+}
+
 export function cn(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");
 }
