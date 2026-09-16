@@ -60,3 +60,4 @@ next-env.d.ts
 .github/skills/
 .shot.mjs
 .clip.mjs
+/.playwright-mcp/

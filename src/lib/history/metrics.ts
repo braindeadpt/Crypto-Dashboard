@@ -9,6 +9,7 @@ export const HISTORY_METRIC_IDS = [
   "btc_dominance",
   "tvl",
   "etf_btc_flow",
+  "price_btc",
   "volume_btc",
   "vol_realized_btc",
   "fee_btc",
@@ -68,6 +69,12 @@ export const METRIC_META: Record<HistoryMetricId, MetricSeriesMeta> = {
     unit: "usd_m",
     granularity: "day",
     bootstrap: "Farside ETF snapshot history",
+  },
+  price_btc: {
+    id: "price_btc",
+    unit: "usd",
+    granularity: "day",
+    bootstrap: "CoinGecko bitcoin market_chart (prices)",
   },
   volume_btc: {
     id: "volume_btc",

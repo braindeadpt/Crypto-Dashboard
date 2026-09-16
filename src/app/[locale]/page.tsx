@@ -53,6 +53,18 @@ async function HomeBoard({ locale }: { locale: string }) {
         ritual={data.ritual}
         readings={data.readings}
         asOf={data.asOf}
+        regimeHistory={data.regimeHistory}
+        visitVitals={{
+          seenAt: new Date().toISOString(),
+          posture: data.regime.posture,
+          score: data.regime.score,
+          btcChange24h: data.market.btc.change24h,
+          breadthPct: data.caseContext.breadthPct,
+          fearGreed: data.sentiment.fearGreed.value,
+          fundingBps: data.sentiment.funding.rate * 10000,
+          dominance: data.market.global.btcDominance,
+          etfUsdM: data.caseContext.etfCombinedUsdM,
+        }}
       />
     </>
   );

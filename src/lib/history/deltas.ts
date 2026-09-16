@@ -32,6 +32,7 @@ const LABELS: Record<
   btc_dominance: { pt: "Dominância BTC", en: "BTC dominance", unit: "pct" },
   tvl: { pt: "TVL DeFi", en: "DeFi TVL", unit: "usd" },
   etf_btc_flow: { pt: "Fluxo ETF BTC", en: "BTC ETF flow", unit: "usd_m" },
+  price_btc: { pt: "Preço BTC", en: "BTC price", unit: "usd" },
   volume_btc: { pt: "Volume BTC", en: "BTC volume", unit: "usd" },
   vol_realized_btc: {
     pt: "Vol. realizada BTC",
@@ -66,6 +67,8 @@ function isNotable(id: HistoryMetricId, abs: number, pct: number | null): boolea
       return pct != null && Math.abs(pct) >= 2;
     case "etf_btc_flow":
       return abs >= 80;
+    case "price_btc":
+      return pct != null && Math.abs(pct) >= 4;
     case "volume_btc":
       return pct != null && Math.abs(pct) >= 25;
     case "vol_realized_btc":

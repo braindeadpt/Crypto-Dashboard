@@ -221,8 +221,8 @@ percentis com gémeo, páginas temáticas.
 | Fase | Entrega | Critério de aceite |
 |---|---|---|
 | **F1** ✅ | Fundação motion: entrada coreografada única por sessão, tickers vivos alargados, view transitions | 60fps, reduced-motion limpo, e2e verde — **entregue 2026-09-16** |
-| **F2** | Frescura sistemática (R7): "há X min" + fonte por módulo, aviso de stale explícito | Nenhum número sem idade visível |
-| **F3** | "Desde a tua última visita" (R1) + história do regime (R2) | Diff honesto, regime com passado de 30-90d |
+| **F2** ✅ | Frescura sistemática (R7): "há X min" + fonte por módulo, aviso de stale explícito | Nenhum número sem idade visível — **entregue 2026-09-16** |
+| **F3** ✅ | "Desde a tua última visita" (R1) + história do regime (R2) | Diff honesto, regime com passado de 30-90d — **entregue 2026-09-16** |
 | **F4** | Regime decomposto (R3) + metodologia publicada (R9) | Cada leitura auditable até à fonte |
 | **F5** | Treemap multi-camada (R4) + ETF flows de primeira classe (R6) | Cor alternável, streaks/cumulativo/record |
 | **F6** | "60 segundos" verificável (R5) | Cada afirmação clicável → métrica-fonte |

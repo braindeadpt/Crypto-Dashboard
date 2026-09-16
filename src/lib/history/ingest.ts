@@ -180,6 +180,14 @@ export async function ingestHistorySeries(): Promise<{
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map(([t, v]) => ({ t, v }));
           storeRealizedVol(prev, series, bootstrapped, prices, METRIC_META.vol_realized_btc.bootstrap);
+          series.price_btc = {
+            points: mergeDailyPoints(
+              getSeries(prev, "price_btc").points,
+              prices,
+              WINDOW,
+            ),
+            source: METRIC_META.price_btc.bootstrap,
+          };
 
           return {
             points,
@@ -205,6 +213,14 @@ export async function ingestHistorySeries(): Promise<{
             prices,
             "Binance BTCUSDT 1d klines (CG unavailable)",
           );
+          series.price_btc = {
+            points: mergeDailyPoints(
+              getSeries(prev, "price_btc").points,
+              prices,
+              WINDOW,
+            ),
+            source: "Binance BTCUSDT 1d klines (CG unavailable)",
+          };
           return {
             points,
             source: "Binance BTCUSDT 1d quote volume (CG unavailable)",

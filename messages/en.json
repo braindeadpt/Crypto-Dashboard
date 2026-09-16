@@ -424,6 +424,21 @@
     "stale": "stale",
     "live": "live"
   },
+  "visit": {
+    "title": "Since your last visit",
+    "noChange": "No material changes — the market is where you left it.",
+    "breadth": "Breadth",
+    "fng": "Fear & Greed",
+    "funding": "Funding",
+    "btc": "BTC 24h",
+    "dominance": "BTC dom.",
+    "etf": "ETF"
+  },
+  "regimeHistory": {
+    "title": "Regime history",
+    "window": "last {days} days",
+    "partial": "{n} days on partial signals"
+  },
   "board": {
     "live": "Live",
     "liveConnecting": "Connecting…",

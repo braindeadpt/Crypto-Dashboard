@@ -424,6 +424,21 @@
     "stale": "desactualizado",
     "live": "live"
   },
+  "visit": {
+    "title": "Desde a tua última visita",
+    "noChange": "Sem mudanças materiais — o mercado está onde o deixaste.",
+    "breadth": "Amplitude",
+    "fng": "Medo & Ganância",
+    "funding": "Funding",
+    "btc": "BTC 24h",
+    "dominance": "Dom. BTC",
+    "etf": "ETF"
+  },
+  "regimeHistory": {
+    "title": "A história do regime",
+    "window": "últimos {days} dias",
+    "partial": "{n} dias com sinais parciais"
+  },
   "board": {
     "live": "Ao vivo",
     "liveConnecting": "A ligar…",

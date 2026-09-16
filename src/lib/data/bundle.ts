@@ -12,6 +12,8 @@ import {
   ritualToBriefItem,
 } from "@/lib/editorial/ritual";
 import { getHistoryDayDeltas } from "@/lib/history/deltas";
+import { getRegimeHistory, type RegimeDay } from "@/lib/regime/history";
+import { utcToday } from "@/lib/history/series";
 import { buildReadingSet } from "@/lib/reading";
 import { oldestIso } from "@/lib/format";
 import { computeBreadthPct, computeRegime } from "@/lib/regime/engine";
@@ -167,7 +169,12 @@ export async function getFrontPageData() {
   const [
     { regime, readings, market, sentiment, defi, caseContext, asOf },
     { deltas },
-  ] = await Promise.all([getRegimeBundle(), getHistoryDayDeltas()]);
+    regimeHistory,
+  ] = await Promise.all([
+    getRegimeBundle(),
+    getHistoryDayDeltas(),
+    getRegimeHistory(),
+  ]);
   const cases = buildDailyCases(
     [...market.movers.gainers, ...market.movers.losers],
     caseContext,
@@ -182,6 +189,17 @@ export async function getFrontPageData() {
   const brief = ritualToBriefItem(ritual);
   const cycle = await fetchCycleSnapshot().catch(() => null);
 
+  // R2 — o passado termina em hoje: o ponto live fecha a série de 90d.
+  const historyDays: RegimeDay[] = [
+    ...regimeHistory.days.filter((d) => d.t !== utcToday()),
+    {
+      t: utcToday(),
+      score: regime.score,
+      posture: regime.posture,
+      coverage: 1,
+    },
+  ];
+
   return {
     regime,
     readings,
@@ -194,5 +212,6 @@ export async function getFrontPageData() {
     defi,
     caseContext,
     asOf,
+    regimeHistory: { days: historyDays, updatedAt: regimeHistory.updatedAt },
   };
 }

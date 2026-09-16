@@ -3,6 +3,8 @@
 import { ActHead } from "@/components/board/boardShared";
 import { HeroPanel } from "@/components/board/HeroPanel";
 import { MarketMap } from "@/components/board/MarketMap";
+import { RegimeHistory } from "@/components/board/RegimeHistory";
+import { SinceLastVisit } from "@/components/board/SinceLastVisit";
 import { Pulso } from "@/components/instrument/Pulso";
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
 import { WatchlistPanel } from "@/components/watchlist/WatchlistPanel";
@@ -11,6 +13,8 @@ import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
 import type { DailyRitual } from "@/lib/editorial/ritual";
 import type { ReadingSet } from "@/lib/reading";
+import type { RegimeDay } from "@/lib/regime/history";
+import type { VisitVitals } from "@/lib/local/visit";
 import type { MarketSnapshot, RegimeResult } from "@/lib/types";
 import { useTranslations } from "next-intl";
 import { useBoardRefresh } from "@/lib/hooks/useBoardRefresh";
@@ -23,6 +27,10 @@ type Props = {
   readings: ReadingSet;
   /** Oldest input behind regime/readings/ritual — the honest data age (F2). */
   asOf: string | null;
+  /** Vitals actuais para o diff "desde a tua última visita" (R1). */
+  visitVitals: VisitVitals;
+  /** Regime com passado — série diária 30–90d + hoje (R2). */
+  regimeHistory: { days: RegimeDay[]; updatedAt: string | null };
 };
 
 /**
@@ -38,6 +46,8 @@ export function OperatorBoard({
   ritual,
   readings,
   asOf,
+  visitVitals,
+  regimeHistory,
 }: Props) {
   const ti = useTranslations("instrumento");
   const { level } = useExpertise();
@@ -85,6 +95,9 @@ export function OperatorBoard({
         }}
       />
 
+      {/* Entrada — o que mudou desde a última visita (só aparece com passado) */}
+      <SinceLastVisit vitals={visitVitals} />
+
       {/* 01 — o mapa: amplitude e estrutura do mercado inteiro */}
       <section className="mt-10">
         <ActHead
@@ -104,6 +117,10 @@ export function OperatorBoard({
             ageAt={asOf}
           />
           <Pulso regime={regime} hist={hist} />
+          <RegimeHistory
+            days={regimeHistory.days}
+            updatedAt={regimeHistory.updatedAt}
+          />
         </section>
       )}
 
