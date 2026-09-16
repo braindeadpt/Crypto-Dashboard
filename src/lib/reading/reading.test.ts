@@ -128,6 +128,70 @@ test("manchete: avisa quando a leitura é parcial", () => {
   assert.ok(completa.direction.confidence >= LOW_CONFIDENCE);
 });
 
+test("manchete verificável (R5): cada afirmação aponta à leitura-fonte", () => {
+  const set = buildReadingSet({
+    btcChange24h: -4,
+    ethChange24h: -5,
+    breadthPct: 20,
+    marketCapChange24h: -3,
+    oiChange24hPct: 1,
+    fundingRate: 0.0001,
+    realizedVolPct: 30,
+    longShortRatio: 1.05,
+    liquidationsUsd: 1_000_000,
+    stableSupply7dPct: -1.8,
+    etfCombinedUsdM: -500,
+    tvlChange1dPct: -2,
+  });
+  assert.ok(set.headlineClaims.length >= 2);
+  assert.equal(set.headlineClaims[0].reading, "direction");
+  assert.equal(set.headlineClaims[1].reading, "money");
+  // Cada afirmação é a frase da leitura que a sustenta — clicável por índice.
+  assert.equal(set.headlineClaims[0].textPt, set.direction.sentencePt);
+  assert.equal(set.headlineClaims[1].textPt, set.money.sentencePt);
+  // A manchete plana continua a ser a concatenação das afirmações (+ cauda).
+  assert.ok(
+    set.headlinePt.startsWith(
+      set.headlineClaims.map((c) => c.textPt).join(" "),
+    ),
+  );
+});
+
+test("manchete parcial (R5): a cauda honesta não é uma afirmação clicável", () => {
+  const set = buildReadingSet({ btcChange24h: 1 });
+  // Dinheiro e risco ficam de fora (confiança baixa); só a direcção afirma.
+  assert.deepEqual(
+    set.headlineClaims.map((c) => c.reading),
+    ["direction"],
+  );
+  assert.ok(set.headlineCaveatPt?.includes("parcial"));
+  assert.ok(set.headlinePt.endsWith(set.headlineCaveatPt!));
+});
+
+test("manchete completa (R5): sem cauda quando todas as leituras têm dados", () => {
+  const set = buildReadingSet({
+    btcChange24h: 1,
+    ethChange24h: 1,
+    breadthPct: 55,
+    marketCapChange24h: 1,
+    oiChange24hPct: 1,
+    fundingRate: 0.0001,
+    realizedVolPct: 40,
+    longShortRatio: 1.1,
+    liquidationsUsd: 1_000_000,
+    stableSupply7dPct: 0.1,
+    etfCombinedUsdM: 10,
+    tvlChange1dPct: 0.1,
+  });
+  assert.equal(set.headlineCaveatPt, null);
+  assert.equal(set.headlineCaveatEn, null);
+  // Dinheiro neutro e risco calmo não entram — a manchete só afirma o que diz algo.
+  assert.deepEqual(
+    set.headlineClaims.map((c) => c.reading),
+    ["direction"],
+  );
+});
+
 test("vigiar hoje: devolve um só ponto, o de maior peso", () => {
   const set = buildReadingSet({
     btcChange24h: 0.2,

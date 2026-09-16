@@ -60,6 +60,17 @@ export type Reading = {
   sentenceEn: string;
 };
 
+/**
+ * Um segmento da manchete que aponta à leitura que o sustenta (R5).
+ * `reading` é a chave para abrir o recibo: ingredientes, lacunas e a
+ * metodologia publicada — cada afirmação audita-se a si própria.
+ */
+export type HeadlineClaim = {
+  reading: ReadingId;
+  textPt: string;
+  textEn: string;
+};
+
 export type ReadingSet = {
   direction: Reading;
   risk: Reading;
@@ -67,6 +78,14 @@ export type ReadingSet = {
   /** Frase única que resume as três — o topo do Nível 1. */
   headlinePt: string;
   headlineEn: string;
+  /** A manchete partida em afirmações clicáveis (R5). */
+  headlineClaims: HeadlineClaim[];
+  /**
+   * Cauda honesta da manchete quando a confiança é baixa — texto solto,
+   * não uma afirmação com fonte. Null quando a leitura é completa.
+   */
+  headlineCaveatPt: string | null;
+  headlineCaveatEn: string | null;
   /** A única coisa a vigiar hoje. */
   watchPt: string;
   watchEn: string;

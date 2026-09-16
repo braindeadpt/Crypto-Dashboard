@@ -877,6 +877,9 @@
     "auditWeight": "peso {weight}",
     "auditCoverage": "Cobertura de dados: {pct}%",
     "auditMethod": "metodologia",
+    "claimAria": "Ver o que sustenta esta afirmação",
+    "claimReceipt": "a fonte",
+    "claimsHint": "afirmações verificáveis — toca para abrir a métrica-fonte",
     "direction": {
       "label": "Direcção"
     },

@@ -4,9 +4,14 @@ import {
   computeRisk,
   type ReadingInputs,
 } from "@/lib/reading/compute";
-import type { Reading, ReadingSet } from "@/lib/reading/types";
+import type {
+  HeadlineClaim,
+  Reading,
+  ReadingSet,
+} from "@/lib/reading/types";
 
 export type {
+  HeadlineClaim,
   Reading,
   ReadingBand,
   ReadingContributor,
@@ -47,22 +52,25 @@ function buildHeadline(
   direction: Reading,
   risk: Reading,
   money: Reading,
-): { pt: string; en: string } {
-  const parts: { pt: string; en: string }[] = [];
-
-  parts.push({
-    pt: direction.sentencePt,
-    en: direction.sentenceEn,
-  });
+): {
+  pt: string;
+  en: string;
+  claims: HeadlineClaim[];
+  caveatPt: string | null;
+  caveatEn: string | null;
+} {
+  const claims: HeadlineClaim[] = [
+    { reading: "direction", textPt: direction.sentencePt, textEn: direction.sentenceEn },
+  ];
 
   // O dinheiro só entra na manchete quando diz alguma coisa.
   if (money.band !== "neutro" && money.confidence >= LOW_CONFIDENCE) {
-    parts.push({ pt: money.sentencePt, en: money.sentenceEn });
+    claims.push({ reading: "money", textPt: money.sentencePt, textEn: money.sentenceEn });
   }
 
   // O risco só entra quando é accionável (elevado).
   if (risk.value >= 45 && risk.confidence >= LOW_CONFIDENCE) {
-    parts.push({ pt: risk.sentencePt, en: risk.sentenceEn });
+    claims.push({ reading: "risk", textPt: risk.sentencePt, textEn: risk.sentenceEn });
   }
 
   const weakest = Math.min(
@@ -73,14 +81,17 @@ function buildHeadline(
   const caveat =
     weakest < LOW_CONFIDENCE
       ? {
-          pt: " Leitura parcial — faltam sinais.",
-          en: " Partial reading — signals missing.",
+          pt: "Leitura parcial — faltam sinais.",
+          en: "Partial reading — signals missing.",
         }
-      : { pt: "", en: "" };
+      : { pt: null, en: null };
 
   return {
-    pt: parts.map((p) => p.pt).join(" ") + caveat.pt,
-    en: parts.map((p) => p.en).join(" ") + caveat.en,
+    pt: claims.map((c) => c.textPt).join(" ") + (caveat.pt ? ` ${caveat.pt}` : ""),
+    en: claims.map((c) => c.textEn).join(" ") + (caveat.en ? ` ${caveat.en}` : ""),
+    claims,
+    caveatPt: caveat.pt,
+    caveatEn: caveat.en,
   };
 }
 
@@ -122,6 +133,9 @@ export function buildReadingSet(inputs: ReadingInputs): ReadingSet {
     money,
     headlinePt: headline.pt,
     headlineEn: headline.en,
+    headlineClaims: headline.claims,
+    headlineCaveatPt: headline.caveatPt,
+    headlineCaveatEn: headline.caveatEn,
     watchPt: watch.pt,
     watchEn: watch.en,
     updatedAt: new Date().toISOString(),

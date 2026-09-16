@@ -877,6 +877,9 @@
     "auditWeight": "weight {weight}",
     "auditCoverage": "Data coverage: {pct}%",
     "auditMethod": "methodology",
+    "claimAria": "See what backs this claim",
+    "claimReceipt": "the source",
+    "claimsHint": "verifiable claims — tap to open the source metric",
     "direction": {
       "label": "Direction"
     },

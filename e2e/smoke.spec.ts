@@ -104,6 +104,31 @@ test.describe("smoke · market map layers (R4)", () => {
   });
 });
 
+test.describe("smoke · verifiable headline (R5)", () => {
+  test("each claim opens its source-metric receipt", async ({ page }) => {
+    await page.goto("/pt", { waitUntil: "domcontentloaded" });
+    const h1 = page.getByRole("heading", { level: 1 });
+    await expect(h1, "hero headline must render").toBeVisible({
+      timeout: 45_000,
+    });
+    const claim = h1.getByRole("button").first();
+    await expect(claim, "headline claims must be clickable").toBeVisible();
+    const receipt = page.getByTestId("claim-receipt");
+    // Retry loop: a click dispatched before hydration is dropped — re-click
+    // until the receipt opens, then assert it carries the methodology link.
+    await expect(async () => {
+      if (!(await receipt.isVisible())) await claim.click();
+      await expect(receipt).toBeVisible({ timeout: 1_500 });
+    }).toPass({ timeout: 20_000 });
+    await expect(
+      receipt.getByRole("link", { name: /metodologia|methodology/i }),
+    ).toBeVisible();
+    // Segundo clique fecha o recibo.
+    await claim.click();
+    await expect(receipt).toBeHidden();
+  });
+});
+
 test.describe("smoke · i18n + nav", () => {
   test("EN locale loads board chrome", async ({ page }) => {
     const response = await page.goto("/en", { waitUntil: "domcontentloaded" });

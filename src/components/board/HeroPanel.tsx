@@ -10,10 +10,11 @@ import {
   READING_METHOD_ANCHOR,
   type ReadingSet,
 } from "@/lib/reading";
-import { deltaClass, formatPct, formatUsd } from "@/lib/format";
+import { cn, deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { LiveTickerConnection } from "@/lib/hooks/useLiveTicker";
 import type { MarketPosture } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
+import { Fragment, useState } from "react";
 
 type Ticker = {
   px: number | undefined;
@@ -65,6 +66,10 @@ export function HeroPanel({
   const tp = useTranslations("pulso");
   const locale = useLocale();
   const isPt = locale === "pt";
+  // R5 — a afirmação aberta no recibo (índice em headlineClaims).
+  const [openClaim, setOpenClaim] = useState<number | null>(null);
+  const claims = readings.headlineClaims ?? [];
+  const caveat = isPt ? readings.headlineCaveatPt : readings.headlineCaveatEn;
 
   return (
     <section>
@@ -87,8 +92,48 @@ export function HeroPanel({
         <div className="relative grid gap-8 py-8 md:py-10 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <h1 className="max-w-[16ch] font-display text-display leading-[1.02] text-ink lg:text-hero">
-              {isPt ? readings.headlinePt : readings.headlineEn}
+              {claims.length
+                ? claims.map((c, i) => (
+                    <Fragment key={i}>
+                      {i > 0 && " "}
+                      <button
+                        type="button"
+                        aria-expanded={openClaim === i}
+                        aria-label={`${t("claimAria")}: ${isPt ? c.textPt : c.textEn}`}
+                        onClick={() =>
+                          setOpenClaim(openClaim === i ? null : i)
+                        }
+                        className={cn(
+                          "cursor-pointer transition-colors hover:text-accent-2",
+                          openClaim === i && "text-accent-2",
+                        )}
+                        style={{ font: "inherit", letterSpacing: "inherit" }}
+                      >
+                        {isPt ? c.textPt : c.textEn}
+                        <sup
+                          aria-hidden
+                          className="ml-1 font-mono text-[0.32em] font-normal text-accent-2"
+                        >
+                          {i + 1}
+                        </sup>
+                      </button>
+                    </Fragment>
+                  ))
+                : isPt
+                  ? readings.headlinePt
+                  : readings.headlineEn}
+              {caveat ? ` ${caveat}` : ""}
             </h1>
+            {claims.length > 0 && (
+              <p className="mt-3 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-faint">
+                {t("claimsHint")}
+              </p>
+            )}
+            {openClaim != null && claims[openClaim] && (
+              <ClaimReceipt
+                reading={readings[claims[openClaim].reading]}
+              />
+            )}
             <p className="mt-6 max-w-xl border-l-2 border-accent-2 pl-4 text-body text-muted">
               <span className="text-label text-accent-2">{t("watch")} </span>
               {isPt ? readings.watchPt : readings.watchEn}
@@ -304,64 +349,114 @@ function ReadingRow({
           {t("audit")}
         </summary>
         <div className="mt-2 border border-line">
-          <ul>
-            {reading.contributors.map((c) => (
-              <li
-                key={c.id}
-                className="flex items-baseline justify-between gap-3 border-b border-line/60 px-2 py-1 text-meta last:border-0"
-              >
-                <span className="min-w-0">
-                  <span className="text-ink">
-                    {isPt ? c.labelPt : c.labelEn}
-                  </span>
-                  {c.detailPt && (
-                    <span className="ml-1.5 text-faint">
-                      {isPt ? c.detailPt : c.detailEn}
-                    </span>
-                  )}
-                </span>
-                <span
-                  className={`shrink-0 font-mono tabular-nums ${
-                    c.points >= 0 ? "text-up" : "text-down"
-                  }`}
-                >
-                  {c.points > 0 ? "+" : ""}
-                  {c.points}
-                </span>
-              </li>
-            ))}
-            {reading.gaps.map((g) => (
-              <li
-                key={g.id}
-                className="flex items-baseline justify-between gap-3 border-b border-line/60 px-2 py-1 text-meta last:border-0"
-              >
-                <span className="min-w-0">
-                  <span className="text-faint">
-                    {isPt ? g.labelPt : g.labelEn}
-                  </span>
-                  <span className="ml-1.5 text-warn">{t("auditMissing")}</span>
-                </span>
-                <span className="shrink-0 font-mono tabular-nums text-faint">
-                  {t("auditWeight", { weight: g.weight })}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p className="flex items-baseline justify-between gap-3 border-t border-line px-2 py-1.5 text-meta text-faint">
-            <span>
-              {t("auditCoverage", {
-                pct: Math.round(reading.confidence * 100),
-              })}
-            </span>
-            <Link
-              href={`/metodologia#${READING_METHOD_ANCHOR[reading.id]}`}
-              className="text-accent-2 transition hover:text-accent"
-            >
-              {t("auditMethod")}
-            </Link>
-          </p>
+          <ReadingAuditBody reading={reading} />
         </div>
       </details>
+    </div>
+  );
+}
+
+/**
+ * O rasto auditável de uma leitura — partilhado entre o detalhe de cada
+ * índice e o recibo das afirmações da manchete (R5).
+ */
+function ReadingAuditBody({
+  reading,
+}: {
+  reading: ReadingSet["direction"];
+}) {
+  const t = useTranslations("readings");
+  const locale = useLocale();
+  const isPt = locale === "pt";
+  return (
+    <>
+      <ul>
+        {reading.contributors.map((c) => (
+          <li
+            key={c.id}
+            className="flex items-baseline justify-between gap-3 border-b border-line/60 px-2 py-1 text-meta last:border-0"
+          >
+            <span className="min-w-0">
+              <span className="text-ink">
+                {isPt ? c.labelPt : c.labelEn}
+              </span>
+              {c.detailPt && (
+                <span className="ml-1.5 text-faint">
+                  {isPt ? c.detailPt : c.detailEn}
+                </span>
+              )}
+            </span>
+            <span
+              className={`shrink-0 font-mono tabular-nums ${
+                c.points >= 0 ? "text-up" : "text-down"
+              }`}
+            >
+              {c.points > 0 ? "+" : ""}
+              {c.points}
+            </span>
+          </li>
+        ))}
+        {reading.gaps.map((g) => (
+          <li
+            key={g.id}
+            className="flex items-baseline justify-between gap-3 border-b border-line/60 px-2 py-1 text-meta last:border-0"
+          >
+            <span className="min-w-0">
+              <span className="text-faint">
+                {isPt ? g.labelPt : g.labelEn}
+              </span>
+              <span className="ml-1.5 text-warn">{t("auditMissing")}</span>
+            </span>
+            <span className="shrink-0 font-mono tabular-nums text-faint">
+              {t("auditWeight", { weight: g.weight })}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="flex items-baseline justify-between gap-3 border-t border-line px-2 py-1.5 text-meta text-faint">
+        <span>
+          {t("auditCoverage", {
+            pct: Math.round(reading.confidence * 100),
+          })}
+        </span>
+        <Link
+          href={`/metodologia#${READING_METHOD_ANCHOR[reading.id]}`}
+          className="text-accent-2 transition hover:text-accent"
+        >
+          {t("auditMethod")}
+        </Link>
+      </p>
+    </>
+  );
+}
+
+/**
+ * Recibo de uma afirmação da manchete (R5): abre a leitura que a sustenta
+ * — ingredientes, lacunas, cobertura e a metodologia publicada.
+ */
+function ClaimReceipt({
+  reading,
+}: {
+  reading: ReadingSet["direction"];
+}) {
+  const t = useTranslations("readings");
+  const isRisk = reading.id === "risk";
+  return (
+    <div
+      className="mt-4 max-w-xl border border-line bg-surface"
+      data-testid="claim-receipt"
+    >
+      <p className="flex items-baseline justify-between gap-3 border-b border-line px-2 py-2">
+        <span className="text-label text-faint">
+          {t(`${reading.id}.label`)} · {t("claimReceipt")}
+        </span>
+        <span className="font-mono text-meta tabular-nums text-ink">
+          {isRisk
+            ? reading.value
+            : `${reading.value > 0 ? "+" : ""}${reading.value}`}
+        </span>
+      </p>
+      <ReadingAuditBody reading={reading} />
     </div>
   );
 }
