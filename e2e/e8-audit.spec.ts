@@ -43,7 +43,7 @@ async function measureVisible(page: Page): Promise<PageMetrics> {
     const text = (main.textContent ?? "").replace(/\s+/g, " ").trim();
     const percentSigns = (text.match(/%/g) ?? []).length;
     const root =
-      document.querySelector("#main .enter") ??
+      document.querySelector("#main .enter, #main .enter-sequence") ??
       document.querySelector("#main") ??
       document.body;
     const sections = Array.from(root.children).filter((el) => {

@@ -75,7 +75,7 @@ Mantemos a identidade (não deitar fora o que funciona):
 
 - Fundo azul-violeta profundo, acento violeta, ciano de ênfase,
   verde/coral direccional com glifo ▲▼
-- Fraunces (display) + IBM Plex Sans + IBM Plex Mono
+- Sora (display) + IBM Plex Sans + IBM Plex Mono
 - Bordas finas, radius 2px, elevação por superfície
 
 **A camada wow (nova):**

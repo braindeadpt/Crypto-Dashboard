@@ -463,6 +463,13 @@
     "chartCaption": "OHLC {symbol} intervalo {interval}",
     "chartTime": "Hora"
   },
+  "marketMap": {
+    "title": "Mapa do mercado",
+    "aria": "Mapa do mercado: rectângulos por activo, tamanho proporcional à capitalização, cor conforme a variação de 24 horas",
+    "cap": "Cap.",
+    "hint": "Toca ou passa o rato para detalhe · tamanho = capitalização · cor = variação 24h",
+    "hintShort": "tamanho = cap. · cor = Δ24h"
+  },
   "charts": {
     "title": "Gráficos",
     "subtitle": "Candles ao vivo via Binance spot — BTC, ETH e SOL.",
@@ -782,6 +789,7 @@
   "readings": {
     "todayEyebrow": "O mercado hoje",
     "watch": "A vigiar",
+    "spark7d": "BTC · 7 dias",
     "driver": "Puxa mais",
     "noData": "Sem dados suficientes para esta leitura.",
     "partial": "Leitura parcial — falta: {missing}.",

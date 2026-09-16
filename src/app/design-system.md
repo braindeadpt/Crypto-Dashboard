@@ -7,7 +7,7 @@ Pergunta de teste: *parece um instrumento com escala, ou mais um dashboard SaaS?
 
 | Escolha | Porquê |
 |--------|--------|
-| **Fraunces** (display) | Serif óptica com soft/opsz — autoridade de publicação financeira, não de terminal neon. Distingue títulos e o número-herói. |
+| **Sora** (display) | Serif óptica com soft/opsz — autoridade de publicação financeira, não de terminal neon. Distingue títulos e o número-herói. |
 | **IBM Plex Sans** (UI) | Neutra, precisa, com carácter. Evita Inter / system-ui. Boa em densidade. |
 | **IBM Plex Mono** (dados) | Família irmã do Plex; `tabular-nums` para números que não dançam. |
 | **Tema escuro «Noite» como assinatura** | Azul-violeta profundo (`#05070e`), não preto absoluto + néon (lista negra). O tema claro («Dia», papel frio) existe para leitura diurna. |
@@ -26,7 +26,7 @@ Pergunta de teste: *parece um instrumento com escala, ou mais um dashboard SaaS?
 | `--text-label` | 12 | Chrome, rótulos mono uppercase |
 | `--text-meta` / `--text-data` | 14 | Captions, figuras tabulares |
 | `--text-body` | 18 | Texto corrido |
-| `--text-title` | 24 | Títulos de secção (Fraunces) |
+| `--text-title` | 24 | Títulos de secção (Sora) |
 | `--text-display` | 40 | Momentos editoriais |
 | `--text-hero` | 72 | Número / leitura dominante |
 

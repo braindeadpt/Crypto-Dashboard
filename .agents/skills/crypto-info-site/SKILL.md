@@ -79,7 +79,7 @@ conteúdo, decide em que nível vive (ExpertiseGate / useExpertise).
 ## Design
 
 Assinatura "Noite": fundo escuro azul-violeta, acento violeta, ciano de
-ênfase, verde/coral para direcção (sempre com glifo ▲▼). Fraunces para
+ênfase, verde/coral para direcção (sempre com glifo ▲▼). Sora para
 display, IBM Plex Sans/Mono para corpo e dados. Bordas finas, radius 2px,
 sem glassmorphism. Motion com significado: entradas coreografadas uma vez
 por sessão, números vivos, view transitions, campo ambiental que reage ao

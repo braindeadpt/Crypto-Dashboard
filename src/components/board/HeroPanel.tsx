@@ -1,11 +1,13 @@
 "use client";
 
 import { AmbientField } from "@/components/ambient/AmbientField";
+import { AnimatedNumber } from "@/components/board/AnimatedNumber";
+import { Sparkline } from "@/components/board/Sparkline";
 import type { ReadingSet } from "@/lib/reading";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import { useLocale, useTranslations } from "next-intl";
 
-type Ticker = { px: number | undefined; chg: number | undefined };
+type Ticker = { px: number | undefined; chg: number | undefined; spark?: number[] };
 
 /**
  * Nível 0 — o hero. A manchete do dia em display grande sobre um campo de
@@ -53,9 +55,11 @@ export function HeroPanel({
             <p className="text-label text-faint">BTC</p>
             <p className="mt-1 font-display text-display leading-none text-ink">
               {btc.px != null ? (
-                <span className={deltaClass(btc.chg ?? 0)}>
-                  {formatUsd(btc.px)}
-                </span>
+                <AnimatedNumber
+                  value={btc.px}
+                  format={formatUsd}
+                  className={deltaClass(btc.chg ?? 0)}
+                />
               ) : (
                 "—"
               )}
@@ -68,18 +72,40 @@ export function HeroPanel({
               )}
             </p>
           </div>
+          {/* 7 dias do BTC — a forma do preço no mesmo palco que o número */}
+          {btc.spark && btc.spark.length > 1 && (
+            <div className="min-w-[180px] flex-1 self-end">
+              <p className="mb-1 text-label text-faint">{t("spark7d")}</p>
+              <Sparkline
+                points={btc.spark}
+                up={(btc.chg ?? 0) >= 0}
+                className="block w-full"
+                height={56}
+              />
+            </div>
+          )}
           <div className="flex flex-wrap gap-6">
             <div>
               <p className="text-label text-faint">ETH</p>
               <p className={`text-data ${deltaClass(eth.chg ?? 0)}`}>
-                {eth.px != null ? `${formatUsd(eth.px)} · ${formatPct(eth.chg ?? 0)}` : "—"}
+                {eth.px != null ? (
+                  <>
+                    <AnimatedNumber value={eth.px} format={formatUsd} />
+                    {" · "}
+                    {formatPct(eth.chg ?? 0)}
+                  </>
+                ) : (
+                  "—"
+                )}
               </p>
             </div>
             {sol.px != null && sol.chg != null && (
               <div>
                 <p className="text-label text-faint">SOL</p>
                 <p className={`text-data ${deltaClass(sol.chg)}`}>
-                  {formatUsd(sol.px)} · {formatPct(sol.chg)}
+                  <AnimatedNumber value={sol.px} format={formatUsd} />
+                  {" · "}
+                  {formatPct(sol.chg)}
                 </p>
               </div>
             )}

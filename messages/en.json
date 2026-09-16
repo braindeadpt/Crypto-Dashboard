@@ -463,6 +463,13 @@
     "chartCaption": "OHLC {symbol} interval {interval}",
     "chartTime": "Time"
   },
+  "marketMap": {
+    "title": "Market map",
+    "aria": "Market map: one rectangle per asset, sized by market cap, coloured by 24-hour change",
+    "cap": "Cap.",
+    "hint": "Tap or hover for detail · size = market cap · colour = 24h change",
+    "hintShort": "size = cap · colour = Δ24h"
+  },
   "charts": {
     "title": "Charts",
     "subtitle": "Live candles via Binance spot — BTC, ETH, SOL.",
@@ -782,6 +789,7 @@
   "readings": {
     "todayEyebrow": "The market today",
     "watch": "Watching",
+    "spark7d": "BTC · 7 days",
     "driver": "Main driver",
     "noData": "Not enough data for this reading.",
     "partial": "Partial reading — missing: {missing}.",

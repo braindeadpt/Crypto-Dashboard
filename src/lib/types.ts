@@ -66,6 +66,7 @@ export interface AssetQuote {
   volume24h: number;
   image?: string;
   rank?: number;
+  sparkline7d?: number[];
 }
 
 export interface TrendingCoin {

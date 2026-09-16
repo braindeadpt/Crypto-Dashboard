@@ -2,6 +2,7 @@
 
 import { ActHead } from "@/components/board/boardShared";
 import { HeroPanel } from "@/components/board/HeroPanel";
+import { MarketMap } from "@/components/board/MarketMap";
 import { ReadingTrio } from "@/components/board/ReadingCards";
 import { Pulso } from "@/components/instrument/Pulso";
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
@@ -55,15 +56,20 @@ export function OperatorBoard({ market, regime, ritual, readings }: Props) {
   const solChg = live.quotes.SOLUSDT?.change24h ?? sol?.change24h;
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter">
+    <div className="mx-auto w-full max-w-[1400px] section-pad pb-16 pt-3 enter-sequence">
       {/* NÍVEL 1 — a resposta: manchete + preço live no mesmo palco */}
       <HeroPanel
         readings={readings}
         date={ritual.date}
-        btc={{ px: btcPx, chg: btcChg }}
+        btc={{ px: btcPx, chg: btcChg, spark: market.btc.sparkline7d }}
         eth={{ px: ethPx, chg: ethChg }}
         sol={{ px: solPx, chg: solChg }}
       />
+
+      {/* NÍVEL 1.5 — o mapa: o mercado inteiro de relance, antes do detalhe */}
+      <div className="mt-3">
+        <MarketMap assets={market.top} />
+      </div>
 
       {/* Bento: o radar é instrumento de operador — Essencial recebe só as
           três leituras em linguagem comum. */}

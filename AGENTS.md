@@ -64,7 +64,7 @@ not an afterthought: add the key to both json files.
 
 Signature "Noite": deep blue-violet dark theme, violet accent (#9b6cff),
 cyan emphasis (#22e6ff), mint/coral direction (always with ▲▼), regime
-chips (--calm/--unsettled/--storm/--weird). Fraunces display, IBM Plex
+chips (--calm/--unsettled/--storm/--weird). Sora display, IBM Plex
 Sans body, IBM Plex Mono data (`tabular-nums`). Thin borders, small
 radius, no glassmorphism, no landing-page gradients. Motion is meaningful
 (flash on value change), always gated by `prefers-reduced-motion`.

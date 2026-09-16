@@ -51,6 +51,7 @@ type CgMarket = {
   price_change_percentage_1h_in_currency?: number | null;
   price_change_percentage_24h_in_currency?: number | null;
   price_change_percentage_7d_in_currency?: number | null;
+  sparkline_in_7d?: { price: number[] };
 };
 
 type CgGlobal = {
@@ -78,6 +79,7 @@ function toQuote(c: CgMarket): AssetQuote {
     volume24h: c.total_volume,
     image: c.image,
     rank: c.market_cap_rank,
+    sparkline7d: c.sparkline_in_7d?.price,
   };
 }
 
@@ -113,7 +115,7 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
     try {
       const [markets, global] = await Promise.all([
         cg<CgMarket[]>(
-          "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d",
+          "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d",
         ),
         cg<CgGlobal>("/global"),
       ]);
@@ -144,7 +146,7 @@ export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
           marketCapChange24h: global.data.market_cap_change_percentage_24h_usd,
         },
         movers: { gainers, losers },
-        top: quotes.slice(0, 25),
+        top: quotes.slice(0, 40),
         updatedAt: new Date().toISOString(),
       };
     } catch (err) {

@@ -1,6 +1,6 @@
 /**
  * Squarified treemap layout (Bruls / Huizing / van Wijk style).
- * Pure geometry — no chart library.
+ * Pure geometry â€” no chart library.
  */
 
 export type TreemapItem = {
@@ -55,7 +55,7 @@ function layoutRow(
 }
 
 /**
- * Layout `items` into `width`×`height` starting at (0,0).
+ * Layout `items` into `width`Ã—`height` starting at (0,0).
  * Values must be > 0.
  */
 export function squarify(
@@ -124,4 +124,57 @@ export function squarify(
   }
 
   return result;
+}
+
+/**
+ * Binary-split treemap - the iconic coin-map look: the largest asset gets a
+ * dominant block and the remainder subdivides beside it. Better than
+ * squarified rows when one value dominates (BTC = ~half the market).
+ * Order is preserved: the first item always claims the biggest side first.
+ */
+export function treemapBinary(
+  items: TreemapItem[],
+  width: number,
+  height: number,
+): TreemapRect[] {
+  const total = items.reduce((s, i) => s + i.value, 0);
+  if (total <= 0 || width <= 0 || height <= 0) return [];
+  const clean = items.filter((i) => i.value > 0);
+  return splitRect(clean, 0, 0, width, height);
+}
+
+function splitRect(
+  items: TreemapItem[],
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+): TreemapRect[] {
+  if (!items.length) return [];
+  if (items.length === 1) return [{ ...items[0], x, y, w, h }];
+
+  const total = items.reduce((s, i) => s + i.value, 0);
+  let acc = 0;
+  let cut = 1;
+  while (cut < items.length && acc + items[cut - 1].value <= total / 2) {
+    acc += items[cut - 1].value;
+    cut += 1;
+  }
+  const first = items.slice(0, Math.max(1, cut - 1));
+  const rest = items.slice(Math.max(1, cut - 1));
+  const firstSum = first.reduce((s, i) => s + i.value, 0);
+  const ratio = total > 0 ? firstSum / total : 0.5;
+
+  if (w >= h) {
+    const wf = w * ratio;
+    return [
+      ...splitRect(first, x, y, wf, h),
+      ...splitRect(rest, x + wf, y, w - wf, h),
+    ];
+  }
+  const hf = h * ratio;
+  return [
+    ...splitRect(first, x, y, w, hf),
+    ...splitRect(rest, x, y + hf, w, h - hf),
+  ];
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { ExpertiseDial } from "@/components/expertise/ExpertiseDial";
+import { LogoMark } from "@/components/brand/LogoMark";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/format";
 import { useTranslations } from "next-intl";
@@ -32,12 +33,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-line bg-bg-elevated print:hidden">
       <div className="obs-shell flex items-center justify-between gap-2 section-pad py-2.5 sm:gap-4 sm:py-3">
         <Link href="/" className="flex min-w-0 shrink items-center gap-2 sm:gap-3">
-          <span
-            className="flex h-7 w-7 shrink-0 items-center justify-center border border-line-strong bg-surface text-label font-medium text-accent sm:h-8 sm:w-8"
-            aria-hidden
-          >
-            CC
-          </span>
+          <LogoMark className="h-7 w-7 shrink-0 sm:h-8 sm:w-8" />
           <span className="min-w-0 leading-tight">
             <span className="block font-display text-[1.05rem] leading-tight text-ink sm:text-title">
               CLAREZA{" "}
@@ -90,7 +86,8 @@ export function SiteFooter() {
     <footer className="w-full border-t border-line bg-bg-elevated print:hidden">
       <div className="obs-shell flex flex-col gap-3 section-pad py-10 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="font-display text-title text-ink">
+          <p className="flex items-center gap-2.5 font-display text-title text-ink">
+            <LogoMark className="h-6 w-6" />
             CLAREZA <span className="text-accent">Crypto</span>
           </p>
           <p className="mt-2 max-w-xl text-meta text-muted">{meta("disclaimer")}</p>
