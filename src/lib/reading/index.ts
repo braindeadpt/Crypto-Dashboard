@@ -14,11 +14,24 @@ export type {
   ReadingId,
   ReadingSet,
 } from "@/lib/reading/types";
-export { type ReadingInputs } from "@/lib/reading/compute";
+export {
+  READING_BANDS,
+  READING_SPECS,
+  type ReadingIngredientSpec,
+  type ReadingInputs,
+  type ReadingSpec,
+} from "@/lib/reading/compute";
 export { computeDirection, computeMoney, computeRisk };
 
 /** Abaixo disto a leitura não é apresentada como afirmação. */
 export const LOW_CONFIDENCE = 0.6;
+
+/** Âncoras de /metodologia por leitura — a fonte linkável de cada conta (R9). */
+export const READING_METHOD_ANCHOR: Record<Reading["id"], string> = {
+  direction: "direccao",
+  risk: "risco",
+  money: "dinheiro",
+};
 
 /**
  * A frase do topo do Nível 1.

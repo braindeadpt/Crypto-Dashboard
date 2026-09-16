@@ -7,6 +7,7 @@ import {
   type PulseDimensionId,
 } from "@/lib/instrument/pulseDimensions";
 import { PercentileTwin } from "@/components/jargon/PercentileTwin";
+import { RegimeDecomposition } from "@/components/instrument/RegimeDecomposition";
 import type { MetricContextApi } from "@/lib/history/context";
 import type { HistoryMetricId } from "@/lib/history/metrics";
 import type { RegimeResult } from "@/lib/types";
@@ -512,6 +513,9 @@ export function Pulso({ regime, hist, className = "" }: Props) {
               ))}
             </ul>
           )}
+
+          {/* R3 — o score decomposto: cada sinal, cada lacuna, a fonte */}
+          <RegimeDecomposition regime={regime} />
         </div>
       </div>
     </section>

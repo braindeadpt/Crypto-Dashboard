@@ -17,7 +17,26 @@ export interface RegimeContributor {
   labelPt: string;
   labelEn: string;
   points: number;
-  detail: string;
+  detailPt: string;
+  detailEn: string;
+}
+
+/**
+ * Um sinal do regime tal como foi lido — medido (com pontos ou sem eles) ou
+ * em falta. `signals` no RegimeResult é o rasto de auditoria completo (R3):
+ * cada ingrediente do score explica-se a si próprio, e as lacunas são
+ * declaradas em vez de silenciadas.
+ */
+export interface RegimeSignalReading {
+  id: string;
+  labelPt: string;
+  labelEn: string;
+  status: "measured" | "missing";
+  /** Pontos de stress que este sinal somou (0 quando medido e calmo). */
+  points: number;
+  /** Evidência factual — a regra que disparou ou a leitura neutra. Null se em falta. */
+  detailPt: string | null;
+  detailEn: string | null;
 }
 
 export interface RegimeResult {
@@ -26,6 +45,8 @@ export interface RegimeResult {
   receipts: EvidenceChip[];
   /** Ranked stress contributors — why the score is what it is */
   contributors: RegimeContributor[];
+  /** Todos os sinais avaliados, medidos ou em falta — audit trail (R3). */
+  signals: RegimeSignalReading[];
   summaryPt: string;
   summaryEn: string;
   headlinePt: string;

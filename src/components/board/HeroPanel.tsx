@@ -4,7 +4,12 @@ import { AmbientField } from "@/components/ambient/AmbientField";
 import { AnimatedNumber } from "@/components/board/AnimatedNumber";
 import { Sparkline } from "@/components/board/Sparkline";
 import { DataAge } from "@/components/explain/DataAge";
-import { LOW_CONFIDENCE, type ReadingSet } from "@/lib/reading";
+import { Link } from "@/i18n/navigation";
+import {
+  LOW_CONFIDENCE,
+  READING_METHOD_ANCHOR,
+  type ReadingSet,
+} from "@/lib/reading";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { LiveTickerConnection } from "@/lib/hooks/useLiveTicker";
 import type { MarketPosture } from "@/lib/types";
@@ -286,6 +291,77 @@ function ReadingRow({
           })}
         </p>
       )}
+
+      {/* R3/R9 — a leitura audita-se: ingredientes, lacunas e a regra publicada */}
+      <details className="group/audit mt-2">
+        <summary className="inline-flex cursor-pointer list-none items-center gap-1 text-meta text-faint transition hover:text-muted">
+          <span
+            aria-hidden
+            className="font-mono transition-transform group-open/audit:rotate-90"
+          >
+            ▸
+          </span>
+          {t("audit")}
+        </summary>
+        <div className="mt-2 border border-line">
+          <ul>
+            {reading.contributors.map((c) => (
+              <li
+                key={c.id}
+                className="flex items-baseline justify-between gap-3 border-b border-line/60 px-2 py-1 text-meta last:border-0"
+              >
+                <span className="min-w-0">
+                  <span className="text-ink">
+                    {isPt ? c.labelPt : c.labelEn}
+                  </span>
+                  {c.detailPt && (
+                    <span className="ml-1.5 text-faint">
+                      {isPt ? c.detailPt : c.detailEn}
+                    </span>
+                  )}
+                </span>
+                <span
+                  className={`shrink-0 font-mono tabular-nums ${
+                    c.points >= 0 ? "text-up" : "text-down"
+                  }`}
+                >
+                  {c.points > 0 ? "+" : ""}
+                  {c.points}
+                </span>
+              </li>
+            ))}
+            {reading.gaps.map((g) => (
+              <li
+                key={g.id}
+                className="flex items-baseline justify-between gap-3 border-b border-line/60 px-2 py-1 text-meta last:border-0"
+              >
+                <span className="min-w-0">
+                  <span className="text-faint">
+                    {isPt ? g.labelPt : g.labelEn}
+                  </span>
+                  <span className="ml-1.5 text-warn">{t("auditMissing")}</span>
+                </span>
+                <span className="shrink-0 font-mono tabular-nums text-faint">
+                  {t("auditWeight", { weight: g.weight })}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="flex items-baseline justify-between gap-3 border-t border-line px-2 py-1.5 text-meta text-faint">
+            <span>
+              {t("auditCoverage", {
+                pct: Math.round(reading.confidence * 100),
+              })}
+            </span>
+            <Link
+              href={`/metodologia#${READING_METHOD_ANCHOR[reading.id]}`}
+              className="text-accent-2 transition hover:text-accent"
+            >
+              {t("auditMethod")}
+            </Link>
+          </p>
+        </div>
+      </details>
     </div>
   );
 }

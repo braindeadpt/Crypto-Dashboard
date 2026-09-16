@@ -12,6 +12,7 @@ const DESTINATIONS = [
   "/pt/mesa",
   "/pt/brief",
   "/pt/estilo",
+  "/pt/metodologia",
 ] as const;
 
 const LEGACY_REDIRECTS = [

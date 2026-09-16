@@ -120,9 +120,15 @@ export function SiteFooter() {
             CLAREZA <span className="text-accent">Crypto</span>
           </p>
           <p className="mt-2 max-w-xl text-meta text-muted">{meta("disclaimer")}</p>
-          <p className="mt-3">
+          <p className="mt-3 flex gap-4">
             <Link href="/estilo" className="text-label text-faint hover:text-accent">
               {t("styleGuide")}
+            </Link>
+            <Link
+              href="/metodologia"
+              className="text-label text-faint hover:text-accent"
+            >
+              {t("methodology")}
             </Link>
           </p>
         </div>

@@ -26,6 +26,7 @@
     "language": "Idioma",
     "footerNote": "Read-only · Sem custódia · Liquidações via stream público",
     "styleGuide": "Sistema de design",
+    "methodology": "Metodologia",
     "skipToContent": "Saltar para o conteúdo"
   },
   "style": {
@@ -449,7 +450,6 @@
     "derivatives": "Derivados BTC",
     "postureLabel": "Postura",
     "stressLabel": "Stress",
-    "stressDrivers": "Principais contributos",
     "liquidation": "Liquidações",
     "biasLabel": "Viés",
     "liqLive": "Ao vivo",
@@ -851,6 +851,11 @@
     "driver": "Puxa mais",
     "noData": "Sem dados suficientes para esta leitura.",
     "partial": "Leitura parcial — falta: {missing}.",
+    "audit": "Como é calculada",
+    "auditMissing": "em falta",
+    "auditWeight": "peso {weight}",
+    "auditCoverage": "Cobertura de dados: {pct}%",
+    "auditMethod": "metodologia",
     "direction": {
       "label": "Direcção"
     },
@@ -891,5 +896,49 @@
       "a": "Stablecoins fora do valor devido e custo da rede.",
       "cta": "Ver liquidez"
     }
+  },
+  "regimeDecomp": {
+    "summary": "{active} de {total} sinais a somar stress",
+    "missingCount": "{count} em falta",
+    "missing": "em falta",
+    "howLink": "Metodologia do score →"
+  },
+  "metodologia": {
+    "eyebrow": "Transparência",
+    "title": "Metodologia",
+    "subtitle": "Cada número do site é calculado pelas tabelas publicadas nesta página — as mesmas que o motor executa. Não há segunda fonte de verdade.",
+    "principlesTitle": "Três regras antes das contas",
+    "p1": "Nada é inventado. Quando uma fonte falha, o dado aparece como indisponível — nunca como uma estimativa disfarçada.",
+    "p2": "Pesos e limiares são heurísticos e arbitrários. Codificam leitura de operador, não um modelo calibrado — estão publicados para serem discutidos.",
+    "p3": "A lacuna é declarada. O que falta contribui zero e reduz a confiança da leitura em proporção ao seu peso.",
+    "regimeTitle": "Regime de stress",
+    "regimeIntro": "O score de 0 a 100 soma pontos de stress de {count} sinais. Um sinal em falta soma zero e fica registado como lacuna no rasto de auditoria.",
+    "postureTitle": "Da pontuação à postura",
+    "postureCalmCond": "score < {unsettledMin}",
+    "postureUnsettledCond": "{unsettledMin} ≤ score < {stormMin}",
+    "postureStormCond": "score ≥ {stormMin}",
+    "postureWeirdCond": "contradição detectada (regras abaixo) e score ≥ {weirdMin}",
+    "colPosture": "Postura",
+    "colCond": "Condição",
+    "colSignal": "Sinal",
+    "colMeasures": "O que mede",
+    "colSource": "Fonte",
+    "colRules": "Regras → pontos (ganha a primeira que passa)",
+    "weirdTitle": "Postura «misto» — sinais em contradição",
+    "weirdIntro": "Se alguma destas condições se verifica e o score atinge {weirdMin}, a postura passa a «misto».",
+    "directionIntro": "Para onde vai o mercado — escala −100 a +100.",
+    "riskIntro": "Fragilidade perante uma cascata — escala 0 a 100, quanto maior pior.",
+    "moneyIntro": "Se está a entrar dinheiro novo no sistema — escala −100 a +100.",
+    "colIngredient": "Ingrediente",
+    "colWeight": "Peso",
+    "colScale": "Normalização",
+    "colBand": "Faixa",
+    "bandsTitle": "Do valor à faixa",
+    "gapNote": "Um ingrediente em falta contribui zero e é listado como lacuna; a confiança da leitura é a fracção do peso total efectivamente coberta.",
+    "bandVeryNeg": "muito negativo",
+    "bandNeg": "negativo",
+    "bandNeutral": "neutro",
+    "bandPos": "positivo",
+    "bandVeryPos": "muito positivo"
   }
 }

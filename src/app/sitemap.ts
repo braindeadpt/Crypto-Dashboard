@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/mesa", priority: 0.6, changeFrequency: "hourly" as const },
     { path: "/ferramentas", priority: 0.6, changeFrequency: "daily" as const },
     { path: "/brief", priority: 0.6, changeFrequency: "hourly" as const },
+    { path: "/metodologia", priority: 0.4, changeFrequency: "monthly" as const },
   ];
 
   const entries: MetadataRoute.Sitemap = [];

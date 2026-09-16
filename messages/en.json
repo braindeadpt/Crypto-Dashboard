@@ -26,6 +26,7 @@
     "language": "Language",
     "footerNote": "Read-only · Non-custodial · Liquidations via public stream",
     "styleGuide": "Design system",
+    "methodology": "Methodology",
     "skipToContent": "Skip to content"
   },
   "style": {
@@ -449,7 +450,6 @@
     "derivatives": "BTC derivatives",
     "postureLabel": "Posture",
     "stressLabel": "Stress",
-    "stressDrivers": "Top contributors",
     "liquidation": "Liquidations",
     "biasLabel": "Bias",
     "liqLive": "Live",
@@ -851,6 +851,11 @@
     "driver": "Main driver",
     "noData": "Not enough data for this reading.",
     "partial": "Partial reading — missing: {missing}.",
+    "audit": "How it's computed",
+    "auditMissing": "missing",
+    "auditWeight": "weight {weight}",
+    "auditCoverage": "Data coverage: {pct}%",
+    "auditMethod": "methodology",
     "direction": {
       "label": "Direction"
     },
@@ -891,5 +896,49 @@
       "a": "Stablecoins off their peg and network cost.",
       "cta": "See liquidity"
     }
+  },
+  "regimeDecomp": {
+    "summary": "{active} of {total} signals adding stress",
+    "missingCount": "{count} missing",
+    "missing": "missing",
+    "howLink": "Score methodology →"
+  },
+  "metodologia": {
+    "eyebrow": "Transparency",
+    "title": "Methodology",
+    "subtitle": "Every number on the site is computed by the tables published on this page — the same tables the engine executes. There is no second source of truth.",
+    "principlesTitle": "Three rules before the maths",
+    "p1": "Nothing is invented. When a source fails, the datum shows as unavailable — never as a disguised estimate.",
+    "p2": "Weights and thresholds are heuristic and arbitrary. They encode operator judgement, not a calibrated model — published so they can be challenged.",
+    "p3": "Gaps are declared. What is missing contributes zero and lowers a reading's confidence in proportion to its weight.",
+    "regimeTitle": "Stress regime",
+    "regimeIntro": "The 0–100 score sums stress points from {count} signals. A missing signal adds zero and is recorded as a gap in the audit trail.",
+    "postureTitle": "From score to posture",
+    "postureCalmCond": "score < {unsettledMin}",
+    "postureUnsettledCond": "{unsettledMin} ≤ score < {stormMin}",
+    "postureStormCond": "score ≥ {stormMin}",
+    "postureWeirdCond": "contradiction detected (rules below) and score ≥ {weirdMin}",
+    "colPosture": "Posture",
+    "colCond": "Condition",
+    "colSignal": "Signal",
+    "colMeasures": "What it measures",
+    "colSource": "Source",
+    "colRules": "Rules → points (first match wins)",
+    "weirdTitle": "«Mixed» posture — contradictory signals",
+    "weirdIntro": "If any of these conditions holds and the score reaches {weirdMin}, the posture becomes «mixed».",
+    "directionIntro": "Where the market is heading — scale −100 to +100.",
+    "riskIntro": "Fragility to a cascade — scale 0 to 100, higher is worse.",
+    "moneyIntro": "Whether new money is entering the system — scale −100 to +100.",
+    "colIngredient": "Ingredient",
+    "colWeight": "Weight",
+    "colScale": "Normalisation",
+    "colBand": "Band",
+    "bandsTitle": "From value to band",
+    "gapNote": "A missing ingredient contributes zero and is listed as a gap; a reading's confidence is the fraction of total weight actually covered.",
+    "bandVeryNeg": "very negative",
+    "bandNeg": "negative",
+    "bandNeutral": "neutral",
+    "bandPos": "positive",
+    "bandVeryPos": "very positive"
   }
 }
