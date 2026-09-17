@@ -52,7 +52,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className="sticky top-0 z-40 w-full border-b border-line bg-bg-elevated print:hidden"
+      className="sticky top-0 z-40 w-full bg-bg-elevated print:hidden"
       style={{ viewTransitionName: "site-header" }}
     >
       <div className="obs-shell flex items-center justify-between gap-2 section-pad py-2.5 sm:gap-4 sm:py-3">
@@ -104,6 +104,7 @@ export function SiteHeader() {
           );
         })}
       </nav>
+      <div className="rule-double" aria-hidden />
     </header>
   );
 }
@@ -112,7 +113,8 @@ export function SiteFooter() {
   const meta = useTranslations("meta");
   const t = useTranslations("chrome");
   return (
-    <footer className="w-full border-t border-line bg-bg-elevated print:hidden">
+    <footer className="w-full bg-bg-elevated print:hidden">
+      <div className="rule-double" aria-hidden />
       <div className="obs-shell flex flex-col gap-3 section-pad py-10 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="flex items-center gap-2.5 font-display text-title text-ink">

@@ -480,8 +480,6 @@ button {
   align-items: baseline;
   gap: 0.9rem;
   margin-bottom: 1.1rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--line);
 }
 .placa-num {
   font-family: var(--font-mono), monospace;
@@ -516,6 +514,103 @@ button {
   text-transform: uppercase;
   color: var(--faint);
   white-space: nowrap;
+}
+
+/* ——————————————————————————————————————————————————————————
+ * CAMADA DE IMPRESSÃO — o que separa papel de "modo claro"
+ *
+ * Grão de fibra, moldura de placa na viewport e regras gravadas.
+ * Sem isto, Papel é só um dashboard claro; com isto, é uma página
+ * de atlas impresso.
+ * —————————————————————————————————————————————————————————— */
+
+/* Grão de papel — ruído fino em multiply sobre o Papel, screen sobre
+ * a Noite (vira poeira estelar). Fixo, nunca intercepta cliques. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+[data-theme="light"] body::after {
+  mix-blend-mode: multiply;
+}
+[data-theme="dark"] body::after {
+  mix-blend-mode: screen;
+  opacity: 0.6;
+}
+
+/* Moldura de placa — a marca de impressão à volta da folha inteira.
+ * Duas réguas: exterior grossa, interior fina, como nas placas de atlas. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 7px;
+  z-index: 69;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--line-strong);
+}
+[data-theme="dark"] body::before {
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--line);
+}
+
+/* Regra gravada — a placa abre com fio grosso + fio fino, como nas
+ * gravuras. Substitui a hairline simples. */
+.placa-head {
+  border-top: 0;
+  position: relative;
+  padding-top: 1.7rem;
+}
+.placa-head::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-top: 1.5px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Numeral de placa — pequeno selo gravado, não texto solto. */
+.placa-num {
+  border-block: 1px solid var(--line-strong);
+  padding-block: 1px;
+}
+
+/* Regra dupla — a marca tipográfica de primeira página. */
+.rule-double {
+  height: 6px;
+  border-top: 1.5px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Moldura de placa para instrumentos — o mapa e afins ficam dentro de
+ * dupla regra gravada, como ilustração de atlas. */
+.plate-frame {
+  position: relative;
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    inset 0 0 0 3px var(--bg),
+    inset 0 0 0 4px var(--line);
+  background: var(--surface);
+  padding: 0.75rem;
+}
+
+/* Capitular — a letra inicial do artigo, gravada em serif. */
+.prose-atlas > p:first-of-type::first-letter,
+.prose-atlas::first-letter {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 3.1em;
+  font-weight: 480;
+  float: left;
+  line-height: 0.82;
+  padding-right: 0.14em;
+  padding-top: 0.08em;
+  color: var(--ink);
 }
 
 /* Manchete editorial — a frase que abre o dia. */

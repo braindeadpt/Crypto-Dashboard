@@ -108,9 +108,12 @@ export function OperatorBoard({
           num="I"
           title={ti("acts.mapTitle")}
           note={ti("acts.mapNote")}
+          coord={ti("acts.mapCoord", { count: market.top.length })}
           ageAt={market.updatedAt}
         />
-        <MarketMap assets={market.top} layers={mapLayers} tall showTitle={false} />
+        <div className="plate-frame">
+          <MarketMap assets={market.top} layers={mapLayers} tall showTitle={false} />
+        </div>
       </section>
 
       {/* Placa II — o pulso: instrumento de operador; Essencial já teve a resposta */}
@@ -120,6 +123,7 @@ export function OperatorBoard({
             num="II"
             title={ti("acts.pulseTitle")}
             note={ti("acts.pulseNote")}
+            coord={ti("acts.pulseCoord", { days: regimeHistory.days.length })}
             ageAt={asOf}
           />
           <Pulso regime={regime} hist={hist} />
@@ -138,6 +142,7 @@ export function OperatorBoard({
             num="III"
             title={ti("acts.briefTitle")}
             note={ti("acts.briefNote")}
+            coord={ti("acts.briefCoord")}
             ageAt={asOf}
           />
           <DailyRitualCard ritual={ritual} />
@@ -189,6 +194,7 @@ export function OperatorBoard({
             num="IV"
             title={ti("acts.listTitle")}
             note={ti("acts.listNote")}
+            coord={ti("acts.listCoord")}
           />
           <WatchlistPanel />
         </section>

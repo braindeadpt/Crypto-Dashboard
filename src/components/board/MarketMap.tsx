@@ -249,8 +249,9 @@ export function MarketMap({
         {tiles.map(({ asset, rect }) => {
           const { x, y, w, h } = rect;
           const look = tileLook(asset);
-          const both = w > 68 && h > 46;
-          const symbolOnly = !both && w > 30 && h > 24;
+          const big = w > 190 && h > 140;
+          const both = !big && w > 68 && h > 46;
+          const symbolOnly = !big && !both && w > 30 && h > 24;
           return (
             <button
               key={asset.id}
@@ -269,6 +270,19 @@ export function MarketMap({
                 color: tileForeground(look.fg),
               }}
             >
+              {big && (
+                <span className="block px-3 py-2.5 leading-tight">
+                  <span className="block font-mono text-[13px] font-semibold tracking-tight">
+                    {asset.symbol.toUpperCase()}
+                  </span>
+                  <span className="mt-1 block font-mono text-sm font-medium tabular-nums opacity-90">
+                    {look.text}
+                  </span>
+                  <span className="mt-0.5 block font-mono text-[10px] tabular-nums opacity-70">
+                    {formatUsd(asset.price)}
+                  </span>
+                </span>
+              )}
               {both && (
                 <span className="block px-1.5 py-1 leading-none">
                   <span className="block font-mono text-[11px] font-semibold tracking-tight">

@@ -619,7 +619,11 @@
       "pulseTitle": "O pulso",
       "pulseNote": "seis eixos, um regime",
       "briefTitle": "O briefing",
-      "briefNote": "cinco slots fixos · ~5 min"
+      "briefNote": "cinco slots fixos · ~5 min",
+      "mapCoord": "campo estelar · {count} objectos",
+      "pulseCoord": "registo · {days} dias",
+      "briefCoord": "edição diária · 5 slots",
+      "listCoord": "local · sem servidor"
     }
   },
   "mundo": {

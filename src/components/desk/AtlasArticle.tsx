@@ -31,7 +31,7 @@ export function AtlasArticle({ slug }: { slug: string }) {
         {locale === "pt" ? concept.summaryPt : concept.summaryEn}
       </p>
       <AtlasDiagram slug={concept.slug} title={title} className="mt-6 max-w-sm" />
-      <div className="mt-8 border border-line bg-surface p-6 leading-relaxed text-ink">
+      <div className="prose-atlas mt-8 border border-line bg-surface p-6 leading-relaxed text-ink">
         {locale === "pt" ? concept.bodyPt : concept.bodyEn}
       </div>
 

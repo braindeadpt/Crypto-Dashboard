@@ -86,12 +86,12 @@ export function HeroPanel({
         </p>
       </div>
 
-      {/* A resposta — manchete grande + índice das três leituras */}
+      {/* A resposta — manchete de primeira página + faixa das três leituras */}
       <div className="relative overflow-hidden">
         <AmbientField intensity={intensity} />
-        <div className="relative grid gap-8 py-8 md:py-10 lg:grid-cols-12">
-          <div className="lg:col-span-8">
-            <h1 className="max-w-[17ch] text-serif-display text-ink">
+        <div className="relative py-10 text-center md:py-14">
+          <div>
+            <h1 className="mx-auto max-w-[24ch] text-serif-display text-ink">
               {claims.length
                 ? claims.map((c, i) => (
                     <Fragment key={i}>
@@ -125,39 +125,42 @@ export function HeroPanel({
               {caveat ? ` ${caveat}` : ""}
             </h1>
             {claims.length > 0 && (
-              <p className="mt-3 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-faint">
+              <p className="mt-4 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-faint">
                 {t("claimsHint")}
               </p>
             )}
             {openClaim != null && claims[openClaim] && (
-              <ClaimReceipt
-                reading={readings[claims[openClaim].reading]}
-              />
+              <div className="mx-auto max-w-xl text-left">
+                <ClaimReceipt
+                  reading={readings[claims[openClaim].reading]}
+                />
+              </div>
             )}
-            <p className="mt-6 max-w-xl border-l-2 border-accent-2 pl-4 text-body text-muted">
+            <p className="mx-auto mt-8 max-w-xl border-l-2 border-accent-2 pl-4 text-left text-body text-muted">
               <span className="text-label text-accent-2">{t("watch")} </span>
               {isPt ? readings.watchPt : readings.watchEn}
             </p>
           </div>
-
-          {/* Índice — as três leituras como entrada de índice, não cards */}
-          <div className="border-t border-line lg:col-span-4 lg:border-l lg:border-t-0 lg:pl-8">
-            {(
-              [
-                ["01", readings.direction],
-                ["02", readings.risk],
-                ["03", readings.money],
-              ] as const
-            ).map(([n, r]) => (
-              <ReadingRow key={r.id} n={n} reading={r} />
-            ))}
-            {readingsAt && (
-              <p className="pt-2 text-meta">
-                <DataAge at={readingsAt} />
-              </p>
-            )}
-          </div>
         </div>
+
+        {/* Índice — as três leituras como faixa de instrumentos dividida
+            por hairlines, não uma coluna lateral */}
+        <div className="relative grid divide-y divide-line border-t border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {(
+            [
+              ["01", readings.direction],
+              ["02", readings.risk],
+              ["03", readings.money],
+            ] as const
+          ).map(([n, r]) => (
+            <ReadingRow key={r.id} n={n} reading={r} cell />
+          ))}
+        </div>
+        {readingsAt && (
+          <p className="relative border-t border-line pt-2 text-right text-meta">
+            <DataAge at={readingsAt} />
+          </p>
+        )}
       </div>
 
       {/* A tape — preço live e vitals numa régua dividida, sem caixa */}
@@ -277,9 +280,12 @@ function TapeCell({
 function ReadingRow({
   n,
   reading,
+  cell = false,
 }: {
   n: string;
   reading: ReadingSet["direction"];
+  /** Na faixa horizontal do hero a leitura é uma célula, não uma linha. */
+  cell?: boolean;
 }) {
   const t = useTranslations("readings");
   const locale = useLocale();
@@ -301,7 +307,13 @@ function ReadingRow({
   const pos = isRisk ? reading.value : (reading.value + 100) / 2;
 
   return (
-    <div className="border-b border-line py-4 last:border-0 first:pt-0 lg:first:pt-0">
+    <div
+      className={
+        cell
+          ? "py-5 sm:px-6 sm:first:pl-0 sm:last:pr-0"
+          : "border-b border-line py-4 last:border-0 first:pt-0 lg:first:pt-0"
+      }
+    >
       <p className="flex items-baseline justify-between gap-3">
         <span className="text-label text-faint">
           <span className="mr-2 font-mono text-accent tabular-nums">{n}</span>

@@ -619,7 +619,11 @@
       "pulseTitle": "The pulse",
       "pulseNote": "six axes, one regime",
       "briefTitle": "The briefing",
-      "briefNote": "five fixed slots · ~5 min"
+      "briefNote": "five fixed slots · ~5 min",
+      "mapCoord": "star field · {count} objects",
+      "pulseCoord": "record · {days} days",
+      "briefCoord": "daily edition · 5 slots",
+      "listCoord": "local · no server"
     }
   },
   "mundo": {
