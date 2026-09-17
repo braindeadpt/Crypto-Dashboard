@@ -68,7 +68,7 @@
  * — a value glows because it is extreme, not for decoration. Violet is brand,
  * cyan is emphasis, mint/coral are direction (always with ▲▼ redundancy).
  */
-:root,
+:root:not([data-theme="light"]),
 [data-theme="dark"] {
   color-scheme: dark;
 

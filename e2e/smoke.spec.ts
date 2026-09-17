@@ -259,6 +259,33 @@ test.describe("polish · a11y keyboard + reduced motion", () => {
   });
 });
 
+test.describe("polish · theme toggle", () => {
+  test("PAPEL switch actually changes computed colors", async ({ page }) => {
+    await page.goto("/pt", { waitUntil: "domcontentloaded" });
+    await page.waitForLoadState("networkidle");
+    const bgOf = () =>
+      page.evaluate(() =>
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--bg")
+          .trim(),
+      );
+    // Force a known starting point regardless of OS preference.
+    await page.evaluate(() => {
+      localStorage.setItem("clareza-theme", "dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    });
+    const darkBg = await bgOf();
+    await page.getByRole("button", { name: /papel|light/i }).click();
+    await expect
+      .poll(bgOf, { timeout: 5_000 })
+      .not.toBe(darkBg);
+    const lightBg = await bgOf();
+    await page.getByRole("button", { name: /noite|dark/i }).click();
+    await expect.poll(bgOf, { timeout: 5_000 }).toBe(darkBg);
+    expect(lightBg).not.toBe(darkBg);
+  });
+});
+
 test.describe("polish · contrast tokens", () => {
   test("light and dark theme ink/bg meet AA-ish ratio", async ({ page }) => {
     await page.goto("/pt", { waitUntil: "domcontentloaded" });
