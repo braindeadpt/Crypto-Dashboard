@@ -7,24 +7,25 @@
  */
 
 /*
- * Light ("Dia") — secondary theme. Cool near-white with the same luminous
- * accents as the signature dark theme, so switching changes brightness, not
- * identity. Deliberately NOT paper/cream: this product is about the future,
- * not the archive.
+ * Papel — the signature theme, and the default.
+ *
+ * Warm editorial paper, not cold SaaS white: the publication voice lives
+ * here. Cream base, ink almost-black, violet accent darkened for AA.
+ * Noite stays available as the instrument theme.
  */
 [data-theme="light"] {
   color-scheme: light;
 
-  --bg: #eef1f8;
-  --bg-elevated: #f6f8fc;
-  --surface: #ffffff;
-  --surface-2: #f2f5fb;
-  --surface-3: #e4e9f4;
-  --ink: #0b1020;
-  --muted: #414b63;
-  --faint: #5f6a84;
-  --line: rgba(11, 16, 32, 0.1);
-  --line-strong: rgba(11, 16, 32, 0.2);
+  --bg: #f4f1e9;
+  --bg-elevated: #faf8f2;
+  --surface: #fdfcf7;
+  --surface-2: #f0ece1;
+  --surface-3: #e5dfd0;
+  --ink: #171410;
+  --muted: #4c463a;
+  --faint: #72695a;
+  --line: rgba(23, 20, 16, 0.12);
+  --line-strong: rgba(23, 20, 16, 0.24);
 
   /* Brand / interaction — violet, darkened for AA on white */
   --accent: #5b2bd9;
@@ -47,21 +48,21 @@
   --crosshair: rgba(91, 43, 217, 0.45);
 
   /* On light, "glow" is a soft halo — restrained, still meaning-bearing */
-  --glow-accent: 0 0 18px rgba(91, 43, 217, 0.22);
-  --glow-up: 0 0 14px rgba(0, 112, 90, 0.2);
-  --glow-down: 0 0 14px rgba(192, 16, 70, 0.2);
+  --glow-accent: 0 0 18px rgba(91, 43, 217, 0.18);
+  --glow-up: 0 0 14px rgba(0, 112, 90, 0.18);
+  --glow-down: 0 0 14px rgba(192, 16, 70, 0.18);
 
   --elev-0: none;
-  --elev-1: 0 1px 0 rgba(11, 16, 32, 0.05);
-  --elev-2: 0 10px 28px rgba(11, 16, 32, 0.08);
+  --elev-1: 0 1px 0 rgba(23, 20, 16, 0.06);
+  --elev-2: 0 10px 28px rgba(23, 20, 16, 0.09);
   --elev-hero:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 14px 36px rgba(11, 16, 32, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 14px 36px rgba(23, 20, 16, 0.1);
 
   --selection: rgba(91, 43, 217, 0.18);
 }
 
 /*
- * "Noite" — the signature theme, and the default.
+ * "Noite" — the instrument theme, always one click away.
  *
  * Deep-space base with a blue-violet undertone, never pure #000: black kills
  * depth and is the tell of a lazy crypto terminal. Luminosity carries meaning

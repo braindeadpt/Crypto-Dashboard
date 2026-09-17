@@ -54,9 +54,9 @@ function setMode(next: ThemeMode) {
 
 export function ThemeToggle() {
   const t = useTranslations("theme");
-  // Server snapshot must match the bootstrap fallback in lib/theme.ts, which is
-  // now dark — returning "light" here caused a hydration mismatch on first paint.
-  const theme = useSyncExternalStore(subscribe, readTheme, () => "dark");
+  // Server snapshot must match the bootstrap fallback in lib/theme.ts —
+  // Papel (light) is the default; a mismatch here breaks first paint.
+  const theme = useSyncExternalStore(subscribe, readTheme, () => "light");
 
   return (
     <div

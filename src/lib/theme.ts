@@ -3,9 +3,10 @@ export const THEME_STORAGE_KEY = "clareza-theme";
 
 /**
  * Blocking inline script for <head> — prevents FOUC.
- * Order: localStorage override → prefers-color-scheme → dark.
+ * Order: localStorage override → Papel (light).
  *
- * Dark is the signature theme and the fallback: this is a live market
- * instrument, and the luminous palette is the product's identity.
+ * Papel is the signature theme and the default: CLAREZA is an editorial
+ * observatory, and paper is where the publication voice lives. Noite stays
+ * one click away as the instrument theme.
  */
-export const themeBootstrapScript = `(function(){try{var k='${THEME_STORAGE_KEY}';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
+export const themeBootstrapScript = `(function(){try{var k='${THEME_STORAGE_KEY}';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t='light';}document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
