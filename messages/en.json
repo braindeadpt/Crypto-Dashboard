@@ -925,5 +925,12 @@
     "bandNeutral": "neutral",
     "bandPos": "positive",
     "bandVeryPos": "very positive"
+  },
+  "corrente": {
+    "aria": "Live market current",
+    "label": "THE CURRENT",
+    "live": "LIVE",
+    "offline": "OFFLINE",
+    "connecting": "CONNECTING"
   }
 }

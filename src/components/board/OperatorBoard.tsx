@@ -4,6 +4,7 @@ import { ActHead } from "@/components/board/boardShared";
 import { Concordancia } from "@/components/board/Concordancia";
 import { Correntes } from "@/components/board/Correntes";
 import { FitaRegime } from "@/components/board/FitaRegime";
+import { CorrenteViva } from "@/components/board/CorrenteViva";
 import { HeroPanel } from "@/components/board/HeroPanel";
 import { MarketMap } from "@/components/board/MarketMap";
 import { RegimeHistory } from "@/components/board/RegimeHistory";
@@ -92,6 +93,10 @@ export function OperatorBoard({
   return (
     <MotionProvider readings={readings} realizedVolPct={volRealizedPct}>
     <div className="obs-shell section-pad pb-16 enter-sequence">
+      {/* A corrente viva — primeira coisa que se vê e a única que nunca pára.
+          Canvas em tempo real alimentado pelos ticks e liquidações reais. */}
+      <CorrenteViva live={live} className="-mx-[var(--pad-x,1rem)] mb-2" />
+
       {/* A resposta — masthead, manchete, índice de leituras, tape live */}
       <HeroPanel
         readings={readings}

@@ -925,5 +925,12 @@
     "bandNeutral": "neutro",
     "bandPos": "positivo",
     "bandVeryPos": "muito positivo"
+  },
+  "corrente": {
+    "aria": "Corrente viva do mercado",
+    "label": "A CORRENTE",
+    "live": "AO VIVO",
+    "offline": "SEM LIGAÇÃO",
+    "connecting": "A LIGAR"
   }
 }
