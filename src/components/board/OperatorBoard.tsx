@@ -9,6 +9,7 @@ import { Pulso } from "@/components/instrument/Pulso";
 import { DailyRitualCard } from "@/components/ritual/DailyRitualCard";
 import { WatchlistPanel } from "@/components/watchlist/WatchlistPanel";
 import { useExpertise } from "@/components/expertise/ExpertiseProvider";
+import { MotionProvider } from "@/lib/motion/useMotion";
 import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
 import type { MapLayers } from "@/lib/data/mapLayers";
@@ -34,6 +35,8 @@ type Props = {
   regimeHistory: { days: RegimeDay[]; updatedAt: string | null };
   /** Camadas de cor do mapa (R4) — null quando as fontes falham. */
   mapLayers: MapLayers | null;
+  /** Volatilidade realizada BTC — cadência do Maestro. Null sem série. */
+  volRealizedPct?: number | null;
 };
 
 /**
@@ -52,6 +55,7 @@ export function OperatorBoard({
   visitVitals,
   regimeHistory,
   mapLayers,
+  volRealizedPct = null,
 }: Props) {
   const ti = useTranslations("instrumento");
   const { level, show } = useExpertise();
@@ -75,6 +79,7 @@ export function OperatorBoard({
   const solChg = live.quotes.SOLUSDT?.change24h ?? sol?.change24h;
 
   return (
+    <MotionProvider readings={readings} realizedVolPct={volRealizedPct}>
     <div className="obs-shell section-pad pb-16 enter-sequence">
       {/* A resposta — masthead, manchete, índice de leituras, tape live */}
       <HeroPanel
@@ -200,5 +205,6 @@ export function OperatorBoard({
         </section>
       )}
     </div>
+    </MotionProvider>
   );
 }

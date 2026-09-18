@@ -13,6 +13,7 @@ import {
   ritualToBriefItem,
 } from "@/lib/editorial/ritual";
 import { getHistoryDayDeltas } from "@/lib/history/deltas";
+import { getMetricContext } from "@/lib/history/context";
 import { getRegimeHistory, type RegimeDay } from "@/lib/regime/history";
 import { utcToday } from "@/lib/history/series";
 import { buildReadingSet } from "@/lib/reading";
@@ -70,8 +71,11 @@ export async function getRegimeBundle(): Promise<{
   caseContext: CaseContext;
   /** Idade honesta dos artefactos computados — o input mais velho (F2). */
   asOf: string | null;
+  /** Volatilidade realizada BTC (30d, %) da série histórica — alimenta a
+   *  leitura de Risco e a cadência do Maestro. Null se a série não existir. */
+  volRealizedPct: number | null;
 }> {
-  const [marketRaw, sentiment, etf, derivs, defi, liquidity] =
+  const [marketRaw, sentiment, etf, derivs, defi, liquidity, volCtx] =
     await Promise.all([
       fetchMarketSnapshot(),
       fetchSentimentSnapshot(),
@@ -81,6 +85,8 @@ export async function getRegimeBundle(): Promise<{
       // Snapshot em disco (sem rede no caminho de render) — alimenta a leitura
       // "Dinheiro" com a oferta de stablecoins.
       fetchLiquiditySnapshot().catch(() => null),
+      // Disco — a série vol_realized_btc deriva das velas diárias do BTC.
+      getMetricContext("vol_realized_btc").catch(() => null),
     ]);
 
   const caseContext = buildCaseContext({
@@ -147,7 +153,7 @@ export async function getRegimeBundle(): Promise<{
     // Liquidações são stream ao vivo no cliente (P1) — o servidor não as tem.
     // Fica como lacuna nomeada em vez de um número inventado.
     liquidationsUsd: null,
-    realizedVolPct: null,
+    realizedVolPct: volCtx?.valor ?? null,
 
     etfCombinedUsdM: caseContext.etfCombinedUsdM,
     stableSupply7dPct: liquidity?.stables.change7dPct ?? null,
@@ -163,12 +169,30 @@ export async function getRegimeBundle(): Promise<{
     liquidity?.ingestedAt,
   );
 
-  return { regime, readings, market, sentiment, defi, caseContext, asOf };
+  return {
+    regime,
+    readings,
+    market,
+    sentiment,
+    defi,
+    caseContext,
+    asOf,
+    volRealizedPct: volCtx?.valor ?? null,
+  };
 }
 
 export async function getFrontPageData() {
   const [
-    { regime, readings, market, sentiment, defi, caseContext, asOf },
+    {
+      regime,
+      readings,
+      market,
+      sentiment,
+      defi,
+      caseContext,
+      asOf,
+      volRealizedPct,
+    },
     { deltas },
     regimeHistory,
     mapLayers,
@@ -216,6 +240,7 @@ export async function getFrontPageData() {
     defi,
     caseContext,
     asOf,
+    volRealizedPct,
     mapLayers,
     regimeHistory: { days: historyDays, updatedAt: regimeHistory.updatedAt },
   };

@@ -83,12 +83,32 @@ Pares principais (aproximação WCAG sobre sRGB):
 
 Faint sobre bg (~3.8:1 claro / ~4.1:1 escuro) só para chrome terciário (rótulos de instrumento). Texto operacional usa `muted` ou `ink`.
 
+## O Maestro (movimento)
+
+`src/lib/motion/conductor.ts` + `src/lib/motion/useMotion.tsx` — UM estado
+de movimento global derivado das leituras reais. Nenhum componente inventa
+a sua própria duração ou amplitude: todos subscrevem `useMotion()`.
+
+| Canal | Fonte real | Codifica |
+|---|---|---|
+| `cadence` | volatilidade realizada BTC (`vol_realized_btc`) | × duração das transições |
+| `agitation` | leitura de Risco (0–100, smoothstep 30→85) | amplitude/densidade do campo |
+| `temperature` | leitura de Direcção (−100..+100) | energia cromática |
+| `subdued` | reduced-motion, página oculta, confiança < 0.6 | repouso total |
+
+Regras: `prefers-reduced-motion` vence sempre; `visibilitychange` pausa;
+confiança fraca força `MOTION_REST` — o ecrã nunca finge energia que os
+dados não sustentam. Tecto de agitação `0.85`: num crash é quando mais se
+precisa de ler. Referência viva dos quatro canais em `/estilo` (secção
+Movimento, com dados reais do dia).
+
 ## Ambient field
 
 `AmbientField` (home hero) — canvas decorativo de partículas + ligações,
 tingido pelos tokens `--accent`/`--accent-2`, com fade nas bordas
-(`.field-fade`). Regras: `aria-hidden`, `pointer-events-none`, um frame
-estático sob `prefers-reduced-motion`, nunca compete com a leitura.
+(`.field-fade`). Subscreve o canal Agitação do Maestro (`intensity` é o
+fallback fora de provider). Regras: `aria-hidden`, `pointer-events-none`,
+frame estático em repouso, nunca compete com a leitura.
 
 ## Referência viva
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/format";
 
 type Labels = {
@@ -46,10 +46,13 @@ export function StyleGuide({
   title,
   subtitle,
   labels,
+  maestro,
 }: {
   title: string;
   subtitle: string;
   labels: Labels;
+  /** O Maestro ao vivo — MotionProvider + MotionChannels vêm da página. */
+  maestro?: ReactNode;
 }) {
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
 
@@ -229,6 +232,7 @@ export function StyleGuide({
           </span>
           <span className="text-meta text-faint">{labels.flashHint}</span>
         </div>
+        {maestro && <div className="mt-6">{maestro}</div>}
         <p className="mt-4">
           <button
             type="button"

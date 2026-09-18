@@ -77,7 +77,20 @@
     "plates": "Placas",
     "platesHint": "Cada acto é uma placa gravada — número, título serif, coordenada e idade da fonte.",
     "plateSample": "O mapa do mercado",
-    "plateNote": "A leitura inteira, sem saltos de tab."
+    "plateNote": "A leitura inteira, sem saltos de tab.",
+    "maestro": {
+      "cadence": "Cadência",
+      "cadenceHint": "× duração — volatilidade realizada BTC encurta as transições",
+      "agitation": "Agitação",
+      "agitationHint": "0–1 · amplitude do campo — leitura de Risco (smoothstep)",
+      "temperature": "Temperatura",
+      "temperatureHint": "−1 a +1 · energia cromática — leitura de Direcção",
+      "subdued": "Repouso",
+      "subduedHint": "reduced-motion, página oculta ou confiança fraca → tudo para",
+      "subduedOn": "activo",
+      "subduedOff": "inactivo",
+      "fieldNote": "o campo reage à Agitação em tempo real — dados de hoje"
+    }
   },
   "market": {
     "title": "Mercado",

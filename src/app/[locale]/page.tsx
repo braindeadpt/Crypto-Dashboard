@@ -55,6 +55,7 @@ async function HomeBoard({ locale }: { locale: string }) {
         asOf={data.asOf}
         regimeHistory={data.regimeHistory}
         mapLayers={data.mapLayers}
+        volRealizedPct={data.volRealizedPct}
         visitVitals={{
           seenAt: new Date().toISOString(),
           posture: data.regime.posture,

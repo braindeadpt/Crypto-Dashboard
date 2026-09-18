@@ -77,7 +77,20 @@
     "plates": "Plates",
     "platesHint": "Each act is an engraved plate — number, serif title, coordinate and source age.",
     "plateSample": "The market map",
-    "plateNote": "The full read, no tab-hopping."
+    "plateNote": "The full read, no tab-hopping.",
+    "maestro": {
+      "cadence": "Cadence",
+      "cadenceHint": "× duration — realized BTC volatility shortens transitions",
+      "agitation": "Agitation",
+      "agitationHint": "0–1 · field amplitude — Risk reading (smoothstep)",
+      "temperature": "Temperature",
+      "temperatureHint": "−1 to +1 · chromatic energy — Direction reading",
+      "subdued": "Rest",
+      "subduedHint": "reduced-motion, hidden tab or low confidence → all stops",
+      "subduedOn": "on",
+      "subduedOff": "off",
+      "fieldNote": "the field reacts to Agitation in real time — today’s data"
+    }
   },
   "market": {
     "title": "Market",

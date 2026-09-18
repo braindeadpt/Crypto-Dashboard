@@ -1,6 +1,9 @@
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { StyleGuide } from "@/components/desk/StyleGuide";
+import { MotionChannels } from "@/components/desk/MotionChannels";
+import { MotionProvider } from "@/lib/motion/useMotion";
+import { getRegimeBundle } from "@/lib/data/bundle";
 
 export const dynamic = "force-dynamic";
 
@@ -12,9 +15,21 @@ export default async function EstiloPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("style");
+  // Leituras reais do dia — o Maestro em /estilo mostra dados verdadeiros.
+  const bundle = await getRegimeBundle().catch(() => null);
+
+  const maestro = (
+    <MotionProvider
+      readings={bundle?.readings ?? null}
+      realizedVolPct={bundle?.volRealizedPct ?? null}
+    >
+      <MotionChannels />
+    </MotionProvider>
+  );
 
   return (
     <StyleGuide
+      maestro={maestro}
       title={t("title")}
       subtitle={t("subtitle")}
       labels={{

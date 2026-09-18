@@ -70,14 +70,19 @@ not an afterthought: add the key to both json files.
 
 ## Design system
 
-Signature "Noite": deep blue-violet dark theme, violet accent (#9b6cff),
-cyan emphasis (#22e6ff), mint/coral direction (always with ▲▼), regime
-chips (--calm/--unsettled/--storm/--weird). Sora display, IBM Plex
-Sans body, IBM Plex Mono data (`tabular-nums`). Thin borders, small
-radius, no glassmorphism, no landing-page gradients. Motion is meaningful
-(flash on value change), always gated by `prefers-reduced-motion`.
-Tokens only — `src/app/globals.css`; living reference at `/estilo`;
-canonical doc `src/app/design-system.md`.
+Two themes, both always one click away and persisted via `clareza-theme`:
+**"Papel"** — warm editorial paper (`#f4f1e9`), the publication voice,
+default for new visitors — and **"Noite"** — deep blue-violet dark
+(`#05070e`), the instrument theme. Violet accent (#9b6cff / darker on
+Papel), cyan emphasis (#22e6ff), mint/coral direction (always with ▲▼),
+regime chips (--calm/--unsettled/--storm/--weird). Newsreader serif for
+editorial voice, Sora display, IBM Plex Sans body, IBM Plex Mono data
+(`tabular-nums`). Thin borders, small radius, engraved rules, no
+glassmorphism, no landing-page gradients. Motion is meaningful and
+conducted by the Maestro (`src/lib/motion/`) — channels derived from real
+readings, always gated by `prefers-reduced-motion`, page visibility and
+reading confidence. Tokens only — `src/app/globals.css`; living reference
+at `/estilo`; canonical doc `src/app/design-system.md`.
 
 ## Skills
 

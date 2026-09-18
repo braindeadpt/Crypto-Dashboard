@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useMotion } from "@/lib/motion/useMotion";
 
 const LINK_DIST = 92;
 
 /**
  * Ambient data-field behind the hero — the controlled "wow".
  *
- * Reactive to the market regime: `intensity` (0..1, from regime.score)
- * drives particle density, drift speed and link opacity — calm reads
- * sparse and slow, storm reads dense and fast. Still decorative, still
+ * Drives off the Maestro's Agitação channel (leitura de Risco): calm reads
+ * sparse and slow, storm reads dense and fast. `intensity` (regime.score)
+ * is the fallback outside a MotionProvider. Still decorative, still
  * reduced-motion safe, never intercepts input, hidden from AT.
  */
 export function AmbientField({
@@ -20,6 +21,7 @@ export function AmbientField({
   className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const motion = useMotion();
 
   useEffect(() => {
     const canvas = ref.current;
@@ -40,8 +42,11 @@ export function AmbientField({
       return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
     };
 
-    // O campo reage ao regime: mais denso, mais rápido, mais ligado.
-    const t = Math.max(0, Math.min(1, intensity));
+    // O campo reage à agitação do Maestro: mais denso, mais rápido, mais
+    // ligado. Subdued (reduced-motion, dados fracos, página oculta) → repouso.
+    const t = motion.subdued
+      ? Math.max(0, Math.min(1, intensity))
+      : Math.max(0, Math.min(1, motion.agitation));
     const count = Math.round(28 + t * 44);
     const speed = 0.0002 + t * 0.00055;
     const linkAlpha = 0.05 + t * 0.09;
@@ -115,14 +120,14 @@ export function AmbientField({
       raf = requestAnimationFrame(tick);
     };
 
-    if (reduced) draw();
+    if (reduced || motion.subdued) draw();
     else raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [intensity]);
+  }, [intensity, motion.agitation, motion.subdued]);
 
   return (
     <canvas

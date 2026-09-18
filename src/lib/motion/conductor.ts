@@ -48,32 +48,17 @@ function clamp01(n: number): number {
 }
 
 /**
- * TODO(dono do produto) — A CURVA DE AGITAÇÃO.
+ * A CURVA DE AGITAÇÃO — smoothstep com limiar.
  *
  * Converte a leitura de Risco (0..100) na agitação visível do ecrã (0..1).
- *
- * Esta é uma decisão de PRODUTO, não técnica, e é por isso que não a escrevi:
- * define o que o utilizador sente, e tu é que conheces a sensação certa para
- * um dia de mercado. As opções não são equivalentes:
- *
- *  - LINEAR (risk/100): previsível, mas o ecrã já treme a meio da escala. Num
- *    dia comum (risco ~40) há movimento constante que pode cansar.
- *
- *  - LIMIAR (0 até ~45, depois sobe): dias normais ficam SERENOS e só o stress
- *    real acorda o ecrã. O contraste é maior — quando mexe, quer dizer algo.
- *    Risco: parece "morto" a quem abre num dia calmo e esperava o "wow".
- *
- *  - EXPONENCIAL ((risk/100)^2): meio-termo, sobe devagar e dispara no fim.
- *
- * Considera também: o "wow" tem de existir num dia CALMO (é quando a maioria
- * visita), mas o ecrã não pode ser insuportável num dia de queda de 10%.
- *
- * Devolve 0..1. O tecto é aplicado a seguir, não te preocupes com ele.
+ * O compromisso de produto: um dia calmo tem de ser genuinamente calmo (não
+ * morto — o repouso também é um estado legível) e uma queda de 10% não pode
+ * tornar o ecrã ilegível. Por isso: nada até risco ~30, subida suave sem
+ * degraus até ~85, tecto absoluto aplicado em conduct().
  */
 export function agitationFromRisk(risk: number): number {
-  // TODO: implementa a curva escolhida.
-  // `risk` vem 0..100. Devolve 0..1.
-  return clamp01(risk / 100);
+  const t = clamp01((risk - 30) / 55); // 30 → 0 ; 85 → 1
+  return t * t * (3 - 2 * t); // smoothstep
 }
 
 /**
