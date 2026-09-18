@@ -14,6 +14,7 @@ export const HISTORY_METRIC_IDS = [
   "vol_realized_btc",
   "fee_btc",
   "stablecoin_supply",
+  "ls_btc",
 ] as const;
 
 export type HistoryMetricId = (typeof HISTORY_METRIC_IDS)[number];
@@ -106,6 +107,12 @@ export const METRIC_META: Record<HistoryMetricId, MetricSeriesMeta> = {
     unit: "usd",
     granularity: "day",
     bootstrap: "DefiLlama stablecoincharts/all",
+  },
+  ls_btc: {
+    id: "ls_btc",
+    unit: "ratio",
+    granularity: "day",
+    bootstrap: "Binance globalLongShortAccountRatio 1d",
   },
 };
 

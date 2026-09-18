@@ -55,8 +55,10 @@ async function measureVisible(page: Page): Promise<PageMetrics> {
     const sectionTags = main.querySelectorAll("section, article").length;
     const svgs = main.querySelectorAll("svg").length;
     const tables = main.querySelectorAll("table").length;
+    // O preço do BTC no formato canónico ($ + grupo de milhares). Regex
+    // apertado: "BTC: +455M" (delta de fluxo ETF) não é preço e não conta.
     const btcLoose = (
-      text.match(/BTC[\s\u00a0]{0,12}\$?\s?[\d,]{3,}/g) ?? []
+      text.match(/BTC[\s\u00a0]{0,8}\$\s?\d{1,3}(,\d{3})+/g) ?? []
     ).length;
     const stressHits = (
       text.match(/Stress\s*\d+|Stress\s*\{?score\}?/gi) ?? []

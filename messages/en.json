@@ -738,6 +738,26 @@
     "empty": "Not enough history to measure agreement.",
     "note": "Height = share of consistent signals · colour = price direction · 'consistent with', never caused by."
   },
+  "multidao": {
+    "title": "The Crowd · positioning vs price",
+    "todayLabel": "{n}-day trail",
+    "ratio": "ratio",
+    "today": "today, in progress",
+    "equilibrium": "equilibrium 1.0",
+    "crowdShort": "← crowd short",
+    "crowdLong": "crowd long →",
+    "legend": "each dot = one day · fuller = more recent",
+    "empty": "Long/short ratio unavailable — the field is not drawn without both axes.",
+    "noToday": "No live ratio today — the historical trail stays visible.",
+    "todayReading": "Today: ratio {ratio}, price {chg}% — \"{quadrant}\".",
+    "q": {
+      "longsUp": "crowd long, price rising",
+      "longsDown": "crowd long, price falling",
+      "shortsUp": "crowd short, price rising",
+      "shortsDown": "crowd short, price falling",
+      "balanced": "crowd split"
+    }
+  },
   "contexto": {
     "eyebrow": "A map, not a GPS",
     "title": "Learn",

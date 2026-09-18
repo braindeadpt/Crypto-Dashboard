@@ -234,6 +234,25 @@ export async function ingestHistorySeries(): Promise<{
       },
     },
     {
+      id: "ls_btc",
+      run: async () => {
+        const rows = await fetchJson<
+          { longShortRatio: string; timestamp: number }[]
+        >(
+          `${FAPI}/futures/data/globalLongShortAccountRatio?symbol=BTCUSDT&period=1d&limit=90`,
+        );
+        const points = rows.map((r) => ({
+          t: dayKey(new Date(r.timestamp).toISOString()),
+          v: Number(r.longShortRatio),
+        }));
+        return {
+          points,
+          source: METRIC_META.ls_btc.bootstrap,
+          bootstrap: true,
+        };
+      },
+    },
+    {
       id: "etf_btc_flow",
       run: async () => {
         const etf = await readSnapshot<EtfSnapshot>("etf");

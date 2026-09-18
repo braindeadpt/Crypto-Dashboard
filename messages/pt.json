@@ -738,6 +738,26 @@
     "empty": "Sem histórico para medir a concordância.",
     "note": "Altura = fracção de sinais consistentes · cor = direcção do preço · «consistente com», nunca causa."
   },
+  "multidao": {
+    "title": "A Multidão · posicionamento vs preço",
+    "todayLabel": "rasto de {n} dias",
+    "ratio": "rácio",
+    "today": "hoje, em curso",
+    "equilibrium": "equilíbrio 1.0",
+    "crowdShort": "← multidão vendida",
+    "crowdLong": "multidão comprada →",
+    "legend": "cada ponto = um dia · mais cheio = mais recente",
+    "empty": "Rácio long/short indisponível — o campo não se desenha sem os dois eixos.",
+    "noToday": "Hoje sem rácio ao vivo — o rasto histórico continua visível.",
+    "todayReading": "Hoje: rácio {ratio}, preço {chg}% — «{quadrant}».",
+    "q": {
+      "longsUp": "multidão comprada, preço a subir",
+      "longsDown": "multidão comprada, preço a cair",
+      "shortsUp": "multidão vendida, preço a subir",
+      "shortsDown": "multidão vendida, preço a cair",
+      "balanced": "multidão dividida"
+    }
+  },
   "contexto": {
     "eyebrow": "Mapa, não GPS",
     "title": "Aprender",

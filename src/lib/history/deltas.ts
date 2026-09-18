@@ -45,6 +45,7 @@ const LABELS: Record<
     en: "Stablecoin supply",
     unit: "usd",
   },
+  ls_btc: { pt: "Rácio long/short BTC", en: "BTC long/short ratio", unit: "other" },
 };
 
 /**
