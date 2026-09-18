@@ -2,6 +2,7 @@ import { MundoDesk } from "@/components/desk/MundoDesk";
 import { getFrontPageData } from "@/lib/data/bundle";
 import { fetchMarketSnapshot } from "@/lib/data/coingecko";
 import { fetchSectorsSnapshot } from "@/lib/data/sectors";
+import { MotionProvider } from "@/lib/motion/useMotion";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 
@@ -33,11 +34,16 @@ export default async function MundoPage({
   }
 
   return (
-    <MundoDesk
-      sectors={sectors}
-      market={market}
-      cases={front?.cases ?? []}
-      asOf={front?.asOf ?? null}
-    />
+    <MotionProvider
+      readings={front?.readings ?? null}
+      realizedVolPct={front?.volRealizedPct ?? null}
+    >
+      <MundoDesk
+        sectors={sectors}
+        market={market}
+        cases={front?.cases ?? []}
+        asOf={front?.asOf ?? null}
+      />
+    </MotionProvider>
   );
 }

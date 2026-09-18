@@ -1,12 +1,16 @@
 "use client";
 
 import { BITCOIN_TIMELINE } from "@/lib/content/timeline";
+import { useViewportBuild } from "@/lib/motion/useViewportBuild";
 import type { TimelineEvent } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
 /**
  * Navigable Bitcoin timeline — horizontal track + selected event detail.
+ * Pedagogia, não mercado: o diagrama constrói-se ao entrar no viewport
+ * (eixo → marcos pela ordem cronológica → anos), uma única vez. Durações
+ * e easings são os tokens do sistema — nada inventado fora deles.
  */
 export function BitcoinTimelineViz({ className = "" }: { className?: string }) {
   const t = useTranslations("cycle");
@@ -23,6 +27,40 @@ export function BitcoinTimelineViz({ className = "" }: { className?: string }) {
   const t1 = times[times.length - 1]!;
   const span = Math.max(1, t1 - t0);
 
+  // Construção pedagógica: eixo desenha-se, marcos pela ordem cronológica,
+  // anos por último — a sequência de montagem é a própria lição.
+  const rootRef = useViewportBuild<HTMLDivElement>((tl) => {
+    tl.from("[data-axis]", {
+      scaleX: 0,
+      transformOrigin: "0% 50%",
+      duration: 0.48, // --dur-slow
+      ease: "expo.out", // --ease-out
+    })
+      .from(
+        "[data-event] circle",
+        {
+          scale: 0,
+          opacity: 0,
+          transformOrigin: "50% 50%",
+          duration: 0.28, // --dur-med
+          stagger: 0.05,
+          ease: "expo.out",
+        },
+        "-=0.18",
+      )
+      .from(
+        "[data-event] text",
+        {
+          opacity: 0,
+          y: 4,
+          duration: 0.12, // --dur-fast
+          stagger: 0.04,
+          ease: "expo.out",
+        },
+        "<0.08",
+      );
+  });
+
   useEffect(() => {
     const el = trackRef.current?.querySelector(`[data-event="${selectedId}"]`);
     el?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
@@ -33,7 +71,7 @@ export function BitcoinTimelineViz({ className = "" }: { className?: string }) {
   const padX = 28;
 
   return (
-    <div className={className}>
+    <div ref={rootRef} className={className}>
       <div className="flex items-end justify-between gap-3">
         <h2 className="text-title">{t("timeline")}</h2>
         <p className="text-meta text-faint">{t("timelineNavHint")}</p>
@@ -51,6 +89,7 @@ export function BitcoinTimelineViz({ className = "" }: { className?: string }) {
         >
           <title>{t("timeline")}</title>
           <line
+            data-axis
             x1={padX}
             x2={w - padX}
             y1={44}

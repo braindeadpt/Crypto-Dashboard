@@ -5,8 +5,13 @@ import { ExplainThisNumber } from "@/components/explain/ExplainThisNumber";
 import { Link } from "@/i18n/navigation";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { YieldPool } from "@/lib/data/yields";
+import { useMotion } from "@/lib/motion/useMotion";
 import type { DefiSnapshot } from "@/lib/types";
+import gsap from "gsap";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+
+type ProtoSort = "tvl" | "move";
 
 export function DefiDesk({
   data,
@@ -19,6 +24,48 @@ export function DefiDesk({
   yieldsAt?: string | null;
 }) {
   const t = useTranslations("defi");
+  const motion = useMotion();
+  const [sort, setSort] = useState<ProtoSort>("tvl");
+
+  // Ordenação real entre duas leituras honestas: quota (TVL, a ordem da
+  // fonte) ou movimento (Δ1d ponderado). Sem Δ o protocolo cai para o fim
+  // — nunca se inventa um 0.
+  const protocols = [...data.protocols].sort((a, b) =>
+    sort === "move"
+      ? (b.change1d ?? -Infinity) - (a.change1d ?? -Infinity)
+      : b.tvl - a.tvl,
+  );
+
+  /* Flip manual (mesmo padrão do MarketMap): regista a posição anterior de
+     cada linha e desloca-a fisicamente ao reordenar. A duração vem do
+     Maestro; repouso/reduced-motion → reordenação directa, sem deslize. */
+  const rowEls = useRef(new Map<string, HTMLLIElement>());
+  const prevTops = useRef(new Map<string, number>());
+  useLayoutEffect(() => {
+    const prev = prevTops.current;
+    const next = new Map<string, number>();
+    const anims: gsap.core.Tween[] = [];
+    for (const [slug, el] of rowEls.current) {
+      const top = el.offsetTop;
+      next.set(slug, top);
+      const p = prev.get(slug);
+      if (p == null || Math.abs(p - top) < 0.5 || motion.subdued) continue;
+      anims.push(
+        gsap.fromTo(
+          el,
+          { y: p - top },
+          {
+            y: 0,
+            duration: 0.55 * motion.cadence,
+            ease: "power2.out",
+            overwrite: "auto",
+          },
+        ),
+      );
+    }
+    prevTops.current = next;
+    return () => anims.forEach((a) => a.kill());
+  }, [protocols, motion.cadence, motion.subdued]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-6 enter">
@@ -69,11 +116,38 @@ export function DefiDesk({
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <section className="card p-5">
-          <h2 className="text-title">{t("protocols")}</h2>
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="text-title">{t("protocols")}</h2>
+            <div
+              className="flex gap-1 font-mono text-[0.62rem] uppercase tracking-wider"
+              role="group"
+              aria-label={t("sortLabel")}
+            >
+              {(["tvl", "move"] as const).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  aria-pressed={sort === s}
+                  onClick={() => setSort(s)}
+                  className={`border px-2 py-1 ${
+                    sort === s
+                      ? "border-accent/50 text-accent"
+                      : "border-line text-faint hover:text-muted"
+                  }`}
+                >
+                  {s === "tvl" ? t("sortTvl") : t("sortMove")}
+                </button>
+              ))}
+            </div>
+          </div>
           <ul className="mt-4 divide-y divide-line">
-            {data.protocols.map((p) => (
+            {protocols.map((p) => (
               <li
                 key={p.slug}
+                ref={(el) => {
+                  if (el) rowEls.current.set(p.slug, el);
+                  else rowEls.current.delete(p.slug);
+                }}
                 className="flex items-baseline justify-between gap-3 py-2.5"
               >
                 <div>

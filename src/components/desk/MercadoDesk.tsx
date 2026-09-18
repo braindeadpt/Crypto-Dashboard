@@ -6,7 +6,10 @@ import { MarketMap } from "@/components/board/MarketMap";
 import { Sparkline } from "@/components/board/Sparkline";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { MapLayers } from "@/lib/data/mapLayers";
+import type { ReadingSet } from "@/lib/reading";
 import type { AssetQuote, MarketSnapshot } from "@/lib/types";
+import { useLiveTicker } from "@/lib/hooks/useLiveTicker";
+import { MotionProvider } from "@/lib/motion/useMotion";
 import { useTranslations } from "next-intl";
 
 /**
@@ -16,14 +19,26 @@ import { useTranslations } from "next-intl";
 export function MercadoDesk({
   market,
   layers,
+  readings = null,
+  volRealizedPct = null,
 }: {
   market: MarketSnapshot;
   layers?: MapLayers | null;
+  readings?: ReadingSet | null;
+  volRealizedPct?: number | null;
 }) {
   const t = useTranslations("market");
   const { global: g } = market;
+  const sol = market.top.find((a) => a.id === "solana");
+  // O mesmo socket do quadro de entrada — o mapa vive aqui também.
+  const live = useLiveTicker({
+    BTCUSDT: { price: market.btc.price, change24h: market.btc.change24h },
+    ETHUSDT: { price: market.eth.price, change24h: market.eth.change24h },
+    ...(sol ? { SOLUSDT: { price: sol.price, change24h: sol.change24h } } : {}),
+  });
 
   return (
+    <MotionProvider readings={readings} realizedVolPct={volRealizedPct}>
     <div className="obs-shell section-pad pb-16 pt-3 enter-sequence">
       <header className="max-w-2xl pt-2">
         <h1 className="font-display text-display text-ink">{t("title")}</h1>
@@ -40,7 +55,12 @@ export function MercadoDesk({
       </dl>
 
       <div className="mt-4">
-        <MarketMap assets={market.top} layers={layers} />
+        <MarketMap
+          assets={market.top}
+          layers={layers}
+          liveTicks={live.quotes}
+          screen
+        />
       </div>
 
       {/* Movers — quem mais se mexeu, com contexto */}
@@ -74,6 +94,7 @@ export function MercadoDesk({
         </div>
       </section>
     </div>
+    </MotionProvider>
   );
 }
 

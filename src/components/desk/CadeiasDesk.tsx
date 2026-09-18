@@ -2,7 +2,9 @@
 
 import { DataAge } from "@/components/explain/DataAge";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
+import { useMotion } from "@/lib/motion/useMotion";
 import type { DefiSnapshot } from "@/lib/types";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 /**
@@ -24,6 +26,14 @@ export function CadeiasDesk({ defi }: { defi: DefiSnapshot }) {
       chainDelta.set(c, cur);
     }
   }
+
+  // TVL total "ontem": cada cadeia com Δ1d recua pelo seu próprio delta;
+  // sem Δ a cadeia fica no valor de hoje — não se inventa variação.
+  const prevTotal = defi.chains.reduce((s, c) => {
+    const d = chainDelta.get(c.name);
+    const d1 = d && d.den > 0 ? d.num / d.den : null;
+    return s + (d1 != null ? c.tvl / (1 + d1 / 100) : c.tvl);
+  }, 0);
 
   return (
     <div className="obs-shell section-pad pb-16 pt-3 enter-sequence">
@@ -87,6 +97,10 @@ export function CadeiasDesk({ defi }: { defi: DefiSnapshot }) {
               const share = total > 0 ? (c.tvl / total) * 100 : 0;
               const d = chainDelta.get(c.name);
               const d1 = d && d.den > 0 ? d.num / d.den : null;
+              const prevShare =
+                d1 != null && prevTotal > 0
+                  ? ((c.tvl / (1 + d1 / 100)) / prevTotal) * 100
+                  : share;
               return (
                 <tr key={c.name} className="border-b border-line last:border-0">
                   <td className="px-3 py-2 font-mono text-faint tabular-nums">
@@ -96,10 +110,7 @@ export function CadeiasDesk({ defi }: { defi: DefiSnapshot }) {
                   <td className="hidden px-3 py-2 sm:table-cell">
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 w-full max-w-40 rounded-sm bg-surface-3">
-                        <div
-                          className="h-full rounded-sm bg-accent"
-                          style={{ width: `${Math.min(100, share)}%` }}
-                        />
+                        <GrowBar share={share} prevShare={prevShare} />
                       </div>
                       <span className="font-mono text-label text-faint tabular-nums">
                         {formatPct(share, 1)}
@@ -123,5 +134,32 @@ export function CadeiasDesk({ defi }: { defi: DefiSnapshot }) {
 
       <p className="mt-3 text-label text-faint">{t("source")}</p>
     </div>
+  );
+}
+
+/**
+ * Barra de quota que cresce a partir do estado anterior — a animação
+ * codifica o Δ1d ponderado (se o mercado mudasse, a barra mudava).
+ * Duração do Maestro; reduced-motion mostra o estado final directo.
+ */
+function GrowBar({ share, prevShare }: { share: number; prevShare: number }) {
+  const motion = useMotion();
+  const [w, setW] = useState(prevShare);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() =>
+      requestAnimationFrame(() => setW(share)),
+    );
+    return () => cancelAnimationFrame(raf);
+  }, [share]);
+  return (
+    <div
+      className="h-full rounded-sm bg-accent"
+      style={{
+        width: `${Math.min(100, Math.max(0, w))}%`,
+        transition: motion.subdued
+          ? "none"
+          : `width ${0.9 * motion.cadence}s var(--ease-out)`,
+      }}
+    />
   );
 }

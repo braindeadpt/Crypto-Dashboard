@@ -1,5 +1,6 @@
 "use client";
 
+import { useViewportBuild } from "@/lib/motion/useViewportBuild";
 import type { CycleSnapshot } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -27,6 +28,32 @@ export function CycleHistoryViz({
   const t = useTranslations("cycle");
   const locale = useLocale();
   const series = cycle.priceHistory;
+
+  // Pedagogia: o traço desenha-se na ordem do tempo (a história a
+  // acontecer), os halvings marcam-se por ordem cronológica, e o ponto
+  // "agora" fecha a lição.
+  const figRef = useViewportBuild<HTMLElement>((tl) => {
+    tl.fromTo(
+      "[data-price-path]",
+      { strokeDashoffset: 1 },
+      { strokeDashoffset: 0, duration: 1.6, ease: "expo.out" },
+    )
+      .from(
+        "[data-halving]",
+        { opacity: 0, duration: 0.12, stagger: 0.15, ease: "expo.out" },
+        "-=0.9",
+      )
+      .from(
+        "[data-now]",
+        {
+          scale: 0,
+          transformOrigin: "50% 50%",
+          duration: 0.28,
+          ease: "expo.out",
+        },
+        "-=0.1",
+      );
+  });
 
   if (series.length < 8) {
     return (
@@ -68,7 +95,7 @@ export function CycleHistoryViz({
     });
 
   return (
-    <figure className={className}>
+    <figure ref={figRef} className={className}>
       <figcaption className="mb-1 text-label text-faint">
         {t("historyVizTitle")}
       </figcaption>
@@ -102,7 +129,7 @@ export function CycleHistoryViz({
           </g>
         ))}
         {HALVING_MS.filter((ms) => ms >= t0 && ms <= t1).map((ms) => (
-          <g key={ms}>
+          <g key={ms} data-halving>
             <line
               x1={xOf(ms)}
               x2={xOf(ms)}
@@ -123,14 +150,18 @@ export function CycleHistoryViz({
           </g>
         ))}
         <path
+          data-price-path
           d={path}
           fill="none"
           stroke="var(--ink)"
           strokeWidth="1.5"
           strokeLinejoin="round"
           strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray={1}
         />
         <circle
+          data-now
           cx={xOf(now.time)}
           cy={yOf(now.price)}
           r="4.5"

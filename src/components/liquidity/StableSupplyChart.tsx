@@ -2,6 +2,7 @@
 
 import type { SeriesPoint } from "@/lib/stats";
 import { formatUsd } from "@/lib/format";
+import { useMotion } from "@/lib/motion/useMotion";
 import { useTranslations } from "next-intl";
 
 type Props = {
@@ -20,6 +21,9 @@ export function StableSupplyChart({
   height = 220,
 }: Props) {
   const t = useTranslations("liquidity");
+  // O traço desenha-se uma vez na ordem do tempo (esq.→dir.) ao ritmo do
+  // Maestro; repouso → render directo, sem fingir movimento.
+  const motion = useMotion();
 
   if (series.length < 2) {
     return (
@@ -97,12 +101,25 @@ export function StableSupplyChart({
             ? "color-mix(in srgb, var(--up) 16%, transparent)"
             : "color-mix(in srgb, var(--down) 14%, transparent)"
         }
+        className={motion.subdued ? undefined : "chart-fill"}
+        style={
+          motion.subdued
+            ? undefined
+            : { animationDelay: `${0.9 * motion.cadence}s` }
+        }
       />
       <path
         d={line}
         fill="none"
         stroke={up ? "var(--up)" : "var(--down)"}
         strokeWidth="2"
+        pathLength={1}
+        className={motion.subdued ? undefined : "chart-path-any"}
+        style={
+          motion.subdued
+            ? undefined
+            : { animationDuration: `${1.6 * motion.cadence}s` }
+        }
       />
       <circle
         cx={xAt(series.length - 1)}

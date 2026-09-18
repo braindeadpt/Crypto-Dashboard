@@ -1,6 +1,8 @@
 import { DefiDesk } from "@/components/desk/DefiDesk";
 import { fetchDefiSnapshot } from "@/lib/data/defillama";
 import { fetchTopYieldPools } from "@/lib/data/yields";
+import { getRegimeBundle } from "@/lib/data/bundle";
+import { MotionProvider } from "@/lib/motion/useMotion";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +17,10 @@ export default async function DefiPage({
   setRequestLocale(locale);
   const t = await getTranslations("defi");
 
-  const [defi, yields] = await Promise.all([
+  const [defi, yields, regimeBundle] = await Promise.all([
     fetchDefiSnapshot().catch(() => null),
     fetchTopYieldPools(15).catch(() => null),
+    getRegimeBundle().catch(() => null),
   ]);
 
   if (!defi) {
@@ -30,10 +33,15 @@ export default async function DefiPage({
   }
 
   return (
-    <DefiDesk
-      data={defi}
-      yields={yields?.pools ?? []}
-      yieldsAt={yields?.updatedAt ?? null}
-    />
+    <MotionProvider
+      readings={regimeBundle?.readings ?? null}
+      realizedVolPct={regimeBundle?.volRealizedPct ?? null}
+    >
+      <DefiDesk
+        data={defi}
+        yields={yields?.pools ?? []}
+        yieldsAt={yields?.updatedAt ?? null}
+      />
+    </MotionProvider>
   );
 }

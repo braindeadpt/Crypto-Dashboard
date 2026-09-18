@@ -958,6 +958,50 @@ body::before {
   animation: chart-draw 1.6s var(--ease-out) forwards;
 }
 
+/* Variante normalizada para traços longos — o path declara pathLength={1}
+   e o dash conta em fracção, não em px. A duração vem sempre do Maestro. */
+@keyframes chart-draw-any {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.chart-path-any {
+  stroke-dasharray: 1;
+  animation: chart-draw-any 1.6s var(--ease-out) forwards;
+}
+
+/* Caudal ETF — cada barra cresce da linha de base; o atraso vem do índice
+   do dia (ordem real), a duração do Maestro. transform-box para a origem
+   ser a própria barra (base para entradas, topo para saídas). */
+@keyframes flow-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+.flow-bar {
+  transform-box: fill-box;
+  animation: flow-grow 0.28s var(--ease-out) both;
+}
+
+/* Áreas que acompanham um traço desenhado — sobem de opacidade, sem loop. */
+@keyframes chart-fill-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.chart-fill {
+  animation: chart-fill-in 0.9s var(--ease-out) both;
+}
+
 @keyframes alert-glow {
   0%,
   100% {
@@ -983,6 +1027,9 @@ body::before {
   .enter,
   .enter-sequence > *,
   .chart-path,
+  .chart-path-any,
+  .chart-fill,
+  .flow-bar,
   .alert-pulse,
   .skeleton::after,
   .animate-pulse {
@@ -1225,6 +1272,27 @@ body::before {
 }
 @media (prefers-reduced-motion: reduce) {
   .multidao-breath {
+    animation: none !important;
+  }
+}
+
+/* Chips de evidência — acendem pela ordem em que ocorreram (casos).
+   Só opacity + translate; o atraso vem do Maestro via inline style. */
+.signal-chip {
+  animation: signal-pop 0.35s var(--ease-out) both;
+}
+@keyframes signal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-chip {
     animation: none !important;
   }
 }

@@ -9,6 +9,7 @@ import {
   etfWeeklyDelta,
 } from "@/lib/data/etfDerived";
 import { cn, formatUsdMillions } from "@/lib/format";
+import { useMotion } from "@/lib/motion/useMotion";
 import { useLocale, useTranslations } from "next-intl";
 
 export function EtfDesk({
@@ -394,9 +395,14 @@ function CumulativeFlows({
   );
 }
 
-/** Daily net-flow bars — last ~20 days, up/down tone. */
+/**
+ * Barras de fluxo diário — o CAUDAL: largura = magnitude, sentido = sinal.
+ * Crescem da linha de base na ordem em que os dias aconteceram (esq.→dir.);
+ * a duração e o passo vêm do Maestro — nunca durações próprias.
+ */
 function FlowBars({ history }: { history: EtfDailyFlow[] }) {
   const days = history.slice(-20);
+  const motion = useMotion();
   if (days.length < 2) return null;
   const W = 240;
   const H = 48;
@@ -430,7 +436,18 @@ function FlowBars({ history }: { history: EtfDailyFlow[] }) {
               y={up ? mid - h : mid}
               width={Math.max(1, bw - 2)}
               height={Math.max(0.5, h)}
-              className={up ? "fill-up" : "fill-down"}
+              className={`${up ? "fill-up" : "fill-down"} ${
+                motion.subdued ? "" : "flow-bar"
+              }`}
+              style={
+                motion.subdued
+                  ? undefined
+                  : {
+                      transformOrigin: up ? "50% 100%" : "50% 0%",
+                      animationDuration: `${0.28 * motion.cadence}s`,
+                      animationDelay: `${i * 0.045 * motion.cadence}s`,
+                    }
+              }
             />
           );
         })}

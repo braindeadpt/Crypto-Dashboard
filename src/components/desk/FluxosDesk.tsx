@@ -47,6 +47,9 @@ export function FluxosDesk({
   const liq = useForceLiquidations();
 
   return (
+    // A página inteira herda o Maestro — caudal, multidão e qualquer
+    // movimento leem a mesma cadência. Sem leituras → repouso honesto.
+    <MotionProvider readings={readings} realizedVolPct={volRealizedPct}>
     <div>
       <div className="obs-shell section-pad pt-6">
         <header className="max-w-3xl">
@@ -103,9 +106,7 @@ export function FluxosDesk({
                 o desacordo entre posicionamento e preço, não um número que
                 toda a gente já viu. */}
             <div className="mt-3">
-              <MotionProvider readings={readings} realizedVolPct={volRealizedPct}>
-                <Multidao data={multidao} today={crowdToday} />
-              </MotionProvider>
+              <Multidao data={multidao} today={crowdToday} />
             </div>
             <div className="mt-4">
               <OndeDoeu data={liq} />
@@ -117,5 +118,6 @@ export function FluxosDesk({
         )}
       </ExpertiseGate>
     </div>
+    </MotionProvider>
   );
 }

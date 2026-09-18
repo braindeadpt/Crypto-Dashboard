@@ -156,7 +156,10 @@
     "yieldsHint": "Pools ordenadas por APY — ⚡ inclui recompensa de token (mais volátil). Fonte: DefiLlama yields.",
     "pool": "Pool",
     "chain": "Cadeia",
-    "empty": "Sem dados DeFi neste momento — o snapshot diário ainda não correu."
+    "empty": "Sem dados DeFi neste momento — o snapshot diário ainda não correu.",
+    "sortLabel": "Ordenar protocolos",
+    "sortTvl": "Quota",
+    "sortMove": "Movimento"
   },
   "cadeias": {
     "title": "Cadeias",

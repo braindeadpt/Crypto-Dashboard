@@ -1,6 +1,7 @@
 import { MercadoDesk } from "@/components/desk/MercadoDesk";
 import { fetchMarketSnapshot } from "@/lib/data/coingecko";
 import { fetchMapLayers } from "@/lib/data/mapLayersServer";
+import { getRegimeBundle } from "@/lib/data/bundle";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +16,10 @@ export default async function MercadoPage({
   setRequestLocale(locale);
   const t = await getTranslations("market");
 
-  const [market, layers] = await Promise.all([
+  const [market, layers, regimeBundle] = await Promise.all([
     fetchMarketSnapshot().catch(() => null),
     fetchMapLayers().catch(() => null),
+    getRegimeBundle().catch(() => null),
   ]);
 
   if (!market) {
@@ -29,5 +31,12 @@ export default async function MercadoPage({
     );
   }
 
-  return <MercadoDesk market={market} layers={layers} />;
+  return (
+    <MercadoDesk
+      market={market}
+      layers={layers}
+      readings={regimeBundle?.readings ?? null}
+      volRealizedPct={regimeBundle?.volRealizedPct ?? null}
+    />
+  );
 }

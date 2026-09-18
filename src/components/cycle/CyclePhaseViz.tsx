@@ -1,5 +1,6 @@
 "use client";
 
+import { useViewportBuild } from "@/lib/motion/useViewportBuild";
 import type { CycleSnapshot } from "@/lib/types";
 import { useTranslations } from "next-intl";
 
@@ -26,6 +27,21 @@ export function CyclePhaseViz({
   className?: string;
 }) {
   const t = useTranslations("cycle");
+  // Pedagogia: as fases preenchem-se na ordem do ciclo (early→bear) e o
+  // marcador "estás aqui" chega por último — lê-se a sequência do ciclo.
+  const figRef = useViewportBuild<HTMLElement>((tl) => {
+    tl.from("[data-band]", {
+      scaleX: 0,
+      transformOrigin: "0% 50%",
+      duration: 0.28, // --dur-med
+      stagger: 0.12,
+      ease: "expo.out",
+    }).from(
+      "[data-marker]",
+      { opacity: 0, duration: 0.28, ease: "expo.out" },
+      "-=0.1",
+    );
+  });
   const w = 640;
   const h = 120;
   const padX = 16;
@@ -45,7 +61,7 @@ export function CyclePhaseViz({
   });
 
   return (
-    <figure className={className}>
+    <figure ref={figRef} className={className}>
       <figcaption className="mb-1 text-label text-faint">
         {t("phaseVizTitle")}
       </figcaption>
@@ -62,6 +78,7 @@ export function CyclePhaseViz({
         {bands.map((b) => (
           <g key={b.phase}>
             <rect
+              data-band
               x={b.x}
               y={barY}
               width={Math.max(0, b.width - 1)}
@@ -87,24 +104,26 @@ export function CyclePhaseViz({
             )}
           </g>
         ))}
-        <line
-          x1={markerX}
-          x2={markerX}
-          y1={barY - 8}
-          y2={barY + barH + 8}
-          stroke="var(--accent)"
-          strokeWidth="2"
-        />
-        <circle cx={markerX} cy={barY - 10} r="5" fill="var(--accent)" />
-        <text
-          x={markerX}
-          y={barY + barH + 24}
-          textAnchor="middle"
-          fill="var(--ink)"
-          style={{ fontSize: 11, fontFamily: "var(--font-mono)" }}
-        >
-          {t("youAreHere")} · {Math.round(cycle.cycleProgressPct)}%
-        </text>
+        <g data-marker>
+          <line
+            x1={markerX}
+            x2={markerX}
+            y1={barY - 8}
+            y2={barY + barH + 8}
+            stroke="var(--accent)"
+            strokeWidth="2"
+          />
+          <circle cx={markerX} cy={barY - 10} r="5" fill="var(--accent)" />
+          <text
+            x={markerX}
+            y={barY + barH + 24}
+            textAnchor="middle"
+            fill="var(--ink)"
+            style={{ fontSize: 11, fontFamily: "var(--font-mono)" }}
+          >
+            {t("youAreHere")} · {Math.round(cycle.cycleProgressPct)}%
+          </text>
+        </g>
         <text
           x={padX}
           y={h - 8}

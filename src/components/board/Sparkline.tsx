@@ -1,5 +1,6 @@
 "use client";
 
+import { useMotion } from "@/lib/motion/useMotion";
 import { useId, useMemo } from "react";
 
 /**
@@ -18,6 +19,9 @@ export function Sparkline({
   height?: number;
 }) {
   const gid = useId().replace(/[^a-zA-Z0-9]/g, "");
+  // A duração vem do Maestro: mercado agitado → traço mais rápido.
+  // Fora de um provider o estado é repouso (cadence 1 → 1.6s, como antes).
+  const motion = useMotion();
 
   const { line, area } = useMemo(() => {
     if (points.length < 2) return { line: "", area: "" };
@@ -61,6 +65,7 @@ export function Sparkline({
         strokeWidth="1.5"
         vectorEffect="non-scaling-stroke"
         className="chart-path"
+        style={{ animationDuration: `${1.6 * motion.cadence}s` }}
       />
     </svg>
   );

@@ -72,6 +72,7 @@ export function MarketMap({
   assets,
   layers,
   tall = false,
+  screen = false,
   showTitle = true,
   liveTicks,
 }: {
@@ -80,6 +81,8 @@ export function MarketMap({
   layers?: MapLayers | null;
   /** Versão alta para a entrada — o mapa respira mais. */
   tall?: boolean;
+  /** Ecrã inteiro — /mercado, onde o mapa é o protagonista da página. */
+  screen?: boolean;
   /** false quando o pai já tem cabeçalho de acto — evita título duplicado. */
   showTitle?: boolean;
   /** Ticks ao vivo por símbolo de perp (BTCUSDT…) — flash na célula. */
@@ -413,7 +416,11 @@ export function MarketMap({
         ref={wrapRef}
         className={cn(
           "relative w-full overflow-hidden border-y border-line bg-bg",
-          tall ? "h-[380px] sm:h-[560px]" : "h-[320px] sm:h-[420px]",
+          screen
+            ? "h-[68vh] min-h-[420px]"
+            : tall
+              ? "h-[380px] sm:h-[560px]"
+              : "h-[320px] sm:h-[420px]",
         )}
         role="img"
         aria-label={t(`aria.${layer}`)}

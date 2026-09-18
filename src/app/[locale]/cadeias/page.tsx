@@ -1,5 +1,7 @@
 import { CadeiasDesk } from "@/components/desk/CadeiasDesk";
 import { fetchDefiSnapshot } from "@/lib/data/defillama";
+import { getRegimeBundle } from "@/lib/data/bundle";
+import { MotionProvider } from "@/lib/motion/useMotion";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +16,10 @@ export default async function CadeiasPage({
   setRequestLocale(locale);
   const t = await getTranslations("cadeias");
 
-  const defi = await fetchDefiSnapshot().catch(() => null);
+  const [defi, regimeBundle] = await Promise.all([
+    fetchDefiSnapshot().catch(() => null),
+    getRegimeBundle().catch(() => null),
+  ]);
 
   if (!defi || !defi.chains.length) {
     return (
@@ -25,5 +30,12 @@ export default async function CadeiasPage({
     );
   }
 
-  return <CadeiasDesk defi={defi} />;
+  return (
+    <MotionProvider
+      readings={regimeBundle?.readings ?? null}
+      realizedVolPct={regimeBundle?.volRealizedPct ?? null}
+    >
+      <CadeiasDesk defi={defi} />
+    </MotionProvider>
+  );
 }
