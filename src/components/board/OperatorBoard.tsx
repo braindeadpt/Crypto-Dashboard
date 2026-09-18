@@ -1,6 +1,7 @@
 "use client";
 
 import { ActHead } from "@/components/board/boardShared";
+import { Correntes } from "@/components/board/Correntes";
 import { HeroPanel } from "@/components/board/HeroPanel";
 import { MarketMap } from "@/components/board/MarketMap";
 import { RegimeHistory } from "@/components/board/RegimeHistory";
@@ -12,6 +13,7 @@ import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import { MotionProvider } from "@/lib/motion/useMotion";
 import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
+import type { CorrentesData } from "@/lib/history/correntes";
 import type { MapLayers } from "@/lib/data/mapLayers";
 import type { DailyRitual } from "@/lib/editorial/ritual";
 import type { ReadingSet } from "@/lib/reading";
@@ -35,6 +37,8 @@ type Props = {
   regimeHistory: { days: RegimeDay[]; updatedAt: string | null };
   /** Camadas de cor do mapa (R4) — null quando as fontes falham. */
   mapLayers: MapLayers | null;
+  /** As Correntes — 9 séries de 90d normalizadas à mediana (M5). */
+  correntes: CorrentesData | null;
   /** Volatilidade realizada BTC — cadência do Maestro. Null sem série. */
   volRealizedPct?: number | null;
 };
@@ -55,6 +59,7 @@ export function OperatorBoard({
   visitVitals,
   regimeHistory,
   mapLayers,
+  correntes = null,
   volRealizedPct = null,
 }: Props) {
   const ti = useTranslations("instrumento");
@@ -127,11 +132,25 @@ export function OperatorBoard({
         </div>
       </section>
 
-      {/* Placa II — o pulso: instrumento de operador; Essencial já teve a resposta */}
-      {level !== "citizen" && (
+      {/* Placa II — as correntes: nove séries de 90d ao desvio da mediana */}
+      {level !== "citizen" && correntes && (
         <section className="board-act">
           <ActHead
             num="II"
+            title={ti("acts.currentsTitle")}
+            note={ti("acts.currentsNote")}
+            coord={ti("acts.currentsCoord", { count: correntes.series.length })}
+            ageAt={correntes.updatedAt}
+          />
+          <Correntes data={correntes} />
+        </section>
+      )}
+
+      {/* Placa III — o pulso: instrumento de operador; Essencial já teve a resposta */}
+      {level !== "citizen" && (
+        <section className="board-act">
+          <ActHead
+            num="III"
             title={ti("acts.pulseTitle")}
             note={ti("acts.pulseNote")}
             coord={ti("acts.pulseCoord", { days: regimeHistory.days.length })}
@@ -145,12 +164,12 @@ export function OperatorBoard({
         </section>
       )}
 
-      {/* Placa III — o briefing: cinco entradas fixas, sempre os mesmos slots.
+      {/* Placa IV — o briefing: cinco entradas fixas, sempre os mesmos slots.
           R8 — Essencial é hero + mapa + leituras; o briefing fica no Operador. */}
       {show("boardSecondary") && (
         <section className="board-act">
           <ActHead
-            num="III"
+            num="IV"
             title={ti("acts.briefTitle")}
             note={ti("acts.briefNote")}
             coord={ti("acts.briefCoord")}
@@ -197,12 +216,12 @@ export function OperatorBoard({
         )}
       </nav>
 
-      {/* 04 — a lista: instrumento pessoal, local e sem servidor.
+      {/* Placa V — a lista: instrumento pessoal, local e sem servidor.
           R8 — fora do Essencial; o dial sobe para a ter de volta. */}
       {show("boardSecondary") && (
         <section className="board-act">
           <ActHead
-            num="IV"
+            num="V"
             title={ti("acts.listTitle")}
             note={ti("acts.listNote")}
             coord={ti("acts.listCoord")}

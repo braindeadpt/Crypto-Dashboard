@@ -630,6 +630,9 @@
       "listNote": "local · no server",
       "mapTitle": "The map",
       "mapNote": "size = market cap · colour = window change",
+      "currentsTitle": "The currents",
+      "currentsNote": "nine 90-day series · deviation from own median",
+      "currentsCoord": "current atlas · {count} series",
       "pulseTitle": "The pulse",
       "pulseNote": "six axes, one regime",
       "briefTitle": "The briefing",
@@ -690,6 +693,36 @@
       "connecting": "Connecting…",
       "reconnecting": "Reconnecting…",
       "offline": "Offline"
+    }
+  },
+  "correntes": {
+    "aria": "The currents — nine 90-day series normalized to deviation from their own median",
+    "legend": "▲ above median · ▼ below · darker = more stretched",
+    "empty": "Not enough history for the currents.",
+    "axisStart": "−{days}d",
+    "axisEnd": "today",
+    "hoverValue": "today",
+    "hoverPercentile": "percentile",
+    "hoverDays": "{days} days observed",
+    "shortSample": "Insufficient sample, accumulating:",
+    "tableShow": "View table",
+    "thSeries": "Series",
+    "thToday": "Today",
+    "thPercentile": "Percentile",
+    "thDays": "Sample",
+    "series": {
+      "price_btc": "BTC price",
+      "volume_btc": "BTC volume",
+      "vol_realized_btc": "Realized volatility",
+      "funding_btc": "Funding · leverage",
+      "oi_btc": "Open interest (OI)",
+      "fear_greed": "Fear & Greed",
+      "tvl": "DeFi TVL",
+      "stablecoin_supply": "Stablecoins",
+      "etf_btc_flow": "BTC ETF flow",
+      "fee_btc": "BTC fee",
+      "breadth": "Breadth",
+      "btc_dominance": "BTC dominance"
     }
   },
   "contexto": {

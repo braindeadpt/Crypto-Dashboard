@@ -630,6 +630,9 @@
       "listNote": "local · sem servidor",
       "mapTitle": "O mapa",
       "mapNote": "tamanho = capitalização · cor = variação na janela",
+      "currentsTitle": "As correntes",
+      "currentsNote": "nove séries de 90 dias · desvio face à própria mediana",
+      "currentsCoord": "atlas de correntes · {count} séries",
       "pulseTitle": "O pulso",
       "pulseNote": "seis eixos, um regime",
       "briefTitle": "O briefing",
@@ -690,6 +693,36 @@
       "connecting": "A ligar…",
       "reconnecting": "A reconectar…",
       "offline": "Desligado"
+    }
+  },
+  "correntes": {
+    "aria": "As correntes — nove séries de 90 dias normalizadas ao desvio face à própria mediana",
+    "legend": "▲ acima da mediana · ▼ abaixo · mais escuro = mais esticado",
+    "empty": "Sem histórico suficiente para as correntes.",
+    "axisStart": "−{days}d",
+    "axisEnd": "hoje",
+    "hoverValue": "hoje",
+    "hoverPercentile": "percentil",
+    "hoverDays": "{days} dias observados",
+    "shortSample": "Amostra insuficiente, a acumular:",
+    "tableShow": "Ver tabela",
+    "thSeries": "Série",
+    "thToday": "Hoje",
+    "thPercentile": "Percentil",
+    "thDays": "Amostra",
+    "series": {
+      "price_btc": "Preço BTC",
+      "volume_btc": "Volume BTC",
+      "vol_realized_btc": "Volatilidade realizada",
+      "funding_btc": "Funding · alavancagem",
+      "oi_btc": "Juro aberto (OI)",
+      "fear_greed": "Medo & Ganância",
+      "tvl": "TVL DeFi",
+      "stablecoin_supply": "Stablecoins",
+      "etf_btc_flow": "Fluxo ETF BTC",
+      "fee_btc": "Fee BTC",
+      "breadth": "Amplitude",
+      "btc_dominance": "Dominância BTC"
     }
   },
   "contexto": {

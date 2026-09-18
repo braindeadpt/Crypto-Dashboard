@@ -1,6 +1,7 @@
 import { OperatorBoard } from "@/components/board/OperatorBoard";
 import { OnboardingHint } from "@/components/layout/OnboardingHint";
 import { getFrontPageData } from "@/lib/data/bundle";
+import { getCorrentes } from "@/lib/history/correntes";
 import { setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import BoardLoading from "./loading";
@@ -25,8 +26,12 @@ export default async function HomePage({
 
 async function HomeBoard({ locale }: { locale: string }) {
   let data;
+  let correntes;
   try {
-    data = await getFrontPageData();
+    [data, correntes] = await Promise.all([
+      getFrontPageData(),
+      getCorrentes().catch(() => null),
+    ]);
   } catch {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
@@ -55,6 +60,7 @@ async function HomeBoard({ locale }: { locale: string }) {
         asOf={data.asOf}
         regimeHistory={data.regimeHistory}
         mapLayers={data.mapLayers}
+        correntes={correntes}
         volRealizedPct={data.volRealizedPct}
         visitVitals={{
           seenAt: new Date().toISOString(),
