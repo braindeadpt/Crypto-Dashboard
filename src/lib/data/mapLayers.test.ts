@@ -5,6 +5,7 @@ import {
   fundingForAsset,
   medianTurnover,
   perpCandidates,
+  sparklineVolatility,
   turnoverOf,
   turnoverRatio,
 } from "@/lib/data/mapLayers";
@@ -127,5 +128,22 @@ describe("turnover layers", () => {
     assert.equal(medianTurnover([a]), null);
     assert.equal(turnoverRatio(a, 0.2), null);
     assert.equal(turnoverRatio(asset({}), null), null);
+  });
+});
+
+describe("sparklineVolatility", () => {
+  it("measures choppy series higher than flat ones", () => {
+    const flat = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+    const choppy = [100, 104, 97, 105, 95, 108, 92, 110, 90, 105];
+    const vFlat = sparklineVolatility(flat);
+    const vChop = sparklineVolatility(choppy);
+    assert.equal(vFlat, 0);
+    assert.ok(vChop != null && vChop > 0.01);
+  });
+
+  it("returns null for short series — tile fica estático, nunca fingido", () => {
+    assert.equal(sparklineVolatility(undefined), null);
+    assert.equal(sparklineVolatility([]), null);
+    assert.equal(sparklineVolatility([100, 101, 102]), null);
   });
 });

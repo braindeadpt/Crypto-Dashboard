@@ -505,7 +505,8 @@
     },
     "noteFunding": "funding anualizado (perp) · {covered}/{total} com perp · Binance — cinzento = sem perp",
     "noteVolume": "volume 24h ÷ cap. vs mediana do grupo — violeta mais forte = mais intenso",
-    "noteSector": "Δ quota temática a 7 dias · {covered}/{total} mapeados — cinzento = sem sector"
+    "noteSector": "Δ quota temática a 7 dias · {covered}/{total} mapeados — cinzento = sem sector",
+    "noVol": "sem série de volatilidade — estático"
   },
   "etf": {
     "title": "ETF spot",

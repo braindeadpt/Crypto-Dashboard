@@ -505,7 +505,8 @@
     },
     "noteFunding": "annualized funding (perp) · {covered}/{total} with perp · Binance — grey = no perp",
     "noteVolume": "24h volume ÷ cap vs group median — stronger violet = more intense",
-    "noteSector": "7-day thematic share delta · {covered}/{total} mapped — grey = no sector"
+    "noteSector": "7-day thematic share delta · {covered}/{total} mapped — grey = no sector",
+    "noVol": "no volatility series — static"
   },
   "etf": {
     "title": "Spot ETFs",

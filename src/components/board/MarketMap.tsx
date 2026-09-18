@@ -1,30 +1,45 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslations } from "next-intl";
+import gsap from "gsap";
 import { treemapBinary } from "@/lib/viz/squarify";
 import {
   fundingForAsset,
   medianTurnover,
+  sparklineVolatility,
   turnoverRatio,
   type MapLayers,
 } from "@/lib/data/mapLayers";
+import { useMotion } from "@/lib/motion/useMotion";
 import type { AssetQuote } from "@/lib/types";
 import { cn, formatPct, formatUsd } from "@/lib/format";
 
 /**
- * Mapa do mercado — treemap dos maiores activos.
- * Tamanho = market cap. A cor é alternável (R4): variação de preço
- * (1h/24h/7d), funding anualizado dos perpétuos, volume relativo à
- * mediana do grupo, e rotação de sector (Δ quota temática 7d).
- * Tiles são divs posicionadas: a geometria transiciona em CSS quando os
- * dados mudam. Lacunas ficam neutras e declaradas — nunca estimadas.
+ * Mapa do mercado — treemap dos maiores activos, agora vivo.
+ *
+ * Área = capitalização · Cor = camada activa · MOVIMENTO = volatilidade
+ * própria de cada activo (sparkline 7d), modulada pela Agitação do Maestro.
+ * Um canto agitado do mercado vibra visivelmente; activos sem série ficam
+ * estáticos e assinalados — nunca animados a fingir.
+ *
+ * Transições físicas via GSAP (FLIP manual em transform): as células
+ * deslocam-se entre estados em vez de re-renderizarem — a continuidade
+ * espacial deixa o olho seguir o mesmo activo de camada para camada.
  */
 
 const MAX_TILES = 40;
 const CHANGE_CLAMP = 8;
 const FUNDING_CLAMP = 60;
 const SECTOR_CLAMP = 2;
+/** Quantas células vibram em simultâneo (as maiores com série). */
+const MAX_VIBRANT = 18;
 
 type Window = "1h" | "24h" | "7d";
 type ColorLayer = "price" | "funding" | "volume" | "sector";
@@ -58,6 +73,7 @@ export function MarketMap({
   layers,
   tall = false,
   showTitle = true,
+  liveTicks,
 }: {
   assets: AssetQuote[];
   /** Camadas de cor alternativas (R4). Sem layers → só a janela de preço. */
@@ -66,13 +82,19 @@ export function MarketMap({
   tall?: boolean;
   /** false quando o pai já tem cabeçalho de acto — evita título duplicado. */
   showTitle?: boolean;
+  /** Ticks ao vivo por símbolo de perp (BTCUSDT…) — flash na célula. */
+  liveTicks?: Partial<
+    Record<string, { price: number; lastUpdate: number }>
+  >;
 }) {
   const t = useTranslations("marketMap");
   const wrapRef = useRef<HTMLDivElement>(null);
+  const motion = useMotion();
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [active, setActive] = useState<AssetQuote | null>(null);
   const [win, setWin] = useState<Window>("24h");
   const [layer, setLayer] = useState<ColorLayer>("price");
+  const [onScreen, setOnScreen] = useState(true);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -82,6 +104,18 @@ export function MarketMap({
     });
     ro.observe(el);
     return () => ro.disconnect();
+  }, []);
+
+  /* A vibração pausa quando o mapa sai do ecrã — animar o que ninguém vê
+     é custo sem informação. */
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      setOnScreen(entry.isIntersecting);
+    });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const top = useMemo(
@@ -97,6 +131,144 @@ export function MarketMap({
     );
     return top.map((a, i) => ({ asset: a, rect: rects[i] })).filter((r) => r.rect);
   }, [top, size]);
+
+  /** Volatilidade própria por activo, normalizada à coorte (0..1). */
+  const volById = useMemo(() => {
+    const raw = new Map<string, number>();
+    let max = 0;
+    for (const a of top) {
+      const v = sparklineVolatility(a.sparkline7d);
+      if (v != null) {
+        raw.set(a.id, v);
+        if (v > max) max = v;
+      }
+    }
+    const norm = new Map<string, number>();
+    if (max > 0) for (const [id, v] of raw) norm.set(id, Math.min(1, v / max));
+    return norm;
+  }, [top]);
+
+  /** As células que vibram: as maiores com série, até ao limite. */
+  const vibrantIds = useMemo(() => {
+    if (motion.subdued || !onScreen) return new Set<string>();
+    const eligible = tiles
+      .filter(({ asset, rect }) => volById.has(asset.id) && rect.w * rect.h > 2600)
+      .sort((a, b) => b.rect.w * b.rect.h - a.rect.w * a.rect.h)
+      .slice(0, MAX_VIBRANT);
+    return new Set(eligible.map(({ asset }) => asset.id));
+  }, [tiles, volById, motion.subdued, onScreen]);
+
+  /* FLIP manual — quando a geometria muda (resize, refresh de dados), as
+     células deslocam-se fisicamente em transform, sem thrash de layout. */
+  const prevRects = useRef<Map<string, { x: number; y: number; w: number; h: number }>>(
+    new Map(),
+  );
+  const tileEls = useRef<Map<string, HTMLButtonElement>>(new Map());
+  useLayoutEffect(() => {
+    const prev = prevRects.current;
+    const anims: gsap.core.Tween[] = [];
+    for (const { asset, rect } of tiles) {
+      const el = tileEls.current.get(asset.id);
+      const p = prev.get(asset.id);
+      if (!el || !p) continue;
+      const dx = p.x - rect.x;
+      const dy = p.y - rect.y;
+      const sx = rect.w > 0 ? p.w / rect.w : 1;
+      const sy = rect.h > 0 ? p.h / rect.h : 1;
+      if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5 && Math.abs(sx - 1) < 0.01 && Math.abs(sy - 1) < 0.01) {
+        continue;
+      }
+      anims.push(
+        gsap.fromTo(
+          el,
+          { x: dx, y: dy, scaleX: sx, scaleY: sy, transformOrigin: "0 0" },
+          {
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+            duration: 0.55 * motion.cadence,
+            ease: "power2.out",
+            overwrite: "auto",
+          },
+        ),
+      );
+    }
+    prevRects.current = new Map(
+      tiles.map(({ asset, rect }) => [asset.id, { ...rect }]),
+    );
+    return () => anims.forEach((a) => a.kill());
+  }, [tiles, motion.cadence]);
+
+  /* Sweep de camada — ao trocar a vista, um pulso varre o campo a partir
+     do maior tile: a continuidade espacial deixa o olho seguir o activo. */
+  const prevLayer = useRef<{ layer: ColorLayer; win: Window }>({ layer, win });
+  useLayoutEffect(() => {
+    const changed =
+      prevLayer.current.layer !== layer || prevLayer.current.win !== win;
+    prevLayer.current = { layer, win };
+    if (!changed || motion.subdued) return;
+    // pulso: cada célula mergulha brevemente em opacity, a partir do centro
+    // do maior tile — o olho segue a onda e não perde o activo de vista
+    const big = tiles.reduce(
+      (m, { rect }) => (rect.w * rect.h > m.w * m.h ? rect : m),
+      { x: 0, y: 0, w: 0, h: 0 },
+    );
+    const cx = big.x + big.w / 2;
+    const cy = big.y + big.h / 2;
+    const els = tiles
+      .map(({ asset, rect }) => ({
+        el: tileEls.current.get(asset.id),
+        d: Math.hypot(rect.x + rect.w / 2 - cx, rect.y + rect.h / 2 - cy),
+      }))
+      .filter((r) => r.el)
+      .sort((a, b) => a.d - b.d);
+    if (!els.length) return;
+    const tween = gsap.fromTo(
+      els.map((r) => r.el!),
+      { opacity: 0.55 },
+      {
+        opacity: 1,
+        duration: 0.5 * motion.cadence,
+        ease: "power1.out",
+        stagger: { each: 0.012, from: "start" },
+        overwrite: "auto",
+      },
+    );
+    return () => {
+      tween.kill();
+    };
+  }, [layer, win, tiles, motion.cadence, motion.subdued]);
+
+  /* Flash de tick — evento real chega, a célula golpeia uma vez.
+     Directo no DOM (classe + timeout): sem re-render por tick. */
+  const lastTickAt = useRef<Record<string, number>>({});
+  useEffect(() => {
+    if (!liveTicks) return;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    for (const [sym, q] of Object.entries(liveTicks)) {
+      if (!q?.lastUpdate) continue;
+      const prev = lastTickAt.current[sym] ?? 0;
+      if (q.lastUpdate <= prev) continue;
+      lastTickAt.current[sym] = q.lastUpdate;
+      const asset = top.find(
+        (a) => `${a.symbol.toUpperCase()}USDT` === sym,
+      );
+      if (!asset) continue;
+      const el = tileEls.current.get(asset.id);
+      if (!el) continue;
+      const cls = (q.price ?? 0) >= (asset.price ?? 0)
+        ? "tape-flash-up"
+        : "tape-flash-down";
+      el.classList.remove("tape-flash-up", "tape-flash-down");
+      void el.offsetWidth; // re-arm da animação
+      el.classList.add(cls);
+      timers.push(
+        setTimeout(() => el.classList.remove(cls), 400),
+      );
+    }
+    return () => timers.forEach(clearTimeout);
+  }, [liveTicks, top]);
 
   const median = useMemo(() => medianTurnover(top), [top]);
 
@@ -252,15 +424,24 @@ export function MarketMap({
           const big = w > 190 && h > 140;
           const both = !big && w > 68 && h > 46;
           const symbolOnly = !big && !both && w > 30 && h > 24;
+          const vol = volById.get(asset.id);
+          const vibrates = vibrantIds.has(asset.id) && vol != null;
+          const noVol = vol == null;
           return (
             <button
               key={asset.id}
+              ref={(el) => {
+                if (el) tileEls.current.set(asset.id, el);
+                else tileEls.current.delete(asset.id);
+              }}
               type="button"
               onMouseEnter={() => setActive(asset)}
               onFocus={() => setActive(asset)}
               onClick={() => setActive(asset)}
               aria-label={`${asset.name} ${look.text}`}
-              className="absolute border border-bg/70 text-left outline-none transition-[left,top,width,height,background-color] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-accent"
+              className={cn(
+                "absolute border border-bg/70 text-left outline-none transition-[background-color] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-accent",
+              )}
               style={{
                 left: x,
                 top: y,
@@ -270,10 +451,24 @@ export function MarketMap({
                 color: tileForeground(look.fg),
               }}
             >
+              <span
+                className={cn("block", vibrates && "map-tile-vibe")}
+                style={
+                  vibrates
+                    ? ({
+                        "--vib-amp": `${(0.6 + vol * 2.2 * motion.agitation).toFixed(2)}px`,
+                        "--vib-dur": `${(2.8 - vol * 1.9).toFixed(2)}s`,
+                      } as React.CSSProperties)
+                    : undefined
+                }
+              >
               {big && (
                 <span className="block px-3 py-2.5 leading-tight">
                   <span className="block font-mono text-[13px] font-semibold tracking-tight">
                     {asset.symbol.toUpperCase()}
+                    {noVol && (
+                      <span className="ml-1 opacity-40" title={t("noVol")}>·</span>
+                    )}
                   </span>
                   <span className="mt-1 block font-mono text-sm font-medium tabular-nums opacity-90">
                     {look.text}
@@ -287,6 +482,7 @@ export function MarketMap({
                 <span className="block px-1.5 py-1 leading-none">
                   <span className="block font-mono text-[11px] font-semibold tracking-tight">
                     {asset.symbol.toUpperCase()}
+                    {noVol && <span className="ml-0.5 opacity-40">·</span>}
                   </span>
                   <span className="mt-0.5 block font-mono text-[10px] tabular-nums opacity-90">
                     {look.text}
@@ -298,6 +494,7 @@ export function MarketMap({
                   {asset.symbol.toUpperCase()}
                 </span>
               )}
+              </span>
             </button>
           );
         })}

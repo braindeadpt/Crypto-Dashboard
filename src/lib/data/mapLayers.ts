@@ -108,3 +108,24 @@ export function turnoverRatio(
   if (t == null || median == null || median <= 0) return null;
   return t / median;
 }
+
+/**
+ * Volatilidade própria de um activo, derivada da sparkline de 7 dias:
+ * desvio-padrão dos retornos intervalo-a-intervalo. Null quando a série é
+ * curta demais — a UI fica estática e assinalada, nunca animada a fingir.
+ */
+export function sparklineVolatility(points: number[] | undefined): number | null {
+  if (!points || points.length < 8) return null;
+  const rets: number[] = [];
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1]!;
+    const b = points[i]!;
+    if (a > 0 && b > 0) rets.push((b - a) / a);
+  }
+  if (rets.length < 6) return null;
+  const avg = rets.reduce((s, x) => s + x, 0) / rets.length;
+  const sd = Math.sqrt(
+    rets.reduce((s, x) => s + (x - avg) ** 2, 0) / (rets.length - 1),
+  );
+  return Number.isFinite(sd) ? sd : null;
+}

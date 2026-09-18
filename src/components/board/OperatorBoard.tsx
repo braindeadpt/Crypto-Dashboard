@@ -117,7 +117,13 @@ export function OperatorBoard({
           ageAt={market.updatedAt}
         />
         <div className="plate-frame">
-          <MarketMap assets={market.top} layers={mapLayers} tall showTitle={false} />
+          <MarketMap
+            assets={market.top}
+            layers={mapLayers}
+            tall
+            showTitle={false}
+            liveTicks={live.quotes}
+          />
         </div>
       </section>
 
