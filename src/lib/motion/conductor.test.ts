@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   AGITATION_CEILING,
   agitationFromRisk,
+  AGITATION_FLOOR,
   conduct,
   MOTION_REST,
 } from "@/lib/motion/conductor";
@@ -41,20 +42,28 @@ function fakeReadings({
   };
 }
 
-test("agitação: risco <= 30 é repouso genuíno", () => {
-  assert.equal(agitationFromRisk(0), 0);
-  assert.equal(agitationFromRisk(30), 0);
+test("agitação: o ecrã nunca pára, nem com o mercado em repouso", () => {
+  // A regra do produto: a maioria das visitas é em dias calmos, e é aí que o
+  // ecrã tem de estar vivo. Risco zero não pode significar imobilidade.
+  assert.equal(agitationFromRisk(0), AGITATION_FLOOR);
+  assert.ok(agitationFromRisk(28) > AGITATION_FLOOR);
 });
 
-test("agitação: sobe suavemente sem degraus", () => {
-  const mid = agitationFromRisk(57.5);
-  assert.ok(mid > 0 && mid < 1);
-  assert.equal(agitationFromRisk(85), 1);
-  assert.equal(agitationFromRisk(100), 1);
-  // smoothstep: derivada zero nos extremos — sem salto ao entrar no stress
-  const a = agitationFromRisk(31);
-  const b = agitationFromRisk(33);
-  assert.ok(b - a < 0.02);
+test("agitação: um dia normal já se move de forma perceptível", () => {
+  // 28 é a leitura típica de um dia calmo — tem de dar movimento visível,
+  // não um valor residual indistinguível de estar parado.
+  assert.ok(agitationFromRisk(28) > 0.4);
+});
+
+test("agitação: o mercado modula a intensidade, não liga/desliga", () => {
+  const calmo = agitationFromRisk(28);
+  const tenso = agitationFromRisk(70);
+  assert.ok(tenso > calmo * 1.5, "o stress tem de ser claramente mais agitado");
+  assert.ok(agitationFromRisk(100) <= 1);
+  // smoothstep: sem degraus ao longo da escala
+  const a = agitationFromRisk(50);
+  const b = agitationFromRisk(52);
+  assert.ok(b - a < 0.05);
 });
 
 test("conduct: tecto de agitação respeitado num crash", () => {

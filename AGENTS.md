@@ -70,19 +70,38 @@ not an afterthought: add the key to both json files.
 
 ## Design system
 
-Two themes, both always one click away and persisted via `clareza-theme`:
-**"Papel"** — warm editorial paper (`#f4f1e9`), the publication voice,
-default for new visitors — and **"Noite"** — deep blue-violet dark
-(`#05070e`), the instrument theme. Violet accent (#9b6cff / darker on
-Papel), cyan emphasis (#22e6ff), mint/coral direction (always with ▲▼),
-regime chips (--calm/--unsettled/--storm/--weird). Newsreader serif for
-editorial voice, Sora display, IBM Plex Sans body, IBM Plex Mono data
-(`tabular-nums`). Thin borders, small radius, engraved rules, no
-glassmorphism, no landing-page gradients. Motion is meaningful and
-conducted by the Maestro (`src/lib/motion/`) — channels derived from real
-readings, always gated by `prefers-reduced-motion`, page visibility and
-reading confidence. Tokens only — `src/app/globals.css`; living reference
-at `/estilo`; canonical doc `src/app/design-system.md`.
+**Direction: editorial-brutal.** Swiss-poster energy applied to market data —
+enormous type, saturated colour in large blocks, violent scale contrast,
+charts that bleed the full width. Not a quiet publication and not a neon
+crypto terminal: the loud voice is earned because the substance underneath
+(real liquidations, horizon chart, agreement strip) exists nowhere else.
+A bold skin over generic data is a template; a bold skin over original data
+is this product.
+
+- **Scale is the main instrument.** Hero numbers 120px+. A datum that matters
+  is huge; a label is tiny. Four near-identical sizes is the defect to avoid.
+- **Colour arrives in blocks**, not in hairlines. The palette is already
+  saturated (`#9b6cff`, `#00f0a8`, `#ff4d7d`) — the fault was using strong
+  colour in tiny doses.
+- **Charts are heroes**, full-bleed, never boxed inside a polite card.
+- Two themes, one click apart, persisted via `clareza-theme`: **"Papel"**
+  (`#f4f1e9`) and **"Noite"** (`#05070e`). Both must be bold; light versus
+  dark was never the problem — muted versus saturated was.
+- Sora display, IBM Plex Sans body, IBM Plex Mono data (`tabular-nums`),
+  Newsreader serif reserved for genuinely editorial moments, not chrome.
+- Direction always carries ▲▼, never colour alone. Regime chips
+  (--calm/--unsettled/--storm/--weird).
+
+**Motion: always alive.** The market modulates the *intensity* of movement;
+it never switches it on or off. Even at rest the screen breathes
+(`AGITATION_FLOOR`) — most visits happen on calm days and that is exactly
+when it must feel alive. Conducted by the Maestro (`src/lib/motion/`),
+channels derived from real readings, gated by `prefers-reduced-motion`, page
+visibility and reading confidence. A crash must still be legible:
+`AGITATION_CEILING` is not negotiable.
+
+Tokens only — `src/app/globals.css`; living reference at `/estilo`;
+canonical doc `src/app/design-system.md`.
 
 ## Skills
 

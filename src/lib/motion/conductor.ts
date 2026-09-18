@@ -48,17 +48,30 @@ function clamp01(n: number): number {
 }
 
 /**
- * A CURVA DE AGITAÇÃO — smoothstep com limiar.
+ * O ecrã NUNCA pára. Piso de agitação, mesmo com o mercado em repouso.
+ *
+ * A versão anterior desta curva devolvia exactamente 0 para risco ≤ 30 — ou
+ * seja, num dia normal (o risco lido é tipicamente ~28) o produto ficava
+ * completamente imóvel. Estava conceptualmente correcto e era o oposto do que
+ * o produto precisa: a maioria das visitas acontece em dias calmos, e é
+ * precisamente aí que o ecrã tem de estar vivo.
+ */
+export const AGITATION_FLOOR = 0.3;
+
+/**
+ * A CURVA DE AGITAÇÃO — sempre viva, intensidade conduzida pelo mercado.
  *
  * Converte a leitura de Risco (0..100) na agitação visível do ecrã (0..1).
- * O compromisso de produto: um dia calmo tem de ser genuinamente calmo (não
- * morto — o repouso também é um estado legível) e uma queda de 10% não pode
- * tornar o ecrã ilegível. Por isso: nada até risco ~30, subida suave sem
- * degraus até ~85, tecto absoluto aplicado em conduct().
+ * O estado do mercado modula a INTENSIDADE do movimento; nunca o liga ou
+ * desliga. Em repouso o ecrã respira (piso); sob stress aproxima-se do tecto.
+ *
+ * O compromisso que continua de pé: uma queda de 10% não pode tornar o ecrã
+ * ilegível — por isso AGITATION_CEILING é aplicado em conduct().
  */
 export function agitationFromRisk(risk: number): number {
-  const t = clamp01((risk - 30) / 55); // 30 → 0 ; 85 → 1
-  return t * t * (3 - 2 * t); // smoothstep
+  const t = clamp01(risk / 90); // satura perto do topo da escala de risco
+  const curve = t * t * (3 - 2 * t); // smoothstep, sem degraus
+  return AGITATION_FLOOR + (1 - AGITATION_FLOOR) * curve;
 }
 
 /**
