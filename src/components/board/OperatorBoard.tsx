@@ -1,7 +1,9 @@
 "use client";
 
 import { ActHead } from "@/components/board/boardShared";
+import { Concordancia } from "@/components/board/Concordancia";
 import { Correntes } from "@/components/board/Correntes";
+import { FitaRegime } from "@/components/board/FitaRegime";
 import { HeroPanel } from "@/components/board/HeroPanel";
 import { MarketMap } from "@/components/board/MarketMap";
 import { RegimeHistory } from "@/components/board/RegimeHistory";
@@ -13,6 +15,7 @@ import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import { MotionProvider } from "@/lib/motion/useMotion";
 import { useHistoryContexts } from "@/components/history/MetricHistoryHint";
 import { Link } from "@/i18n/navigation";
+import type { Concordancia as ConcordanciaData } from "@/lib/history/concordancia";
 import type { CorrentesData } from "@/lib/history/correntes";
 import type { MapLayers } from "@/lib/data/mapLayers";
 import type { DailyRitual } from "@/lib/editorial/ritual";
@@ -39,6 +42,8 @@ type Props = {
   mapLayers: MapLayers | null;
   /** As Correntes — 9 séries de 90d normalizadas à mediana (M5). */
   correntes: CorrentesData | null;
+  /** Concordância diária — sinais no mesmo sentido do preço (M6). */
+  concordancia: ConcordanciaData | null;
   /** Volatilidade realizada BTC — cadência do Maestro. Null sem série. */
   volRealizedPct?: number | null;
 };
@@ -60,6 +65,7 @@ export function OperatorBoard({
   regimeHistory,
   mapLayers,
   correntes = null,
+  concordancia = null,
   volRealizedPct = null,
 }: Props) {
   const ti = useTranslations("instrumento");
@@ -108,6 +114,16 @@ export function OperatorBoard({
           dom: market.global.btcDominance,
         }}
       />
+
+      {/* Contexto temporal sob o herói — uma única faixa fina que junta a
+          duração do regime e o apoio do movimento. Concordância é
+          análise → operador+. */}
+      <div>
+        <FitaRegime days={regimeHistory.days} />
+        {level !== "citizen" && concordancia && (
+          <Concordancia data={concordancia} />
+        )}
+      </div>
 
       {/* Entrada — o que mudou desde a última visita (só aparece com passado) */}
       <SinceLastVisit vitals={visitVitals} />

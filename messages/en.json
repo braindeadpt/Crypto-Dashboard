@@ -725,6 +725,19 @@
       "btc_dominance": "BTC dominance"
     }
   },
+  "fitaRegime": {
+    "title": "Regime ribbon · how long",
+    "forDays": "for {n} days",
+    "partial": "partial coverage"
+  },
+  "concordancia": {
+    "title": "Agreement · signals moving with price",
+    "today": "today {agreed}/{total}",
+    "signals": "consistent signals",
+    "noSignals": "no computable signals",
+    "empty": "Not enough history to measure agreement.",
+    "note": "Height = share of consistent signals · colour = price direction · 'consistent with', never caused by."
+  },
   "contexto": {
     "eyebrow": "A map, not a GPS",
     "title": "Learn",

@@ -2,6 +2,7 @@ import { OperatorBoard } from "@/components/board/OperatorBoard";
 import { OnboardingHint } from "@/components/layout/OnboardingHint";
 import { getFrontPageData } from "@/lib/data/bundle";
 import { getCorrentes } from "@/lib/history/correntes";
+import { getConcordancia } from "@/lib/history/concordancia";
 import { setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import BoardLoading from "./loading";
@@ -27,10 +28,12 @@ export default async function HomePage({
 async function HomeBoard({ locale }: { locale: string }) {
   let data;
   let correntes;
+  let concordancia;
   try {
-    [data, correntes] = await Promise.all([
+    [data, correntes, concordancia] = await Promise.all([
       getFrontPageData(),
       getCorrentes().catch(() => null),
+      getConcordancia().catch(() => null),
     ]);
   } catch {
     return (
@@ -61,6 +64,7 @@ async function HomeBoard({ locale }: { locale: string }) {
         regimeHistory={data.regimeHistory}
         mapLayers={data.mapLayers}
         correntes={correntes}
+        concordancia={concordancia}
         volRealizedPct={data.volRealizedPct}
         visitVitals={{
           seenAt: new Date().toISOString(),

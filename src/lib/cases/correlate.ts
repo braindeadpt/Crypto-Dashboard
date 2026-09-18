@@ -53,7 +53,7 @@ function fmtPct(n: number) {
   return `${n >= 0 ? "+" : ""}${n.toFixed(2)}%`;
 }
 
-function sameSign(a: number, b: number) {
+export function sameSign(a: number, b: number) {
   return a === 0 || b === 0 ? false : Math.sign(a) === Math.sign(b);
 }
 

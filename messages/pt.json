@@ -725,6 +725,19 @@
       "btc_dominance": "Dominância BTC"
     }
   },
+  "fitaRegime": {
+    "title": "Fita de regime · há quanto tempo",
+    "forDays": "há {n} dias",
+    "partial": "cobertura parcial"
+  },
+  "concordancia": {
+    "title": "Concordância · sinais no mesmo sentido do preço",
+    "today": "hoje {agreed}/{total}",
+    "signals": "sinais consistentes",
+    "noSignals": "sem sinais computáveis",
+    "empty": "Sem histórico para medir a concordância.",
+    "note": "Altura = fracção de sinais consistentes · cor = direcção do preço · «consistente com», nunca causa."
+  },
   "contexto": {
     "eyebrow": "Mapa, não GPS",
     "title": "Aprender",
