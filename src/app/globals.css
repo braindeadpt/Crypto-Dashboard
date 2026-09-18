@@ -758,6 +758,41 @@ body::before {
   }
 }
 
+/* Onde Doeu — golpes de liquidação. Lado por cor E forma (triângulo
+   para baixo = long vendida forçada; para cima = short comprada forçada).
+   O anel .liq-hit marca só o evento mais recente — o "golpe" do canal
+   Impacto, duração vem da Cadência do Maestro (inline). */
+.liq-long {
+  fill: var(--down);
+}
+.liq-short {
+  fill: var(--up);
+}
+@keyframes liq-hit {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+.liq-hit {
+  fill: none;
+  stroke: var(--warn);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: liq-hit 0.6s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .liq-hit {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 @keyframes threshold-call {
   0% {
     box-shadow: inset 0 0 0 1px transparent;

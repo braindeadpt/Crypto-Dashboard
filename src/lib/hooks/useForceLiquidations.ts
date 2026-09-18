@@ -119,7 +119,8 @@ const EMPTY: ForceLiqWindow = {
  * Live Binance USD-M forceOrder stream (public, no API key).
  * Sliding 60-minute window of real liquidations for BTC/ETH/SOL.
  */
-export function useForceLiquidations(): ForceLiqWindow {
+export function useForceLiquidations(opts: { enabled?: boolean } = {}): ForceLiqWindow {
+  const { enabled = true } = opts;
   const [state, setState] = useState<ForceLiqWindow>(EMPTY);
   const eventsRef = useRef<ForceLiqEvent[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
@@ -226,12 +227,13 @@ export function useForceLiquidations(): ForceLiqWindow {
       }
     };
 
-    connect();
+    if (enabled) {
+      connect();
+      document.addEventListener("visibilitychange", onVisibility);
+    }
     pruneTimer.current = setInterval(() => {
       publish(connRef.current);
     }, 30_000);
-
-    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       stoppedRef.current = true;
@@ -240,7 +242,7 @@ export function useForceLiquidations(): ForceLiqWindow {
       document.removeEventListener("visibilitychange", onVisibility);
       disposeSocket();
     };
-  }, []);
+  }, [enabled]);
 
   return state;
 }

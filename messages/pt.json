@@ -675,6 +675,23 @@
     "empty": "Ainda não há snapshot de liquidez.",
     "emptyHint": "Corre refresh-heavy ou scripts/ingest-liquidity.ts."
   },
+  "ondeDoeu": {
+    "title": "Onde doeu",
+    "observed": "Observado, não previsto",
+    "waiting": "À espera de liquidações reais — quando o mercado castigar, os golpes aparecem aqui.",
+    "aria": "Liquidações reais das últimas 60 minutos, por preço e momento — Binance Futures forceOrder",
+    "longs": "Longs",
+    "shorts": "Shorts",
+    "total": "Total",
+    "now": "agora",
+    "window": "Últimos {min} min · o que sai da janela desaparece",
+    "conn": {
+      "live": "Ao vivo",
+      "connecting": "A ligar…",
+      "reconnecting": "A reconectar…",
+      "offline": "Desligado"
+    }
+  },
   "contexto": {
     "eyebrow": "Mapa, não GPS",
     "title": "Aprender",

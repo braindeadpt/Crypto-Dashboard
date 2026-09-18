@@ -5,12 +5,15 @@ import { formatUsd } from "@/lib/format";
 import {
   useForceLiquidations,
   type ForceLiqConnection,
+  type ForceLiqWindow,
 } from "@/lib/hooks/useForceLiquidations";
 import { useTranslations } from "next-intl";
 
 type Props = {
   compact?: boolean;
   href?: "/fluxos" | null;
+  /** Janela partilhada pelo pai — evita um segundo WebSocket na página. */
+  data?: ForceLiqWindow;
 };
 
 function connectionLabel(
@@ -23,9 +26,10 @@ function connectionLabel(
   return t("liqConnecting");
 }
 
-export function LiveLiquidations({ compact = false, href = "/fluxos" }: Props) {
+export function LiveLiquidations({ compact = false, href = "/fluxos", data: shared }: Props) {
   const t = useTranslations("board");
-  const data = useForceLiquidations();
+  const own = useForceLiquidations({ enabled: !shared });
+  const data = shared ?? own;
   const top = data.events.slice(0, compact ? 4 : 8);
 
   return (

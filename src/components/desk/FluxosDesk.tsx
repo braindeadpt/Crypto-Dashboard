@@ -5,11 +5,13 @@ import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
 import { EtfDesk } from "@/components/desk/EtfDesk";
 import { LiquidityDesk } from "@/components/liquidity/LiquidityDesk";
 import { LiveLiquidations } from "@/components/board/LiveLiquidations";
+import { OndeDoeu } from "@/components/board/OndeDoeu";
 import { TermLabel } from "@/components/jargon/TermLabel";
 import { TermTwin } from "@/components/jargon/TermTwin";
 import type { EtfSnapshot } from "@/lib/data/etf";
 import type { LiquiditySnapshot } from "@/lib/data/liquidity";
 import type { SentimentSnapshot } from "@/lib/types";
+import { useForceLiquidations } from "@/lib/hooks/useForceLiquidations";
 import { formatUsd } from "@/lib/format";
 import { useTranslations } from "next-intl";
 
@@ -24,6 +26,8 @@ type Props = {
  */
 export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
   const t = useTranslations("fluxos");
+  // Uma única janela de liquidações alimenta o scatter e a lista textual.
+  const liq = useForceLiquidations();
 
   return (
     <div>
@@ -94,7 +98,10 @@ export function FluxosDesk({ liquidity, etf, sentiment }: Props) {
               </div>
             </div>
             <div className="mt-4">
-              <LiveLiquidations href={null} />
+              <OndeDoeu data={liq} />
+            </div>
+            <div className="mt-4">
+              <LiveLiquidations href={null} data={liq} />
             </div>
           </section>
         )}
