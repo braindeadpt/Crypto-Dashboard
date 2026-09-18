@@ -18,6 +18,13 @@ export const HISTORY_METRIC_IDS = [
 
 export type HistoryMetricId = (typeof HISTORY_METRIC_IDS)[number];
 
+/**
+ * Hourly-granularity series. Kept OUT of HISTORY_METRIC_IDS so day-based
+ * consumers (contexts, deltas, regime history) never read hour points as days.
+ */
+export const HOURLY_METRIC_IDS = ["price_btc_1h"] as const;
+export type HourlyMetricId = (typeof HOURLY_METRIC_IDS)[number];
+
 export type MetricSeriesMeta = {
   id: HistoryMetricId;
   /** Human unit label for docs/debug */
@@ -109,5 +116,5 @@ export type HistorySeriesBlob = {
 
 export type HistorySnapshot = {
   windowDays: number;
-  series: Partial<Record<HistoryMetricId, HistorySeriesBlob>>;
+  series: Partial<Record<HistoryMetricId | HourlyMetricId, HistorySeriesBlob>>;
 };

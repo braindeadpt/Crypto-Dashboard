@@ -36,6 +36,37 @@ export function mergeDailyPoints(
     .map(([t, v]) => ({ t, v }));
 }
 
+/** UTC hour key YYYY-MM-DDTHH */
+export function hourKey(isoOrHour: string): string {
+  const t = Date.parse(isoOrHour);
+  if (!Number.isFinite(t)) return isoOrHour.slice(0, 13);
+  return new Date(t).toISOString().slice(0, 13);
+}
+
+/**
+ * Merge by hour key (incoming wins), sort ascending, keep last `maxHours`.
+ * For hourly series — mergeDailyPoints would collapse 24 points into one day.
+ */
+export function mergeHourlyPoints(
+  existing: SeriesPoint[],
+  incoming: SeriesPoint[],
+  maxHours = 720,
+): SeriesPoint[] {
+  const map = new Map<string, number>();
+  for (const p of existing) {
+    if (!Number.isFinite(p.v)) continue;
+    map.set(hourKey(p.t), p.v);
+  }
+  for (const p of incoming) {
+    if (!Number.isFinite(p.v)) continue;
+    map.set(hourKey(p.t), p.v);
+  }
+  return [...map.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .slice(-maxHours)
+    .map(([t, v]) => ({ t, v }));
+}
+
 /** Append/overwrite today's point only (for metrics without API history). */
 export function appendToday(
   existing: SeriesPoint[],

@@ -10,11 +10,13 @@ import {
   type HistoryMetricId,
   type HistorySeriesBlob,
   type HistorySnapshot,
+  type HourlyMetricId,
 } from "@/lib/history/metrics";
 import {
   appendToday,
   dayKey,
   mergeDailyPoints,
+  mergeHourlyPoints,
   realizedVolSeries,
 } from "@/lib/history/series";
 
@@ -63,7 +65,9 @@ export async function ingestHistorySeries(): Promise<{
   bootstrapped: string[];
 }> {
   const prev = await readSnapshot<HistorySnapshot>("history");
-  const series: Partial<Record<HistoryMetricId, HistorySeriesBlob>> = {
+  const series: Partial<
+    Record<HistoryMetricId | HourlyMetricId, HistorySeriesBlob>
+  > = {
     ...(prev?.series ?? {}),
   };
   const bootstrapped: string[] = [];
@@ -273,6 +277,34 @@ export async function ingestHistorySeries(): Promise<{
       "[history ingest] live append",
       e instanceof Error ? e.message : e,
     );
+  }
+
+  // Hourly BTC candles — separate granularity, kept out of HISTORY_METRIC_IDS.
+  // 720h ≈ 30 days; drives finer volatility reads and intraday views.
+  try {
+    const raw = await fetchJson<(string | number)[][]>(
+      "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=720",
+    );
+    const points: SeriesPoint[] = raw.map((k) => ({
+      t: new Date(Number(k[0])).toISOString().slice(0, 13),
+      v: Number(k[4]),
+    }));
+    series.price_btc_1h = {
+      points: mergeHourlyPoints(
+        prev?.series?.price_btc_1h?.points ?? [],
+        points,
+        720,
+      ),
+      source: "Binance BTCUSDT 1h klines",
+    };
+  } catch (e) {
+    console.warn(
+      "[history ingest] price_btc_1h",
+      e instanceof Error ? e.message : e,
+    );
+    if (!series.price_btc_1h && prev?.series?.price_btc_1h) {
+      series.price_btc_1h = prev.series.price_btc_1h;
+    }
   }
 
   // Ensure all keys exist

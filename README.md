@@ -56,6 +56,23 @@ npm run snapshots:refresh
 # ou POST /api/cron/refresh-heavy  (Authorization: Bearer $CRON_SECRET)
 ```
 
+**Ingestão agendada** — `.github/workflows/ingest.yml` corre o refresh todos os
+dias às 05:17 UTC (hora fora do pico de rate-limit da CoinGecko) e commita os
+snapshots actualizados. É o que faz crescer as séries sem backfill gratuito
+(`fee_btc`, `breadth`, `btc_dominance`, história de sectores) — sem este job
+ficam congeladas no comprimento do bootstrap. Accionar à mão: separador
+*Actions → Ingest snapshots → Run workflow*, ou `npm run snapshots:refresh`
+local. Opcional: definir o secret `COINGECKO_DEMO_API_KEY` no repositório para
+reduzir 429s. Em produção, a alternativa é fazer POST a
+`/api/cron/refresh-heavy` do site publicado (ver comentário no workflow).
+
+Notas de robustez: cada fonte é isolada — um falhanço não aborta as restantes
+nem escreve um snapshot truncado por cima de um bom (a escrita é por nome e só
+acontece em sucesso). A história de sectores **não tem backfill possível**:
+`/coins/categories` da CoinGecko só devolve o snapshot actual, não há endpoint
+de histórico de categorias no plano gratuito/Demo — a Rotação acumula apenas
+via cron diário.
+
 CI no GitHub (push/PR a `master`): lint → typecheck → build → smoke E2E.  
 PRs usam o template com **checklist de auditoria** (copy PT, estrutura, estados de erro, i18n).
 

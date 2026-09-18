@@ -30,9 +30,17 @@ export async function refreshHeavySnapshots(): Promise<{
   sectorsHistoryDays: number;
   liquiditySeriesDays: number;
 }> {
+  // Each source is isolated: one failure must not stop the others nor
+  // overwrite a good snapshot with nothing (writeSnapshot is per-name).
   const [yields, defi, etf] = await Promise.all([
-    ingestYields(),
-    ingestDefi(),
+    ingestYields().catch((e) => {
+      console.warn("[yields ingest]", e instanceof Error ? e.message : e);
+      return { count: 0 };
+    }),
+    ingestDefi().catch((e) => {
+      console.warn("[defi ingest]", e instanceof Error ? e.message : e);
+      return { protocols: 0, totalTvl: 0, tvlSource: "chainsSum" as TvlSource };
+    }),
     ingestEtfSnapshot()
       .then(() => true)
       .catch((e) => {
