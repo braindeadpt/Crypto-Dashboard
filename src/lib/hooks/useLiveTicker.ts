@@ -8,6 +8,9 @@ export type LiveTickerQuote = {
   price: number;
   change24h: number;
   lastUpdate: number;
+  /** Rolling 24h quote volume (USD) — o delta entre ticks é o caudal real
+      do intervalo; é isso que engrossa a linha da Corrente. */
+  volume24h?: number;
 };
 
 export type LiveTickerConnection =
@@ -36,6 +39,7 @@ type RawTicker = {
     s?: string;
     c?: string;
     P?: string;
+    q?: string;
   };
 };
 
@@ -137,6 +141,7 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
           const price = Number(d.c);
           const change24h = Number(d.P);
           if (!Number.isFinite(price)) return;
+          const volume24h = Number(d.q);
           const at = Date.now();
           setQuotes((prev) => ({
             ...prev,
@@ -145,6 +150,9 @@ export function useLiveTicker(seed: Seed): LiveTickerState {
               change24h: Number.isFinite(change24h)
                 ? change24h
                 : (prev[symbol]?.change24h ?? 0),
+              volume24h: Number.isFinite(volume24h)
+                ? volume24h
+                : prev[symbol]?.volume24h,
               lastUpdate: at,
             },
           }));

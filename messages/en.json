@@ -159,7 +159,19 @@
     "empty": "No DeFi data right now — the daily snapshot has not run yet.",
     "sortLabel": "Sort protocols",
     "sortTvl": "Share",
-    "sortMove": "Movement"
+    "sortMove": "Movement",
+    "tvlSeries": "Mass over time",
+    "ringAria": "Protocol ring ordered by the active metric",
+    "ringCenter": "{n} protocols",
+    "ringNote": "Top {n} by TVL · arc is share of the shown total",
+    "ringMoveNote": "ordered by biggest movers over the last 24 h",
+    "pegAria": "Stablecoin peg watch",
+    "pegUnknown": "deviation not declared",
+    "pegNote": "Real deviation from peg · alert outside ±{warn}% · DefiLlama",
+    "tvlSeriesEmpty": "insufficient TVL series — still accumulating",
+    "tvlSeriesAria": "Global TVL over the last {days} days",
+    "tvlSeriesNote": "Global TVL · {days} days · DefiLlama",
+    "yieldSortLabel": "Sort yields by"
   },
   "cadeias": {
     "title": "Chains",
@@ -171,7 +183,12 @@
     "share": "Share of TVL",
     "d1": "Δ 1d (weighted)",
     "source": "Source: DefiLlama · daily snapshot · Δ1d = TVL-weighted mean of protocols on the chain",
-    "empty": "No chain data right now — the daily snapshot has not run yet."
+    "empty": "No chain data right now — the daily snapshot has not run yet.",
+    "compareTitle": "Comparator",
+    "comparePick": "Chain {side}",
+    "compareProtocols": "protocols",
+    "compareTopProto": "largest protocol",
+    "compareNote": "Side-by-side of two real chains — pick in the selectors. TVL and share come from the same DefiLlama read."
   },
   "portugal": {
     "title": "Portugal",
@@ -277,7 +294,12 @@
     "signalsTitle": "Signals that coincided",
     "signalsHint": "Numbers moving with the price — coincidence, not proof.",
     "sectorLinkTitle": "Sectors where this asset appears",
-    "sectorLinkHint": "Map context — does not explain the move by itself."
+    "sectorLinkHint": "Map context — does not explain the move by itself.",
+    "balanceTitle": "The hypothesis balance",
+    "balanceAria": "Balance between evidence for and against",
+    "balanceFor": "for",
+    "balanceAgainst": "against",
+    "balanceNote": "The pan tilts with the confidence declared on each hypothesis · evidence, not verdict."
   },
   "explain": {
     "meaning": "What it means",
@@ -679,7 +701,16 @@
     "leverageTitle": "Leverage and sentiment",
     "leverageHint": "Funding, open interest and liquidations — state, not dollar flow.",
     "empty": "No liquidity snapshot yet.",
-    "emptyHint": "Run refresh-heavy or scripts/ingest-liquidity.ts."
+    "emptyHint": "Run refresh-heavy or scripts/ingest-liquidity.ts.",
+    "caudalTitle": "The flow",
+    "caudalHint": "money coming in and going out — ETF above, stablecoins below",
+    "caudalAria": "Flow river: daily ETF flow and stablecoin supply change",
+    "caudalNote": "Real average of the last {days} days with data · direction = flow sign · Farside + DefiLlama",
+    "balanceTitle": "The balance",
+    "balanceAria": "Balance between spot and leverage",
+    "balanceSpot": "spot — money that stays",
+    "balanceLeverage": "leverage — open positions",
+    "balanceNote": "Net 7d ETF vs open-interest change · scales normalised side by side, no invented conversion."
   },
   "ondeDoeu": {
     "title": "Where it hurt",
@@ -725,7 +756,8 @@
       "etf_btc_flow": "BTC ETF flow",
       "fee_btc": "BTC fee",
       "breadth": "Breadth",
-      "btc_dominance": "BTC dominance"
+      "btc_dominance": "BTC dominance",
+      "ls_btc": "Long/short ratio"
     }
   },
   "fitaRegime": {
@@ -802,7 +834,15 @@
     "sumSavedTitle": "Total of {n} addresses on this network",
     "sumSavedErrors": "{n} failed to query — check and retry",
     "poweredBy": "Data:",
-    "disclaimer": "Educational orientation — always verify on the explorer. The exported CSV is raw material, not an accounting report — for accounting purposes always consult a certified accountant."
+    "disclaimer": "Educational orientation — always verify on the explorer. The exported CSV is raw material, not an accounting report — for accounting purposes always consult a certified accountant.",
+    "composition": "Composition",
+    "donutEmpty": "No priced positions to draw the chart.",
+    "donutAria": "Wallet composition donut by USD value",
+    "donutNote": "Only positions with a real price enter a slice.",
+    "donutUnpriced": "{n} unpriced token(s) left out.",
+    "timelineEmpty": "Too few transactions to draw the timeline.",
+    "timelineAria": "Transaction timeline: inflows above, outflows below",
+    "timelineNote": "{n} transactions · position = time · side = direction · size = relative amount"
   },
   "onboarding": {
     "title": "This is not a price tracker",
@@ -932,5 +972,10 @@
     "live": "LIVE",
     "offline": "OFFLINE",
     "connecting": "CONNECTING"
+  },
+  "brief": {
+    "masthead": "daily edition · clareza",
+    "title": "The Briefing",
+    "format": "5 fixed slots · ~5 min · no trade signals"
   }
 }

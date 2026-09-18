@@ -881,6 +881,28 @@ body::before {
   transform-origin: left center;
   animation: corrente-wipe 0.9s var(--ease-out) both;
 }
+/* Poço da Corrente Viva — campo escuro permanente nos dois temas.
+   V4 §2①: a luz em movimento só se lê sobre escuro; em Papel o poço é a
+   "tela" embutida na folha, como o visor de um instrumento. */
+.corrente-well {
+  background: #04060c;
+  background-image: radial-gradient(
+    ellipse 90% 70% at 50% 40%,
+    rgba(155, 108, 255, 0.07),
+    transparent 70%
+  );
+  border-block: 1px solid color-mix(in oklab, var(--accent) 18%, transparent);
+}
+.corrente-well .text-faint {
+  color: rgba(226, 230, 244, 0.55);
+}
+.corrente-well .text-accent-2 {
+  color: #22e6ff;
+}
+.corrente-well .text-warn {
+  color: #ffb454;
+}
+
 .corrente-edge-pulse {
   animation: corrente-edge-pulse 2.4s ease-in-out infinite;
 }
@@ -890,6 +912,17 @@ body::before {
 .corrente-edge-down {
   fill: var(--accent-2);
 }
+/* Baloiço da vigilância de peg — amplitude vem de --peg-amp (desvio real). */
+@keyframes peg-sway {
+  0%,
+  100% {
+    transform: translateY(calc(-50% - var(--peg-amp, 1px)));
+  }
+  50% {
+    transform: translateY(calc(-50% + var(--peg-amp, 1px)));
+  }
+}
+
 @keyframes corrente-edge-pulse {
   0%,
   100% {
@@ -904,6 +937,9 @@ body::before {
     animation: none;
   }
   .corrente-edge-pulse {
+    animation: none;
+  }
+  .peg-sway {
     animation: none;
   }
 }

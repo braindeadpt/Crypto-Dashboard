@@ -1,11 +1,16 @@
 "use client";
 
+import { PegWatch } from "@/components/defi/PegWatch";
+import { ProtocolRing } from "@/components/defi/ProtocolRing";
+import { TvlChart } from "@/components/defi/TvlChart";
+import { YieldBars } from "@/components/defi/YieldBars";
 import { DataAge } from "@/components/explain/DataAge";
 import { ExplainThisNumber } from "@/components/explain/ExplainThisNumber";
 import { Link } from "@/i18n/navigation";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import type { YieldPool } from "@/lib/data/yields";
 import { useMotion } from "@/lib/motion/useMotion";
+import type { SeriesPoint } from "@/lib/stats";
 import type { DefiSnapshot } from "@/lib/types";
 import gsap from "gsap";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -17,11 +22,16 @@ export function DefiDesk({
   data,
   yields = [],
   yieldsAt,
+  tvlPoints = [],
+  tvlAt = null,
 }: {
   data: DefiSnapshot;
   yields?: YieldPool[];
   /** Age of the yields snapshot — separate disk blob (F2). */
   yieldsAt?: string | null;
+  /** Série diária de TVL global (90d) — o órgão visto no tempo. */
+  tvlPoints?: SeriesPoint[];
+  tvlAt?: string | null;
 }) {
   const t = useTranslations("defi");
   const motion = useMotion();
@@ -80,6 +90,17 @@ export function DefiDesk({
           className="mt-2 block text-meta"
         />
       </header>
+
+      {/* O órgão no tempo — a série de TVL que se desenha ao entrar. */}
+      <section className="card mt-6 p-5">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="text-title">{t("tvlSeries")}</h2>
+          {tvlAt && <DataAge at={tvlAt} className="text-meta" />}
+        </div>
+        <div className="mt-3">
+          <TvlChart points={tvlPoints} updatedAt={tvlAt} />
+        </div>
+      </section>
 
       <div className="card mt-8 p-6">
         <p className="text-label text-faint">
@@ -140,6 +161,11 @@ export function DefiDesk({
               ))}
             </div>
           </div>
+          {/* O anel — quota por protocolo em arcos concêntricos; ao
+              reordenar os anéis trocam de raio fisicamente. */}
+          <div className="mt-4">
+            <ProtocolRing protocols={protocols} sort={sort} />
+          </div>
           <ul className="mt-4 divide-y divide-line">
             {protocols.map((p) => (
               <li
@@ -182,7 +208,12 @@ export function DefiDesk({
 
           <section className="card p-5">
             <h2 className="text-title">{t("stablecoins")}</h2>
-            <ul className="mt-4 divide-y divide-line">
+            {/* Vigilância de peg — cada stablecoin orbita o 1,00; o desvio
+                real afasta o ponto e acende acima do limiar declarado. */}
+            <div className="mt-4">
+              <PegWatch stables={data.stablecoins} />
+            </div>
+            <ul className="mt-4 divide-y divide-line border-t border-line pt-2">
               {data.stablecoins.map((s) => (
                 <li
                   key={s.symbol}
@@ -220,37 +251,9 @@ export function DefiDesk({
               </>
             )}
           </p>
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[560px] border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-line text-left text-xs text-faint">
-                  <th className="py-2 pr-3 font-medium">{t("pool")}</th>
-                  <th className="py-2 pr-3 font-medium">{t("chain")}</th>
-                  <th className="py-2 pr-3 text-right font-medium">TVL</th>
-                  <th className="py-2 text-right font-medium">APY</th>
-                </tr>
-              </thead>
-              <tbody>
-                {yields.map((p) => (
-                  <tr key={p.pool} className="border-b border-line last:border-0">
-                    <td className="py-2 pr-3">
-                      <span className="font-medium">{p.project}</span>{" "}
-                      <span className="text-muted">{p.symbol}</span>
-                      {p.apyReward != null && p.apyReward > 0 && (
-                        <span className="ml-1.5 text-[10px] text-faint">⚡</span>
-                      )}
-                    </td>
-                    <td className="py-2 pr-3 text-muted">{p.chain}</td>
-                    <td className="py-2 pr-3 text-right font-mono">
-                      {formatUsd(p.tvlUsd, true)}
-                    </td>
-                    <td className="py-2 text-right font-mono delta-up">
-                      {formatPct(p.apy)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Barras ordenáveis — a transição entre critérios é física. */}
+          <div className="mt-4">
+            <YieldBars pools={yields} />
           </div>
         </section>
       )}

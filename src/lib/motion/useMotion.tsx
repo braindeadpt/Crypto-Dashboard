@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { ReadingSet } from "@/lib/reading";
+import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import {
   conduct,
   MOTION_REST,
@@ -53,14 +54,25 @@ export function MotionProvider({
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  const state = useMemo(
-    () =>
-      conduct(readings, {
-        reduced: reduced || hidden,
-        realizedVolPct,
-      }),
-    [readings, realizedVolPct, reduced, hidden],
-  );
+  // O Dial governa também o movimento (V4 §5): Essencial é generoso — é o
+  // wow; Operador equilibrado; Analista mínimo — quem lê números ao segundo
+  // quer o ecrã estável. Repouso (reduced/hidden/confiança) vence sempre.
+  const { level } = useExpertise();
+
+  const state = useMemo(() => {
+    const s = conduct(readings, {
+      reduced: reduced || hidden,
+      realizedVolPct,
+    });
+    if (s.subdued) return s;
+    const agitScale = level === "citizen" ? 1 : level === "analyst" ? 0.35 : 0.8;
+    const cadScale = level === "analyst" ? 1.3 : level === "citizen" ? 1 : 1.1;
+    return {
+      ...s,
+      agitation: s.agitation * agitScale,
+      cadence: s.cadence * cadScale,
+    };
+  }, [readings, realizedVolPct, reduced, hidden, level]);
 
   return <MotionCtx.Provider value={state}>{children}</MotionCtx.Provider>;
 }

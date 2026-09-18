@@ -159,7 +159,19 @@
     "empty": "Sem dados DeFi neste momento — o snapshot diário ainda não correu.",
     "sortLabel": "Ordenar protocolos",
     "sortTvl": "Quota",
-    "sortMove": "Movimento"
+    "sortMove": "Movimento",
+    "tvlSeries": "A massa no tempo",
+    "ringAria": "Anel de protocolos ordenados pela métrica activa",
+    "ringCenter": "{n} protocolos",
+    "ringNote": "Os {n} maiores por TVL · o arco é a quota do total mostrado",
+    "ringMoveNote": "ordenado por quem mais se mexeu nas últimas 24 h",
+    "pegAria": "Vigia da paridade das stablecoins",
+    "pegUnknown": "desvio não declarado",
+    "pegNote": "Desvio real à paridade · alerta fora de ±{warn}% · DefiLlama",
+    "tvlSeriesEmpty": "série de TVL insuficiente — ainda a acumular",
+    "tvlSeriesAria": "Evolução do TVL global nos últimos {days} dias",
+    "tvlSeriesNote": "TVL global · {days} dias · DefiLlama",
+    "yieldSortLabel": "Ordenar yields por"
   },
   "cadeias": {
     "title": "Cadeias",
@@ -171,7 +183,12 @@
     "share": "Quota do TVL",
     "d1": "Δ 1d (ponderado)",
     "source": "Fonte: DefiLlama · snapshot diário · Δ1d = média ponderada pelo TVL dos protocolos na cadeia",
-    "empty": "Sem dados de cadeias neste momento — o snapshot diário ainda não correu."
+    "empty": "Sem dados de cadeias neste momento — o snapshot diário ainda não correu.",
+    "compareTitle": "Comparador",
+    "comparePick": "Cadeia {side}",
+    "compareProtocols": "protocolos",
+    "compareTopProto": "maior protocolo",
+    "compareNote": "Comparação entre duas cadeias reais — escolhe nos selectores. TVL e quota vêm da mesma leitura DefiLlama."
   },
   "portugal": {
     "title": "Portugal",
@@ -277,7 +294,12 @@
     "signalsTitle": "Sinais que coincidiram",
     "signalsHint": "Números no mesmo sentido do movimento — coincidência, não prova.",
     "sectorLinkTitle": "Sectores onde este activo aparece",
-    "sectorLinkHint": "Contexto de mapa — não explica o movimento por si."
+    "sectorLinkHint": "Contexto de mapa — não explica o movimento por si.",
+    "balanceTitle": "A balança das hipóteses",
+    "balanceAria": "Balança entre evidência a favor e contra",
+    "balanceFor": "a favor",
+    "balanceAgainst": "contra",
+    "balanceNote": "O prato inclina com a confiança declarada em cada hipótese · evidência, não veredicto."
   },
   "explain": {
     "meaning": "Significado",
@@ -679,7 +701,16 @@
     "leverageTitle": "Alavancagem e sentimento",
     "leverageHint": "Funding, open interest e liquidações — estado, não fluxo em dólares.",
     "empty": "Ainda não há snapshot de liquidez.",
-    "emptyHint": "Corre refresh-heavy ou scripts/ingest-liquidity.ts."
+    "emptyHint": "Corre refresh-heavy ou scripts/ingest-liquidity.ts.",
+    "caudalTitle": "O caudal",
+    "caudalHint": "o dinheiro a entrar e a sair — ETF em cima, stablecoins em baixo",
+    "caudalAria": "Rio de caudal: fluxo diário de ETF e variação de stablecoins",
+    "caudalNote": "Média real dos últimos {days} dias com dados · sentido = sinal do fluxo · Farside + DefiLlama",
+    "balanceTitle": "A balança",
+    "balanceAria": "Balança entre spot e alavancagem",
+    "balanceSpot": "spot — dinheiro que fica",
+    "balanceLeverage": "alavancagem — posições abertas",
+    "balanceNote": "ETF líquido 7d vs variação de juros abertos · escalas normalizadas lado a lado, sem conversão inventada."
   },
   "ondeDoeu": {
     "title": "Onde doeu",
@@ -725,7 +756,8 @@
       "etf_btc_flow": "Fluxo ETF BTC",
       "fee_btc": "Fee BTC",
       "breadth": "Amplitude",
-      "btc_dominance": "Dominância BTC"
+      "btc_dominance": "Dominância BTC",
+      "ls_btc": "Rácio long/short"
     }
   },
   "fitaRegime": {
@@ -802,7 +834,15 @@
     "sumSavedTitle": "Total de {n} endereços nesta rede",
     "sumSavedErrors": "{n} falharam a consulta — verifica e tenta de novo",
     "poweredBy": "Dados:",
-    "disclaimer": "Orientação educativa — verifica sempre no explorer. O CSV exportado é matéria-prima, não um relatório contabilístico — para efeitos contabilísticos consulta sempre um TOC."
+    "disclaimer": "Orientação educativa — verifica sempre no explorer. O CSV exportado é matéria-prima, não um relatório contabilístico — para efeitos contabilísticos consulta sempre um TOC.",
+    "composition": "Composição",
+    "donutEmpty": "Sem posições com preço para compor o gráfico.",
+    "donutAria": "Donut da composição da carteira por valor em USD",
+    "donutNote": "Só posições com preço real entram na fatia.",
+    "donutUnpriced": "{n} token(s) sem preço ficaram de fora.",
+    "timelineEmpty": "Poucas transacções para desenhar a linha do tempo.",
+    "timelineAria": "Linha do tempo das transacções: entradas em cima, saídas em baixo",
+    "timelineNote": "{n} transacções · posição = tempo · lado = direcção · tamanho = montante relativo"
   },
   "onboarding": {
     "title": "Isto não é um tracker de preços",
@@ -932,5 +972,10 @@
     "live": "AO VIVO",
     "offline": "SEM LIGAÇÃO",
     "connecting": "A LIGAR"
+  },
+  "brief": {
+    "masthead": "edição diária · clareza",
+    "title": "O Briefing",
+    "format": "5 slots fixos · ~5 min · sem sinais de troca"
   }
 }

@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useTranslations } from "next-intl";
 import gsap from "gsap";
+import { Flip } from "gsap/Flip";
 import { treemapBinary } from "@/lib/viz/squarify";
 import {
   fundingForAsset,
@@ -29,10 +30,13 @@ import { cn, formatPct, formatUsd } from "@/lib/format";
  * Um canto agitado do mercado vibra visivelmente; activos sem série ficam
  * estáticos e assinalados — nunca animados a fingir.
  *
- * Transições físicas via GSAP (FLIP manual em transform): as células
- * deslocam-se entre estados em vez de re-renderizarem — a continuidade
- * espacial deixa o olho seguir o mesmo activo de camada para camada.
+ * Transições físicas via GSAP Flip: ao trocar de camada a ORDEM de leitura
+ * passa a seguir a métrica activa (área continua = capitalização), por isso
+ * as células deslocam-se fisicamente entre posições — o olho segue o mesmo
+ * activo de vista para vista. Flip.getState no clique, Flip.from no commit.
  */
+
+gsap.registerPlugin(Flip);
 
 const MAX_TILES = 40;
 const CHANGE_CLAMP = 8;
@@ -126,14 +130,40 @@ export function MarketMap({
     [assets],
   );
 
+  const median = useMemo(() => medianTurnover(top), [top]);
+
+  /* A ordem de leitura segue a métrica da camada activa — os mais vivos
+     primeiro. É o que faz a troca de camada deslocar as células
+     fisicamente (área = cap não muda; a posição codifica a camada). */
+  const ordered = useMemo(() => {
+    const score = (a: AssetQuote): number => {
+      if (layer === "funding") {
+        const v = layers ? fundingForAsset(a.symbol, layers.funding) : null;
+        return v == null ? -Infinity : Math.abs(v);
+      }
+      if (layer === "volume") {
+        const r = turnoverRatio(a, median);
+        return r == null ? -Infinity : r;
+      }
+      if (layer === "sector") {
+        const v = layers?.sector[a.id]?.shareDelta7d;
+        return v == null ? -Infinity : Math.abs(v);
+      }
+      return Math.abs(windowChange(a, win));
+    };
+    return [...top].sort((a, b) => score(b) - score(a));
+  }, [top, layer, win, layers, median]);
+
   const tiles = useMemo(() => {
     const rects = treemapBinary(
-      top.map((a) => ({ id: a.id, value: a.marketCap })),
+      ordered.map((a) => ({ id: a.id, value: a.marketCap })),
       size.w,
       size.h,
     );
-    return top.map((a, i) => ({ asset: a, rect: rects[i] })).filter((r) => r.rect);
-  }, [top, size]);
+    return ordered
+      .map((a, i) => ({ asset: a, rect: rects[i] }))
+      .filter((r) => r.rect);
+  }, [ordered, size]);
 
   /** Volatilidade própria por activo, normalizada à coorte (0..1). */
   const volById = useMemo(() => {
@@ -161,13 +191,56 @@ export function MarketMap({
     return new Set(eligible.map(({ asset }) => asset.id));
   }, [tiles, volById, motion.subdued, onScreen]);
 
-  /* FLIP manual — quando a geometria muda (resize, refresh de dados), as
-     células deslocam-se fisicamente em transform, sem thrash de layout. */
+  /* GSAP Flip real — na troca de camada/janela o estado é capturado no
+     clique (antes do React reordenar o DOM) e o Flip.from desloca as
+     células fisicamente no commit seguinte. Para mudanças silenciosas de
+     geometria (resize, refresh) mantém-se o invert manual — é o mesmo
+     truque do Flip, mas sem evento para capturar antes. */
   const prevRects = useRef<Map<string, { x: number; y: number; w: number; h: number }>>(
     new Map(),
   );
   const tileEls = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const pendingFlip = useRef<Flip.FlipState | null>(null);
+
+  function captureFlip() {
+    if (motion.subdued) return;
+    const els = tiles
+      .map(({ asset }) => tileEls.current.get(asset.id))
+      .filter((el): el is HTMLButtonElement => !!el);
+    if (els.length) pendingFlip.current = Flip.getState(els);
+  }
+
+  function switchLayer(l: ColorLayer) {
+    if (l === layer) return;
+    captureFlip();
+    setLayer(l);
+  }
+
+  function switchWin(w: Window) {
+    if (w === win) return;
+    captureFlip();
+    setWin(w);
+  }
+
   useLayoutEffect(() => {
+    const pending = pendingFlip.current;
+    pendingFlip.current = null;
+    if (pending && !motion.subdued) {
+      // O utilizador trocou a vista — deslocação física completa.
+      const tween = Flip.from(pending, {
+        duration: 0.7 * motion.cadence,
+        ease: "power2.inOut",
+        stagger: { each: 0.006, from: "start" },
+        absolute: true,
+        scale: false,
+      });
+      prevRects.current = new Map(
+        tiles.map(({ asset, rect }) => [asset.id, { ...rect }]),
+      );
+      return () => {
+        tween.kill();
+      };
+    }
     const prev = prevRects.current;
     const anims: gsap.core.Tween[] = [];
     for (const { asset, rect } of tiles) {
@@ -201,7 +274,7 @@ export function MarketMap({
       tiles.map(({ asset, rect }) => [asset.id, { ...rect }]),
     );
     return () => anims.forEach((a) => a.kill());
-  }, [tiles, motion.cadence]);
+  }, [tiles, motion.cadence, motion.subdued]);
 
   /* Sweep de camada — ao trocar a vista, um pulso varre o campo a partir
      do maior tile: a continuidade espacial deixa o olho seguir o activo. */
@@ -272,8 +345,6 @@ export function MarketMap({
     }
     return () => timers.forEach(clearTimeout);
   }, [liveTicks, top]);
-
-  const median = useMemo(() => medianTurnover(top), [top]);
 
   /** Cobertura honesta por camada — quantos tiles têm dado real. */
   const coverage = useMemo(
@@ -367,7 +438,7 @@ export function MarketMap({
                 <button
                   key={l}
                   type="button"
-                  onClick={() => setLayer(l)}
+                  onClick={() => switchLayer(l)}
                   aria-pressed={layer === l}
                   className={cn(
                     "px-2 py-0.5 font-mono text-[10px] transition",
@@ -396,7 +467,7 @@ export function MarketMap({
                 <button
                   key={w}
                   type="button"
-                  onClick={() => setWin(w)}
+                  onClick={() => switchWin(w)}
                   aria-pressed={win === w}
                   className={cn(
                     "px-2 py-0.5 font-mono text-[10px] transition",

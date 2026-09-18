@@ -49,6 +49,9 @@ export function SignalStrip({
               }
             >
               <span className="block text-label">
+                <span className="mr-1.5 font-mono text-micro text-faint">
+                  {i + 1}
+                </span>
                 {locale === "pt" ? e.label : e.labelEn}
               </span>
               <span className="font-mono text-data tabular-nums">{e.value}</span>

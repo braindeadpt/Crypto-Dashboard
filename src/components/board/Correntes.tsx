@@ -268,11 +268,9 @@ export function Correntes({ data }: { data: CorrentesData }) {
                   cx={geom.edgeX}
                   cy={geom.edgeY}
                   r={2.2}
-                  className={
-                    geom.edgeUp
-                      ? "corrente-edge-up"
-                      : "corrente-edge-down"
-                  }
+                  className={`${
+                    geom.edgeUp ? "corrente-edge-up" : "corrente-edge-down"
+                  } ${motion.subdued ? "" : "corrente-edge-pulse"}`}
                   style={
                     motion.subdued
                       ? undefined

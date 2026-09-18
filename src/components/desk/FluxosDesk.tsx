@@ -2,6 +2,8 @@
 
 import { DataAge } from "@/components/explain/DataAge";
 import { ExpertiseGate } from "@/components/expertise/ExpertiseGate";
+import { Balanca } from "@/components/fluxos/Balanca";
+import { CaudalRiver } from "@/components/fluxos/CaudalRiver";
 import { EtfDesk } from "@/components/desk/EtfDesk";
 import { LiquidityDesk } from "@/components/liquidity/LiquidityDesk";
 import { LiveLiquidations } from "@/components/board/LiveLiquidations";
@@ -46,6 +48,26 @@ export function FluxosDesk({
   // Uma única janela de liquidações alimenta o scatter e a lista textual.
   const liq = useForceLiquidations();
 
+  // Caudal combinado dos ETF spot (BTC+ETH+SOL por dia) — série real Farside.
+  const etfCombined: { t: string; v: number }[] = (() => {
+    if (!etf) return [];
+    const byDay = new Map<string, number>();
+    for (const asset of [etf.btc, etf.eth, etf.sol]) {
+      for (const d of asset?.history ?? []) {
+        byDay.set(d.date, (byDay.get(d.date) ?? 0) + d.totalUsdM);
+      }
+    }
+    return [...byDay.entries()]
+      .map(([t, v]) => ({ t, v }))
+      .sort((a, b) => a.t.localeCompare(b.t));
+  })();
+
+  // Balança: Δ de OI em USD reais (oiUsd × Δ% declarado) contra o fluxo ETF.
+  const oiDeltaUsd =
+    liquidity.leverage.oiUsd != null && liquidity.leverage.oiChange24hPct != null
+      ? liquidity.leverage.oiUsd * (liquidity.leverage.oiChange24hPct / 100)
+      : null;
+
   return (
     // A página inteira herda o Maestro — caudal, multidão e qualquer
     // movimento leem a mesma cadência. Sem leituras → repouso honesto.
@@ -60,6 +82,20 @@ export function FluxosDesk({
           </ExpertiseGate>
         </header>
       </div>
+
+      {/* O CAUDAL — o dinheiro como rio: ETF spot e stables, partículas
+          no sentido real do sinal. A peça mais literal do conceito. */}
+      <section className="obs-shell section-pad pb-8">
+        <h2 className="font-display text-title text-ink">{t("caudalTitle")}</h2>
+        <p className="mt-1 text-meta text-muted">{t("caudalHint")}</p>
+        <div className="mt-4 border border-line bg-surface p-3">
+          <CaudalRiver
+            etfFlows={etfCombined}
+            stableSupply={liquidity.stables.series}
+            updatedAt={etf?.updatedAt ?? liquidity.ingestedAt}
+          />
+        </div>
+      </section>
 
       <LiquidityDesk initial={liquidity} embedded />
 
@@ -99,6 +135,17 @@ export function FluxosDesk({
                   term="openInterest"
                   lineValue={formatUsd(sentiment.openInterest.value, true)}
                   value={formatUsd(sentiment.openInterest.value, true)}
+                />
+              </div>
+            </div>
+            {/* A Balança — spot institucional contra alavancagem, o prato
+                inclina para o lado que pesa mais hoje (dólares reais). */}
+            <div className="mt-3 border border-line bg-surface p-4">
+              <h3 className="text-label text-faint">{t("balanceTitle")}</h3>
+              <div className="mt-2">
+                <Balanca
+                  spotUsdM={liquidity.spot.etfCombined1dUsdM}
+                  oiDeltaUsd={oiDeltaUsd}
                 />
               </div>
             </div>

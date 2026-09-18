@@ -21,7 +21,7 @@ import { useEffect, useRef } from "react";
  * campo congela e di-lo — nunca inventa movimento para parecer ocupado.
  */
 
-type Sample = { t: number; v: number };
+type Sample = { t: number; v: number; q?: number };
 type Impact = { t: number; y: number; side: "long" | "short"; mag: number };
 
 const WINDOW_MS = 90_000; // 90s de história visível
@@ -61,7 +61,11 @@ export function CorrenteViva({
     const arr = samples.current;
     const last = arr[arr.length - 1];
     if (last && last.t === quote.lastUpdate) return;
-    arr.push({ t: quote.lastUpdate || Date.now(), v: quote.price });
+    arr.push({
+      t: quote.lastUpdate || Date.now(),
+      v: quote.price,
+      q: quote.volume24h,
+    });
     if (arr.length > MAX_SAMPLES) arr.splice(0, arr.length - MAX_SAMPLES);
   }, [quote]);
 
@@ -94,13 +98,12 @@ export function CorrenteViva({
     let running = true;
     let phase = 0;
 
-    const css = getComputedStyle(document.documentElement);
-    const read = (n: string, f: string) =>
-      css.getPropertyValue(n).trim() || f;
-    const cUp = read("--up", "#00f0a8");
-    const cDown = read("--down", "#ff4d7d");
-    const cAccent = read("--accent", "#9b6cff");
-    const cAccent2 = read("--accent-2", "#22e6ff");
+    // O poço é sempre escuro — a corrente usa a palete Noite fixa, mesmo
+    // em Papel (era por isto que a luz ficava lavada: lia as cores da folha).
+    const cUp = "#00f0a8";
+    const cDown = "#ff4d7d";
+    const cAccent = "#9b6cff";
+    const cAccent2 = "#22e6ff";
 
     function resize() {
       if (!canvas) return;
@@ -170,7 +173,24 @@ export function CorrenteViva({
         ctx.fill();
       }
 
-      // A linha do preço real, por cima.
+      // Caudal real do intervalo entre ticks (delta do volume 24h rolante)
+      // — a mediana recente define o que conta como "pico". Sem delta
+      // positivo não há engrossamento: a linha nunca finge actividade.
+      let volBoost = 0;
+      const deltas: number[] = [];
+      for (let i = 1; i < win.length; i++) {
+        const dq = (win[i]!.q ?? NaN) - (win[i - 1]!.q ?? NaN);
+        if (Number.isFinite(dq) && dq > 0) deltas.push(dq);
+      }
+      if (deltas.length >= 6) {
+        const sorted = [...deltas].sort((a, b) => a - b);
+        const med = sorted[Math.floor(sorted.length / 2)]!;
+        const lastDelta = deltas[deltas.length - 1]!;
+        if (med > 0) volBoost = Math.min(1, Math.max(0, lastDelta / med - 1) / 3);
+      }
+
+      // A linha do preço real, por cima — engrossa quando o caudal do
+      // intervalo supera a mediana recente (volume real, não decoração).
       if (win.length > 1) {
         ctx.beginPath();
         win.forEach((s, i) => {
@@ -180,7 +200,7 @@ export function CorrenteViva({
           else ctx.lineTo(x, y);
         });
         ctx.strokeStyle = withAlpha(cAccent2, 0.9);
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 + volBoost * 5;
         ctx.stroke();
 
         // Cabeça viva — pulsa ao ritmo, marca o agora.
@@ -234,10 +254,13 @@ export function CorrenteViva({
   }, []);
 
   return (
-    <figure className={`relative ${className}`} aria-label={t("aria")}>
+    <figure
+      className={`corrente-well relative ${className}`}
+      aria-label={t("aria")}
+    >
       <canvas
         ref={canvasRef}
-        className="block h-[clamp(200px,28vw,380px)] w-full"
+        className="block h-[clamp(200px,38vh,420px)] w-full"
         aria-hidden
       />
       <figcaption className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3">

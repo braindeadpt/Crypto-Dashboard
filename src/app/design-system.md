@@ -12,7 +12,7 @@ Pergunta de teste: *parece um instrumento com escala, ou mais um dashboard SaaS?
 | **IBM Plex Sans** (UI) | Neutra, precisa, com carácter. Evita Inter / system-ui. Boa em densidade. |
 | **IBM Plex Mono** (dados) | Família irmã do Plex; `tabular-nums` para números que não dançam. |
 | **Placas numeradas** | Cada acto é uma placa gravada: número mono, título serif, coordenada à direita, idade da fonte. `.placa-head` + `ActHead` (prop `num`). |
-| **Tema claro «Papel» como assinatura** | Papel editorial quente (`#f4f1e9`), não branco SaaS frio — a voz de publicação vive aqui. «Noite» (`#05070e`) é o tema-instrumento, sempre a um clique. |
+| **«Noite» como default, «Papel» a um clique** | Noite (`#05070e`) é o tema de entrada desde V4 — a luz em movimento precisa de fundo escuro para se ler. «Papel» editorial quente (`#f4f1e9`) fica sempre a um clique. |
 | **Acento = violeta de instrumento** | `#9b6cff` (Noite) / `#5b2bd9` (Dia). Marca, links, live. Separado de sobe/desce e de regime. |
 | **Ênfase = ciano** | `--accent-2` (`#22e6ff`/`#0a7ea8`) — destaques secundários, campo ambiental. |
 | **Direcção = teal / âmbar + ▲▼** | Mais seguro para daltonismo do que verde/vermelho isolados. |
@@ -47,8 +47,8 @@ Classes: `.text-micro`, `.text-label` … `.text-hero`, `.text-serif-display`, `
 | `--bg` … `--surface-3` | Elevação cromática |
 | `--ink` / `--muted` / `--faint` | Hierarquia de texto |
 
-Temas: `[data-theme="light"]` (Papel — default) e `[data-theme="dark"]` (Noite).  
-Preferência: `localStorage` (`clareza-theme`) → Papel.
+Temas: `[data-theme="dark"]` (Noite — default) e `[data-theme="light"]` (Papel).  
+Preferência: `localStorage` (`clareza-theme`) → Noite.
 
 ## Elevação e superfícies
 

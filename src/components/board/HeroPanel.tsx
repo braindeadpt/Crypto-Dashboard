@@ -5,6 +5,7 @@ import { AnimatedNumber } from "@/components/board/AnimatedNumber";
 import { Sparkline } from "@/components/board/Sparkline";
 import { DataAge } from "@/components/explain/DataAge";
 import { Link } from "@/i18n/navigation";
+import { useExpertise } from "@/components/expertise/ExpertiseProvider";
 import {
   LOW_CONFIDENCE,
   READING_METHOD_ANCHOR,
@@ -292,6 +293,7 @@ function ReadingRow({
   const t = useTranslations("readings");
   const locale = useLocale();
   const isPt = locale === "pt";
+  const { level } = useExpertise();
   const sentence = isPt ? reading.sentencePt : reading.sentenceEn;
   const tone =
     reading.id === "risk"
@@ -322,7 +324,17 @@ function ReadingRow({
         <span className="mr-2 text-accent">{n}</span>
         {t(`${reading.id}.label`)}
       </p>
-      <p className={`mt-1 text-colossal ${tone}`}>
+      {/* O Dial governa a linguagem (V4 §5): no Essencial a frase em
+          português comum vem primeiro e leva o peso visual; no Analista o
+          número é a primeira coisa. Mesma verdade, densidade diferente. */}
+      {level === "citizen" && reading.confidence > 0 && (
+        <p className="mt-2 text-body font-medium leading-snug text-ink">
+          {sentence}
+        </p>
+      )}
+      <p
+        className={`mt-1 ${level === "citizen" ? "text-data" : "text-colossal"} ${tone}`}
+      >
         {reading.confidence === 0
           ? "—"
           : isRisk
@@ -341,7 +353,9 @@ function ReadingRow({
           />
         </div>
       )}
-      <p className="mt-3 text-meta leading-snug text-muted">{sentence}</p>
+      {(level !== "citizen" || reading.confidence === 0) && (
+        <p className="mt-3 text-meta leading-snug text-muted">{sentence}</p>
+      )}
       {reading.confidence > 0 && reading.confidence < LOW_CONFIDENCE && (
         <p className="mt-1 text-meta text-warn">
           {t("partial", {

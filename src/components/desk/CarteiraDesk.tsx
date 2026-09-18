@@ -13,6 +13,7 @@ import {
   removeSavedAddress,
   setEtherscanKey,
 } from "@/lib/local/addresses";
+import { TxTimeline, WalletDonut } from "@/components/carteira/WalletViz";
 import { DataAge } from "@/components/explain/DataAge";
 import { downloadBlob } from "@/lib/local/store";
 import { cn, formatUsd } from "@/lib/format";
@@ -446,6 +447,14 @@ export function CarteiraDesk() {
             </div>
           </section>
 
+          {/* Composição — donut animado das posições com preço real. */}
+          <section className="border border-line bg-surface p-5 md:col-span-2">
+            <h2 className="text-label text-faint">{t("composition")}</h2>
+            <div className="mt-3">
+              <WalletDonut view={view} />
+            </div>
+          </section>
+
           <section className="border border-line bg-surface p-5">
             <h2 className="text-label text-faint">
               {t("tokens")}
@@ -492,6 +501,12 @@ export function CarteiraDesk() {
             <h2 className="text-label text-faint">
               {t("activity")}
             </h2>
+            {/* Fluxo de transacções — a timeline real antes da lista. */}
+            {view.activity.length >= 2 && (
+              <div className="mt-3">
+                <TxTimeline view={view} />
+              </div>
+            )}
             {view.activity.length === 0 ? (
               <p className="mt-3 text-sm text-muted">{t("noActivity")}</p>
             ) : (

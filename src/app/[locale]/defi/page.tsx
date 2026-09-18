@@ -2,6 +2,7 @@ import { DefiDesk } from "@/components/desk/DefiDesk";
 import { fetchDefiSnapshot } from "@/lib/data/defillama";
 import { fetchTopYieldPools } from "@/lib/data/yields";
 import { getRegimeBundle } from "@/lib/data/bundle";
+import { getHistoryPoints } from "@/lib/history/points";
 import { MotionProvider } from "@/lib/motion/useMotion";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -17,10 +18,11 @@ export default async function DefiPage({
   setRequestLocale(locale);
   const t = await getTranslations("defi");
 
-  const [defi, yields, regimeBundle] = await Promise.all([
+  const [defi, yields, regimeBundle, tvlSeries] = await Promise.all([
     fetchDefiSnapshot().catch(() => null),
     fetchTopYieldPools(15).catch(() => null),
     getRegimeBundle().catch(() => null),
+    getHistoryPoints("tvl").catch(() => ({ points: [], updatedAt: null })),
   ]);
 
   if (!defi) {
@@ -41,6 +43,8 @@ export default async function DefiPage({
         data={defi}
         yields={yields?.pools ?? []}
         yieldsAt={yields?.updatedAt ?? null}
+        tvlPoints={tvlSeries.points}
+        tvlAt={tvlSeries.updatedAt}
       />
     </MotionProvider>
   );

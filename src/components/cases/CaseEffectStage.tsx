@@ -1,5 +1,6 @@
 "use client";
 
+import { HypothesisBalance } from "@/components/cases/HypothesisBalance";
 import { HypothesisForceViz } from "@/components/cases/HypothesisForceViz";
 import { MoveHorizonViz } from "@/components/cases/MoveHorizonViz";
 import { SignalStrip } from "@/components/cases/SignalStrip";
@@ -91,6 +92,15 @@ export function CaseEffectStage({
             hypotheses={caseFile.hypotheses}
             className="mt-5"
           />
+
+          {/* A balança de hipóteses — evidência a favor vs contra como
+              prato que inclina com a confiança ponderada real. */}
+          <div className="mt-4 border border-line bg-bg-elevated p-4">
+            <h4 className="text-label text-faint">{t("balanceTitle")}</h4>
+            <div className="mt-2">
+              <HypothesisBalance hypotheses={caseFile.hypotheses} />
+            </div>
+          </div>
 
           <section className="mt-5">
             <h4 className="text-label text-faint">{t("hypotheses")}</h4>

@@ -93,12 +93,11 @@ export function OperatorBoard({
   return (
     <MotionProvider readings={readings} realizedVolPct={volRealizedPct}>
     <div className="obs-shell section-pad pb-16 enter-sequence">
-      {/* A corrente viva — primeira coisa que se vê e a única que nunca pára.
-          Canvas em tempo real alimentado pelos ticks e liquidações reais. */}
-      <CorrenteViva live={live} className="-mx-[var(--pad-x,1rem)] mb-2" />
-
-      {/* A resposta — masthead, manchete, índice de leituras, tape live */}
-      <HeroPanel
+      {/* A resposta — a corrente viva por cima do masthead: uma só peça.
+          A corrente é a primeira coisa que se vê e a única que nunca pára. */}
+      <div>
+        <CorrenteViva live={live} className="-mx-[var(--pad-x,1rem)] mb-2" />
+        <HeroPanel
         readings={readings}
         date={ritual.date}
         btc={{ px: btcPx, chg: btcChg, spark: market.btc.sparkline7d }}
@@ -119,6 +118,7 @@ export function OperatorBoard({
           dom: market.global.btcDominance,
         }}
       />
+      </div>
 
       {/* Contexto temporal sob o herói — uma única faixa fina que junta a
           duração do regime e o apoio do movimento. Concordância é

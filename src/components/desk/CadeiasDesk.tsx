@@ -1,5 +1,6 @@
 "use client";
 
+import { ChainComparator } from "@/components/cadeias/ChainComparator";
 import { DataAge } from "@/components/explain/DataAge";
 import { deltaClass, formatPct, formatUsd } from "@/lib/format";
 import { useMotion } from "@/lib/motion/useMotion";
@@ -131,6 +132,11 @@ export function CadeiasDesk({ defi }: { defi: DefiSnapshot }) {
           </tbody>
         </table>
       </section>
+
+      {/* O comparador — duas cadeias lado a lado, métricas a interpolar
+          na troca. Bump chart fica bloqueado: precisa de série histórica
+          por cadeia que ainda não existe (DESENHO-V4 §6). */}
+      <ChainComparator defi={defi} />
 
       <p className="mt-3 text-label text-faint">{t("source")}</p>
     </div>

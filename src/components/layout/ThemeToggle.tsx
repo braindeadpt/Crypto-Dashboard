@@ -33,12 +33,12 @@ function subscribe(cb: () => void) {
 }
 
 function readTheme(): ThemeMode {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") return "dark";
   const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  // V4: Noite é o default do produto — não segue o SO. A luz em movimento
+  // precisa do fundo escuro para se ler; Papel fica a um clique.
+  return "dark";
 }
 
 function applyTheme(theme: ThemeMode) {
@@ -55,8 +55,8 @@ function setMode(next: ThemeMode) {
 export function ThemeToggle() {
   const t = useTranslations("theme");
   // Server snapshot must match the bootstrap fallback in lib/theme.ts —
-  // Papel (light) is the default; a mismatch here breaks first paint.
-  const theme = useSyncExternalStore(subscribe, readTheme, () => "light");
+  // Noite (dark) is the default; a mismatch here breaks first paint.
+  const theme = useSyncExternalStore(subscribe, readTheme, () => "dark");
 
   return (
     <div
