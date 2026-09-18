@@ -89,9 +89,11 @@ export function HeroPanel({
       {/* A resposta — manchete de primeira página + faixa das três leituras */}
       <div className="relative overflow-hidden">
         <AmbientField intensity={intensity} />
-        <div className="relative py-10 text-center md:py-14">
+        <div className="relative py-12 md:py-20">
           <div>
-            <h1 className="mx-auto max-w-[24ch] text-serif-display text-ink">
+            {/* Brutal: alinhada à esquerda e a ocupar o ecrã. Centrada e
+                estreita era a voz de publicação — esta é a voz do produto. */}
+            <h1 className="max-w-[18ch] text-brutal text-ink">
               {claims.length
                 ? claims.map((c, i) => (
                     <Fragment key={i}>
@@ -170,8 +172,8 @@ export function HeroPanel({
           <div className="col-span-2 py-4 sm:col-span-3 lg:col-span-2 lg:pr-6">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-label text-faint">BTC</p>
-                <p className="mt-1 font-display text-display leading-none text-ink">
+                <p className="text-tag text-faint">BTC</p>
+                <p className="mt-2 text-colossal text-ink">
                   {btc.px != null ? (
                     <AnimatedNumber
                       value={btc.px}
@@ -314,31 +316,32 @@ function ReadingRow({
           : "border-b border-line py-4 last:border-0 first:pt-0 lg:first:pt-0"
       }
     >
-      <p className="flex items-baseline justify-between gap-3">
-        <span className="text-label text-faint">
-          <span className="mr-2 font-mono text-accent tabular-nums">{n}</span>
-          {t(`${reading.id}.label`)}
-        </span>
-        <span className={`font-display text-title tabular-nums ${tone}`}>
-          {reading.confidence === 0
-            ? "—"
-            : isRisk
-              ? reading.value
-              : `${reading.value > 0 ? "+" : ""}${reading.value}`}
-        </span>
+      {/* Brutal: o rótulo encolhe, o número domina. O contraste de escala é o
+          instrumento — um valor que importa é enorme, o que o nomeia é tag. */}
+      <p className="text-tag text-faint">
+        <span className="mr-2 text-accent">{n}</span>
+        {t(`${reading.id}.label`)}
+      </p>
+      <p className={`mt-1 text-colossal ${tone}`}>
+        {reading.confidence === 0
+          ? "—"
+          : isRisk
+            ? reading.value
+            : `${reading.value > 0 ? "+" : ""}${reading.value}`}
       </p>
       {reading.confidence > 0 && (
-        <div className="mt-2 h-px w-full bg-line" role="presentation">
+        <div
+          className="mt-3 h-2 w-full bg-line/40"
+          role="presentation"
+        >
+          {/* Régua em massa, não em filete: a cor chega em bloco. */}
           <div
-            className={`h-px ${tone}`}
-            style={{
-              width: `${Math.max(2, Math.min(100, pos))}%`,
-              backgroundColor: "currentColor",
-            }}
+            className={`sat-rule ${tone}`}
+            style={{ width: `${Math.max(2, Math.min(100, pos))}%` }}
           />
         </div>
       )}
-      <p className="mt-2 text-meta leading-snug text-muted">{sentence}</p>
+      <p className="mt-3 text-meta leading-snug text-muted">{sentence}</p>
       {reading.confidence > 0 && reading.confidence < LOW_CONFIDENCE && (
         <p className="mt-1 text-meta text-warn">
           {t("partial", {

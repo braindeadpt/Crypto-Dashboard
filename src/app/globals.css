@@ -623,6 +623,72 @@ body::before {
   line-height: 1.08;
 }
 
+/* ——————————————————————————————————————————————————————————
+ * ESCALA BRUTAL — a escala é o instrumento principal
+ *
+ * A direcção editorial-brutal exige contraste violento: o dado que importa é
+ * enorme, o rótulo é minúsculo. Quatro tamanhos quase iguais era o defeito.
+ * Tudo em clamp() para escalar com a viewport sem media queries.
+ * —————————————————————————————————————————————————————————— */
+
+/* Manchete — forte e alinhada à esquerda, nunca centrada e tímida.
+ *
+ * O tecto é deliberado: uma primeira tentativa a 6.5rem empurrava tudo o resto
+ * para fora do ecrã. Brutal é CONTRASTE de escala com composição — o herói tem
+ * de caber com as leituras, senão não há contraste, há só uma coisa gigante. */
+.text-brutal {
+  font-family: var(--font-display), Sora, sans-serif;
+  font-size: clamp(2.1rem, 0.9rem + 3.4vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+/* Número-herói — o BTC, as leituras. Domina tudo o resto. */
+.text-colossal {
+  font-family: var(--font-display), Sora, sans-serif;
+  font-size: clamp(2.6rem, 1rem + 5.2vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rótulo que acompanha um número enorme — deliberadamente minúsculo */
+.text-tag {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--text-micro);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Bloco de cor saturada — a cor chega em massa, não em filete */
+.block-sat {
+  position: relative;
+  isolation: isolate;
+}
+.block-sat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: currentColor;
+  opacity: 0.1;
+}
+.block-sat[data-strong="true"]::before {
+  opacity: 0.18;
+}
+
+/* Régua viva — barra que preenche até à posição do valor */
+.sat-rule {
+  height: 0.5rem;
+  background: currentColor;
+  opacity: 0.85;
+  transform-origin: left center;
+}
+
 /* Afirmação verificável — sublinhado pontilhado marca a affordance;
  * o recibo abre com a métrica-fonte. */
 .claim-mark {
@@ -815,8 +881,7 @@ body::before {
   transform-origin: left center;
   animation: corrente-wipe 0.9s var(--ease-out) both;
 }
-.corrente-edge-up,
-.corrente-edge-down {
+.corrente-edge-pulse {
   animation: corrente-edge-pulse 2.4s ease-in-out infinite;
 }
 .corrente-edge-up {
@@ -838,8 +903,7 @@ body::before {
   .corrente-wipe {
     animation: none;
   }
-  .corrente-edge-up,
-  .corrente-edge-down {
+  .corrente-edge-pulse {
     animation: none;
   }
 }
