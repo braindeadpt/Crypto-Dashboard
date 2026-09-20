@@ -1,7 +1,8 @@
 import { cachedFetch } from "@/lib/cache";
 import { fetchFundingRate, fetchOpenInterest } from "@/lib/data/binance";
+import { http } from "@/lib/data/sources";
 
-const FAPI = "https://fapi.binance.com";
+const FAPI = http("binance_rest");
 
 export type PerpSymbol = "BTCUSDT" | "ETHUSDT" | "SOLUSDT";
 

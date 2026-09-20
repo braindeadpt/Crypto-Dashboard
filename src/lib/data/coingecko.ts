@@ -1,8 +1,13 @@
 import { cachedFetch } from "@/lib/cache";
-import { readSnapshot } from "@/lib/data/snapshotStore";
+import { http } from "@/lib/data/sources";
+import {
+  isSnapshotStale,
+  readSnapshot,
+  writeSnapshot,
+} from "@/lib/data/snapshotStore";
 import type { AssetQuote, MarketSnapshot, Mover, TrendingCoin } from "@/lib/types";
 
-const CG = "https://api.coingecko.com/api/v3";
+const CG = `${http("coingecko")}/api/v3`;
 
 function cgHeaders(): HeadersInit {
   const headers: Record<string, string> = { Accept: "application/json" };
@@ -93,6 +98,9 @@ function toMover(q: AssetQuote): Mover {
   };
 }
 
+/** Último bom em disco fica marcado como desactualizado passadas 6h (F0.6). */
+const MARKET_SNAPSHOT_STALE_MS = 6 * 60 * 60_000;
+
 function fromMarketSnapshotFile(
   snap: MarketSnapshot & { source?: string },
 ): MarketSnapshot {
@@ -102,6 +110,7 @@ function fromMarketSnapshotFile(
     global: snap.global,
     movers: snap.movers,
     top: snap.top,
+    stale: isSnapshotStale(snap.updatedAt, MARKET_SNAPSHOT_STALE_MS),
     updatedAt: snap.updatedAt,
   };
 }
@@ -110,51 +119,66 @@ function fromMarketSnapshotFile(
  * Live CoinGecko first; disk fixture on rate-limit / outage so Agora still
  * renders ritual + Pulso (CI GitHub runners often get 429).
  */
+/** Live CoinGecko — sem cache nem fallback. Usado pelo ingest e pelo render. */
+async function fetchMarketSnapshotLive(): Promise<MarketSnapshot> {
+  const [markets, global] = await Promise.all([
+    cg<CgMarket[]>(
+      "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d",
+    ),
+    cg<CgGlobal>("/global"),
+  ]);
+
+  const quotes = markets.map(toQuote);
+  const btc = quotes.find((q) => q.id === "bitcoin") ?? quotes[0];
+  const eth = quotes.find((q) => q.id === "ethereum") ?? quotes[1];
+
+  const gainers = quotes
+    .filter((q) => q.change24h > 0)
+    .sort((a, b) => b.change24h - a.change24h)
+    .slice(0, 5)
+    .map(toMover);
+  const losers = quotes
+    .filter((q) => q.change24h < 0)
+    .sort((a, b) => a.change24h - b.change24h)
+    .slice(0, 5)
+    .map(toMover);
+
+  return {
+    btc,
+    eth,
+    global: {
+      totalMarketCap: global.data.total_market_cap.usd,
+      totalVolume: global.data.total_volume.usd,
+      btcDominance: global.data.market_cap_percentage.btc,
+      ethDominance: global.data.market_cap_percentage.eth,
+      marketCapChange24h: global.data.market_cap_change_percentage_24h_usd,
+    },
+    movers: { gainers, losers },
+    top: quotes.slice(0, 40),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 export async function fetchMarketSnapshot(): Promise<MarketSnapshot> {
   return cachedFetch("market:snapshot", 90_000, async () => {
     try {
-      const [markets, global] = await Promise.all([
-        cg<CgMarket[]>(
-          "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d",
-        ),
-        cg<CgGlobal>("/global"),
-      ]);
-
-      const quotes = markets.map(toQuote);
-      const btc = quotes.find((q) => q.id === "bitcoin") ?? quotes[0];
-      const eth = quotes.find((q) => q.id === "ethereum") ?? quotes[1];
-
-      const gainers = quotes
-        .filter((q) => q.change24h > 0)
-        .sort((a, b) => b.change24h - a.change24h)
-        .slice(0, 5)
-        .map(toMover);
-      const losers = quotes
-        .filter((q) => q.change24h < 0)
-        .sort((a, b) => a.change24h - b.change24h)
-        .slice(0, 5)
-        .map(toMover);
-
-      return {
-        btc,
-        eth,
-        global: {
-          totalMarketCap: global.data.total_market_cap.usd,
-          totalVolume: global.data.total_volume.usd,
-          btcDominance: global.data.market_cap_percentage.btc,
-          ethDominance: global.data.market_cap_percentage.eth,
-          marketCapChange24h: global.data.market_cap_change_percentage_24h_usd,
-        },
-        movers: { gainers, losers },
-        top: quotes.slice(0, 40),
-        updatedAt: new Date().toISOString(),
-      };
+      return await fetchMarketSnapshotLive();
     } catch (err) {
       const snap = await readSnapshot<MarketSnapshot>("market");
       if (snap?.btc && snap?.eth) return fromMarketSnapshotFile(snap);
       throw err;
     }
   });
+}
+
+/**
+ * Ingest: grava o "último bom" em disco para o fallback do render deixar de
+ * ser a fixture de Julho (F0.6). Lança em falha — o caller regista o erro.
+ */
+export async function ingestMarketSnapshot(): Promise<MarketSnapshot> {
+  const snap = await fetchMarketSnapshotLive();
+  await writeSnapshot("market", snap, "ingest");
+  return snap;
 }
 
 /** USD spot prices for CoinGecko ids — used by Carteira native balance. */

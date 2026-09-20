@@ -12,6 +12,7 @@ import {
   fetchTokenPricesUsd,
   fetchUsdPrices,
 } from "@/lib/data/coingecko";
+import { http } from "@/lib/data/sources";
 import {
   WALLET_CHAINS,
   type EvmChainId,
@@ -20,7 +21,7 @@ import {
   type WalletView,
 } from "@/lib/data/etherscan";
 
-const API = "https://api.etherscan.io/v2/api";
+const API = `${http("etherscan")}/v2/api`;
 const TOKEN_TX_SCAN_LIMIT = 500;
 const ACTIVITY_LIMIT = 25;
 

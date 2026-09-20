@@ -1,4 +1,5 @@
 import type { EtfSnapshot } from "@/lib/data/etf";
+import { http } from "@/lib/data/sources";
 import {
   isSnapshotStale,
   readSnapshot,
@@ -15,8 +16,8 @@ import {
 import { dayKey, mergeDailyPoints } from "@/lib/history/series";
 import { computeMetricContext, type SeriesPoint } from "@/lib/stats";
 
-const STABLES = "https://stablecoins.llama.fi";
-const FAPI = "https://fapi.binance.com";
+const STABLES = http("defillama_stables");
+const FAPI = http("binance_rest");
 const STALE_MS = 45 * 60_000;
 const SERIES_DAYS = 90;
 

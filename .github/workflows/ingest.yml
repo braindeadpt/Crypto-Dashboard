@@ -1,24 +1,26 @@
 name: Ingest snapshots
 
-# Daily data ingest — runs scripts/refresh-snapshots.ts and commits the
-# updated data/snapshots/*.json. This is what makes the historical series
-# grow: fee_btc, breadth and btc_dominance are append-only (no free API
-# backfill), so without this job they stay frozen at bootstrap length.
+# Data ingest — runs scripts/refresh-snapshots.ts and commits the updated
+# data/snapshots/*.json (+ health.json). This is what makes the historical
+# series grow: fee_btc, breadth and btc_dominance are append-only (no free
+# API backfill), so without this job they stay frozen.
 #
-# Hour chosen off-peak: 05:17 UTC avoids the top-of-hour rush when most
-# cron jobs hammer CoinGecko (fewer 429s).
+# Four runs a day, off the top of the hour (fewer CoinGecko 429s). The
+# daily series only append once per UTC day (ingest is idempotent per day);
+# the extra runs keep "last good" market/sentiment snapshots fresh (<6h).
 #
-# Production alternative (once deployed): replace the script step with a
-# POST to https://<site>/api/cron/refresh-heavy with header
-# "Authorization: Bearer ${{ secrets.CRON_SECRET }}".
+# Only the default branch runs `schedule` — the default branch MUST be
+# `master` (checked in DESENHO-V5 §5). Failures open/update an Issue so a
+# dead source is noticed by e-mail, not by a frozen chart weeks later.
 
 on:
   schedule:
-    - cron: "17 5 * * *"
+    - cron: "17 5,11,17,23 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: ingest
@@ -31,6 +33,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: master
 
       - uses: actions/setup-node@v4
         with:
@@ -46,6 +50,9 @@ jobs:
           COINGECKO_DEMO_API_KEY: ${{ secrets.COINGECKO_DEMO_API_KEY }}
           COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
 
+      - name: Validate snapshots
+        run: npm run snapshots:validate
+
       - name: Commit updated snapshots
         run: |
           git config user.name "github-actions[bot]"
@@ -53,7 +60,29 @@ jobs:
           git add data/snapshots/
           if git diff --cached --quiet; then
             echo "No snapshot changes — sources returned identical data."
+            exit 0
+          fi
+          git commit -m "data: snapshot ingest $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
+          # master may have moved while we ran; never lose the day's data.
+          for i in 1 2 3; do
+            git pull --rebase origin master && git push origin HEAD:master && exit 0
+            sleep 10
+          done
+          echo "push failed after 3 attempts" >&2
+          exit 1
+
+      - name: Report failure as an Issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Ingest falhou"
+          body="A ingestão de snapshots falhou em $(date -u +%Y-%m-%dT%H:%MZ). Run: $RUN_URL"
+          existing=$(gh issue list --state open --label ingest --search "$title in:title" --json number -q '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
           else
-            git commit -m "data: daily snapshot ingest"
-            git push
+            gh label create ingest --color D93F0B --description "Falhas da ingestão automática" 2>/dev/null || true
+            gh issue create --title "$title" --label ingest --body "$body"
           fi

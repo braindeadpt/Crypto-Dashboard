@@ -6,8 +6,9 @@ import {
 import { toApiContext, type MetricContextApi } from "@/lib/history/context";
 import { dayKey, utcToday } from "@/lib/history/series";
 import { computeMetricContext, type SeriesPoint } from "@/lib/stats";
+import { http } from "@/lib/data/sources";
 
-const CG = "https://api.coingecko.com/api/v3";
+const CG = `${http("coingecko")}/api/v3`;
 const STALE_MS = 30 * 60_000;
 const HISTORY_DAYS = 35;
 const THEMATIC_COUNT = 24;

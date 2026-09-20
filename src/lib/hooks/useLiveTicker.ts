@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { wss } from "@/lib/data/sources";
 
 export type TickerSymbol = "BTCUSDT" | "ETHUSDT" | "SOLUSDT";
 
@@ -26,7 +27,7 @@ export type LiveTickerState = {
 };
 
 const STREAMS = ["btcusdt@ticker", "ethusdt@ticker", "solusdt@ticker"];
-const WS_URL = `wss://stream.binance.com:9443/stream?streams=${STREAMS.join("/")}`;
+const WS_URL = `${wss("binance_ws")}/stream?streams=${STREAMS.join("/")}`;
 const MAX_BACKOFF_MS = 30_000;
 
 type Seed = Partial<

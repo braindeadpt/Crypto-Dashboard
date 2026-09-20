@@ -1,9 +1,10 @@
+import { http } from "@/lib/data/sources";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const CG = "https://api.coingecko.com/api/v3";
+const CG = `${http("coingecko")}/api/v3`;
 
 function cgHeaders(): HeadersInit {
   const headers: Record<string, string> = { Accept: "application/json" };

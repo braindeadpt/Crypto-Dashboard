@@ -1,8 +1,11 @@
 import { cachedFetch } from "@/lib/cache";
+import { http } from "@/lib/data/sources";
+
+const FNG = `${http("alternative")}/fng/`;
 
 export async function fetchFearGreed() {
   return cachedFetch("sentiment:fng", 300_000, async () => {
-    const res = await fetch("https://api.alternative.me/fng/?limit=1", {
+    const res = await fetch(`${FNG}?limit=1`, {
       next: { revalidate: 300 },
     });
     if (!res.ok) throw new Error("Fear&Greed fetch failed");
@@ -24,7 +27,7 @@ export type FngPoint = { value: number; timestamp: string };
 export async function fetchFearGreedHistory(days = 30): Promise<FngPoint[]> {
   return cachedFetch(`sentiment:fng-history:${days}`, 300_000, async () => {
     const res = await fetch(
-      `https://api.alternative.me/fng/?limit=${days}`,
+      `${FNG}?limit=${days}`,
       { next: { revalidate: 300 } },
     );
     if (!res.ok) throw new Error("Fear&Greed history fetch failed");

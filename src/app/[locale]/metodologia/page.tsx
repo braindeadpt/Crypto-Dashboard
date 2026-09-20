@@ -10,6 +10,7 @@ import {
   REGIME_WEIRD_RULES,
 } from "@/lib/regime/engine";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { SOURCES } from "@/lib/data/sources";
 
 export const dynamic = "force-dynamic";
 
@@ -241,6 +242,52 @@ export default async function MetodologiaPage({
           </section>
         );
       })}
+
+      {/* Fontes — a tabela é o registo executado (src/lib/data/sources.ts) */}
+      <section id="fontes" className="mt-14 scroll-mt-28">
+        <h2 className="text-title text-ink">{t("sourcesTitle")}</h2>
+        <table className="mt-4 w-full max-w-3xl border border-line text-meta">
+          <thead>
+            <tr className="border-b border-line text-left text-label text-faint">
+              <th className="px-3 py-2 font-normal">{t("colSourceName")}</th>
+              <th className="px-3 py-2 font-normal">{t("colKind")}</th>
+              <th className="px-3 py-2 font-normal">{t("colTtl")}</th>
+              <th className="px-3 py-2 font-normal">{t("colKey")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.values(SOURCES).map((s) => (
+              <tr key={s.id} className="border-b border-line/60 last:border-0">
+                <td className="px-3 py-1.5 text-ink">
+                  <a
+                    href={s.docsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition hover:text-accent"
+                  >
+                    {s.name}
+                  </a>
+                </td>
+                <td className="px-3 py-1.5 text-muted">
+                  {t(`kind_${s.kind}`)}
+                </td>
+                <td className="px-3 py-1.5 font-mono tabular-nums text-muted">
+                  {s.ttlSec === 0
+                    ? "—"
+                    : s.ttlSec >= 3600
+                      ? `${s.ttlSec / 3600} h`
+                      : s.ttlSec >= 60
+                        ? `${s.ttlSec / 60} min`
+                        : `${s.ttlSec} s`}
+                </td>
+                <td className="px-3 py-1.5 text-muted">
+                  {t(s.needsKey ? "keyYes" : "keyNo")}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
     </div>
   );
 }

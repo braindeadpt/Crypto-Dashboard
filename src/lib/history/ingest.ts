@@ -1,4 +1,6 @@
 import { readSnapshot, writeSnapshot } from "@/lib/data/snapshotStore";
+import { flushHealth, recordError, recordOk } from "@/lib/data/health";
+import { http, type SourceId } from "@/lib/data/sources";
 import type { EtfSnapshot } from "@/lib/data/etf";
 import {
   DEFAULT_WINDOW_DAYS,
@@ -20,9 +22,12 @@ import {
   realizedVolSeries,
 } from "@/lib/history/series";
 
-const FAPI = "https://fapi.binance.com";
-const CG = "https://api.coingecko.com/api/v3";
-const LLAMA = "https://api.llama.fi";
+const FAPI = http("binance_rest");
+const CG = `${http("coingecko")}/api/v3`;
+const LLAMA = http("defillama");
+const SPOT = http("binance_spot");
+const FNG = `${http("alternative")}/fng/`;
+const MP = `${http("mempool")}/api`;
 const WINDOW = DEFAULT_WINDOW_DAYS;
 
 function cgHeaders(): HeadersInit {
@@ -74,10 +79,13 @@ export async function ingestHistorySeries(): Promise<{
 
   const tasks: {
     id: HistoryMetricId;
+    /** Fonte de saúde a registar com o resultado desta tarefa. */
+    src: SourceId;
     run: () => Promise<{ points: SeriesPoint[]; source: string; bootstrap?: boolean }>;
   }[] = [
     {
       id: "funding_btc",
+      src: "binance_rest",
       run: async () => {
         const rows = await fetchJson<
           { fundingRate: string; fundingTime: number }[]
@@ -100,6 +108,7 @@ export async function ingestHistorySeries(): Promise<{
     },
     {
       id: "oi_btc",
+      src: "binance_rest",
       run: async () => {
         const rows = await fetchJson<
           { sumOpenInterestValue: string; timestamp: number }[]
@@ -119,10 +128,11 @@ export async function ingestHistorySeries(): Promise<{
     },
     {
       id: "fear_greed",
+      src: "alternative",
       run: async () => {
         const json = await fetchJson<{
           data: { value: string; timestamp: string }[];
-        }>("https://api.alternative.me/fng/?limit=90");
+        }>(`${FNG}?limit=90`);
         const points = (json.data ?? [])
           .map((r) => ({
             t: dayKey(new Date(Number(r.timestamp) * 1000).toISOString()),
@@ -138,6 +148,7 @@ export async function ingestHistorySeries(): Promise<{
     },
     {
       id: "tvl",
+      src: "defillama",
       run: async () => {
         const rows = await fetchJson<{ date: number; tvl: number }[]>(
           `${LLAMA}/v2/historicalChainTvl`,
@@ -157,6 +168,7 @@ export async function ingestHistorySeries(): Promise<{
     },
     {
       id: "volume_btc",
+      src: "coingecko",
       run: async () => {
         try {
           const data = await fetchJson<{
@@ -201,7 +213,7 @@ export async function ingestHistorySeries(): Promise<{
         } catch {
           // CoinGecko rate-limits freely — Binance 1d klines as honest fallback
           const raw = await fetchJson<(string | number)[][]>(
-            "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90",
+            `${SPOT}/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=90`,
           );
           const prices: SeriesPoint[] = [];
           const points: SeriesPoint[] = [];
@@ -235,6 +247,7 @@ export async function ingestHistorySeries(): Promise<{
     },
     {
       id: "ls_btc",
+      src: "binance_rest",
       run: async () => {
         const rows = await fetchJson<
           { longShortRatio: string; timestamp: number }[]
@@ -254,6 +267,7 @@ export async function ingestHistorySeries(): Promise<{
     },
     {
       id: "etf_btc_flow",
+      src: "farside",
       run: async () => {
         const etf = await readSnapshot<EtfSnapshot>("etf");
         const hist = etf?.btc?.history ?? [];
@@ -279,11 +293,11 @@ export async function ingestHistorySeries(): Promise<{
         source: result.source,
       };
       if (result.bootstrap) bootstrapped.push(task.id);
+      if (result.points.length) recordOk(task.src, result.points.length);
     } catch (e) {
-      console.warn(
-        `[history ingest] ${task.id}`,
-        e instanceof Error ? e.message : e,
-      );
+      const msg = e instanceof Error ? e.message : String(e);
+      console.warn(`[history ingest] ${task.id}`, msg);
+      recordError(task.src, msg);
       if (!series[task.id]) series[task.id] = getSeries(prev, task.id);
     }
   }
@@ -302,7 +316,7 @@ export async function ingestHistorySeries(): Promise<{
   // 720h ≈ 30 days; drives finer volatility reads and intraday views.
   try {
     const raw = await fetchJson<(string | number)[][]>(
-      "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=720",
+      `${SPOT}/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=720`,
     );
     const points: SeriesPoint[] = raw.map((k) => ({
       t: new Date(Number(k[0])).toISOString().slice(0, 13),
@@ -316,11 +330,11 @@ export async function ingestHistorySeries(): Promise<{
       ),
       source: "Binance BTCUSDT 1h klines",
     };
+    recordOk("binance_spot", points.length);
   } catch (e) {
-    console.warn(
-      "[history ingest] price_btc_1h",
-      e instanceof Error ? e.message : e,
-    );
+    const msg = e instanceof Error ? e.message : String(e);
+    console.warn("[history ingest] price_btc_1h", msg);
+    recordError("binance_spot", msg);
     if (!series.price_btc_1h && prev?.series?.price_btc_1h) {
       series.price_btc_1h = prev.series.price_btc_1h;
     }
@@ -337,6 +351,12 @@ export async function ingestHistorySeries(): Promise<{
   };
 
   await writeSnapshot("history", payload, "history ingest (cron/heavy)");
+
+  // Corrida standalone (scripts/ingest-history.ts) também grava saúde; via
+  // refreshHeavy o flush final apenas actualiza o updatedAt.
+  await flushHealth().catch((e) =>
+    console.warn("[health]", e instanceof Error ? e.message : e),
+  );
 
   const points = HISTORY_METRIC_IDS.reduce(
     (n, id) => n + (series[id]?.points.length ?? 0),
@@ -384,7 +404,7 @@ async function appendLivePoints(
       data: { market_cap_percentage: { btc: number } };
     }>(`${CG}/global`, cgHeaders()).catch(() => null),
     fetchJson<{ fastestFee: number }>(
-      "https://mempool.space/api/v1/fees/recommended",
+      `${MP}/v1/fees/recommended`,
     ).catch(() => null),
   ]);
 
@@ -419,5 +439,8 @@ async function appendLivePoints(
       ),
       source: METRIC_META.fee_btc.bootstrap,
     };
+    recordOk("mempool");
+  } else {
+    recordError("mempool", "fees/recommended falhou no append diário");
   }
 }

@@ -1,5 +1,9 @@
 import { cachedFetch } from "@/lib/cache";
 import { passesDexQuality } from "@/lib/data/dexFilters";
+import { http } from "@/lib/data/sources";
+
+const DEXS = http("dexscreener");
+const GT = http("geckoterminal");
 
 export type DexHotToken = {
   id: string;
@@ -41,7 +45,7 @@ function chainLabel(chainId: string, locale: "pt" | "en"): string {
 }
 
 async function fetchDexBoosts(): Promise<DexHotToken[]> {
-  const res = await fetch("https://api.dexscreener.com/token-boosts/top/v1", {
+  const res = await fetch(`${DEXS}/token-boosts/top/v1`, {
     next: { revalidate: 120 },
     headers: { Accept: "application/json" },
   });
@@ -62,7 +66,7 @@ async function fetchDexBoosts(): Promise<DexHotToken[]> {
       if (!row.chainId || !row.tokenAddress) return;
       try {
         const pr = await fetch(
-          `https://api.dexscreener.com/latest/dex/tokens/${row.tokenAddress}`,
+          `${DEXS}/latest/dex/tokens/${row.tokenAddress}`,
           { next: { revalidate: 120 }, headers: { Accept: "application/json" } },
         );
         if (!pr.ok) return;
@@ -104,7 +108,7 @@ async function fetchDexBoosts(): Promise<DexHotToken[]> {
 async function fetchGeckoTrending(network: string): Promise<DexHotToken[]> {
   try {
     const res = await fetch(
-      `https://api.geckoterminal.com/api/v2/networks/${network}/trending_pools?page=1`,
+      `${GT}/api/v2/networks/${network}/trending_pools?page=1`,
       { next: { revalidate: 180 }, headers: { Accept: "application/json" } },
     );
     if (!res.ok) return [];

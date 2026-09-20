@@ -1,0 +1,53 @@
+name: Freshness check
+
+# Semanal: bate /api/health no deploy e falha se alguma fonte tiver
+# consecutiveFailures >= 4 (fonte parada). Sem SITE_URL definido sai limpo.
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  freshness:
+    name: Check /api/health
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE: ${{ vars.SITE_URL }}
+    steps:
+      - name: Fetch health
+        id: check
+        run: |
+          if [ -z "$SITE" ]; then
+            echo "SITE_URL não definida"
+            exit 0
+          fi
+          body=$(curl -fsS "$SITE/api/health")
+          echo "$body"
+          echo "$body" > health.json
+          dead=$(echo "$body" | jq '[.sources | to_entries[] | .value | select(.consecutiveFailures >= 4)] | length')
+          echo "dead=$dead" >> "$GITHUB_OUTPUT"
+          if [ "$dead" -gt 0 ]; then
+            echo "Fontes paradas: $dead"
+            exit 1
+          fi
+
+      - name: Report failure as an Issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Fonte parada"
+          body="O check de frescura detectou fontes com consecutiveFailures >= 4 em $(date -u +%Y-%m-%dT%H:%MZ). Run: $RUN_URL"
+          existing=$(gh issue list --state open --label ingest --search "$title in:title" --json number -q '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh label create ingest --color D93F0B --description "Falhas da ingestão automática" 2>/dev/null || true
+            gh issue create --title "$title" --label ingest --body "$body"
+          fi

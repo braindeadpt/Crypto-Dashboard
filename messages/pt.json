@@ -964,7 +964,17 @@
     "bandNeg": "negativo",
     "bandNeutral": "neutro",
     "bandPos": "positivo",
-    "bandVeryPos": "muito positivo"
+    "bandVeryPos": "muito positivo",
+    "sourcesTitle": "Fontes de dados",
+    "colSourceName": "Fonte",
+    "colKind": "Tipo",
+    "colTtl": "Cache",
+    "colKey": "Chave",
+    "kind_live": "ao vivo no servidor",
+    "kind_snapshot": "snapshot em disco (ingest)",
+    "kind_browser": "ligação directa no browser",
+    "keyYes": "sim",
+    "keyNo": "não"
   },
   "corrente": {
     "aria": "Corrente viva do mercado",

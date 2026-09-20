@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { wss } from "@/lib/data/sources";
 
 export type ForceLiqEvent = {
   id: string;
@@ -29,7 +30,7 @@ export type ForceLiqWindow = {
 };
 
 /** All-market liquidations — denser than per-symbol; we filter to majors. */
-const WS_URL = "wss://fstream.binance.com/ws/!forceOrder@arr";
+const WS_URL = `${wss("binance_ws_futures")}/ws/!forceOrder@arr`;
 const ALLOWED = new Set(["BTCUSDT", "ETHUSDT", "SOLUSDT"]);
 const WINDOW_MS = 60 * 60 * 1000;
 const MAX_EVENTS = 200;

@@ -25,7 +25,7 @@ import type { RegimeDay } from "@/lib/regime/history";
 import type { VisitVitals } from "@/lib/local/visit";
 import type { MarketSnapshot, RegimeResult } from "@/lib/types";
 import { useTranslations } from "next-intl";
-import { useBoardRefresh } from "@/lib/hooks/useBoardRefresh";
+import { useRefreshOnReturn } from "@/lib/hooks/useRefreshOnReturn";
 import { useLiveTicker } from "@/lib/hooks/useLiveTicker";
 
 type Props = {
@@ -80,7 +80,7 @@ export function OperatorBoard({
       ? { SOLUSDT: { price: sol.price, change24h: sol.change24h } }
       : {}),
   });
-  useBoardRefresh();
+  useRefreshOnReturn();
   const hist = useHistoryContexts();
 
   const btcPx = live.quotes.BTCUSDT?.price ?? market.btc.price;
@@ -106,6 +106,7 @@ export function OperatorBoard({
         intensity={regime.score / 100}
         posture={regime.posture}
         snapshotAt={market.updatedAt}
+        snapshotStale={market.stale ?? false}
         readingsAt={asOf}
         live={{
           connection: live.connection,

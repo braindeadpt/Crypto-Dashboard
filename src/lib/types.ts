@@ -72,6 +72,8 @@ export interface MarketSnapshot {
     losers: Mover[];
   };
   top: AssetQuote[];
+  /** True quando o valor vem do snapshot em disco com > 6h. */
+  stale?: boolean;
   updatedAt: string;
 }
 
@@ -122,6 +124,8 @@ export interface SentimentSnapshot {
   };
   /** 30-day F&G series, ascending — optional (degrades when upstream fails). */
   fngHistory?: { value: number; timestamp: string }[];
+  /** True quando o valor vem do snapshot em disco com > 6h. */
+  stale?: boolean;
   updatedAt: string;
 }
 

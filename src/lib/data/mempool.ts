@@ -1,4 +1,5 @@
 import { cachedFetch } from "@/lib/cache";
+import { http } from "@/lib/data/sources";
 import type { WalletActivityItem, WalletView } from "@/lib/data/etherscan";
 
 export type MempoolFees = {
@@ -17,11 +18,11 @@ export async function fetchMempoolFees(): Promise<MempoolFees | null> {
   return cachedFetch("btc:mempool-fees", 120_000, async () => {
     try {
       const [feesRes, mempoolRes] = await Promise.all([
-        fetch("https://mempool.space/api/v1/fees/recommended", {
+        fetch(`${MP}/v1/fees/recommended`, {
           next: { revalidate: 120 },
           headers: { Accept: "application/json" },
         }),
-        fetch("https://mempool.space/api/mempool", {
+        fetch(`${MP}/mempool`, {
           next: { revalidate: 120 },
           headers: { Accept: "application/json" },
         }),
@@ -74,7 +75,7 @@ interface MempoolAddressStats {
   tx_count: number;
 }
 
-const MP = "https://mempool.space/api";
+const MP = `${http("mempool")}/api`;
 const sats = (s: number) => s / 1e8;
 
 /**
@@ -128,7 +129,7 @@ export async function fetchBtcAddressView(
       counterparty: tx.txid.slice(0, 10) + "…",
       failed: false,
       pending: !tx.status.confirmed,
-      url: `https://mempool.space/tx/${tx.txid}`,
+      url: `${http("mempool")}/tx/${tx.txid}`,
     };
   });
 

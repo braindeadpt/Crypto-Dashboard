@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { validateSnapshot } from "@/lib/data/schemas";
 
 /**
  * Persistent slim snapshots for heavy DefiLlama payloads.
@@ -40,6 +41,22 @@ export async function writeSnapshot<T extends object>(
     updatedAt: new Date().toISOString(),
     source,
   };
+  /**
+   * Nunca gravar inválido/vazio por cima de um snapshot bom: valida o payload,
+   * e em falha mantém o anterior em disco (o ingest continua para as outras
+   * fontes). Sem anterior, recusa mesmo assim — um ficheiro mau é pior que
+   * nenhum.
+   */
+  const check = validateSnapshot(name, payload);
+  if (!check.ok) {
+    const prev = await readSnapshot<Record<string, unknown>>(name);
+    console.warn(
+      `[snapshot ${name}] escrita recusada: ${check.error}` +
+        (prev ? " — mantido o anterior" : " — sem anterior"),
+    );
+    if (prev) return prev as T & SnapshotMeta;
+    throw new Error(`snapshot ${name} inválido: ${check.error}`);
+  }
   await writeFile(
     path.join(DIR, `${name}.json`),
     JSON.stringify(payload),

@@ -2,13 +2,17 @@ import { ingestEtfSnapshot } from "@/lib/data/etf";
 import { ingestLiquiditySnapshot } from "@/lib/data/liquidity";
 import { pegDeviationPct } from "@/lib/data/peg";
 import { ingestSectorsSnapshot } from "@/lib/data/sectors";
+import { flushHealth, recordError, recordOk } from "@/lib/data/health";
+import { ingestMarketSnapshot } from "@/lib/data/coingecko";
+import { ingestSentimentSnapshot } from "@/lib/data/sentiment";
 import { writeSnapshot } from "@/lib/data/snapshotStore";
 import type { YieldPool } from "@/lib/data/yields";
 import type { DefiSnapshot } from "@/lib/types";
 import { ingestHistorySeries } from "@/lib/history/ingest";
+import { http } from "@/lib/data/sources";
 
-const LLAMA = "https://api.llama.fi";
-const STABLES = "https://stablecoins.llama.fi";
+const LLAMA = http("defillama");
+const STABLES = http("defillama_stables");
 
 /** Canonical TVL: DefiLlama /v2/historicalChainTvl last point (reduces double-count). */
 export type TvlSource = "historicalChainTvl" | "chainsSum";
@@ -24,6 +28,8 @@ export async function refreshHeavySnapshots(): Promise<{
   totalTvl: number;
   tvlSource: TvlSource;
   etfOk: boolean;
+  marketOk: boolean;
+  sentimentOk: boolean;
   historyPoints: number;
   historyBootstrapped: string[];
   sectorsThematic: number;
@@ -32,19 +38,46 @@ export async function refreshHeavySnapshots(): Promise<{
 }> {
   // Each source is isolated: one failure must not stop the others nor
   // overwrite a good snapshot with nothing (writeSnapshot is per-name).
-  const [yields, defi, etf] = await Promise.all([
-    ingestYields().catch((e) => {
-      console.warn("[yields ingest]", e instanceof Error ? e.message : e);
-      return { count: 0 };
-    }),
-    ingestDefi().catch((e) => {
-      console.warn("[defi ingest]", e instanceof Error ? e.message : e);
-      return { protocols: 0, totalTvl: 0, tvlSource: "chainsSum" as TvlSource };
-    }),
-    ingestEtfSnapshot()
-      .then(() => true)
+  const [yields, defi, etf, market, sentiment] = await Promise.all([
+    ingestYields()
+      .then((r) => (recordOk("defillama_yields", r.count), r))
       .catch((e) => {
-        console.warn("[etf ingest]", e instanceof Error ? e.message : e);
+        const msg = e instanceof Error ? e.message : String(e);
+        console.warn("[yields ingest]", msg);
+        recordError("defillama_yields", msg);
+        return { count: 0 };
+      }),
+    ingestDefi()
+      .then((r) => (recordOk("defillama", r.protocols), r))
+      .catch((e) => {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.warn("[defi ingest]", msg);
+        recordError("defillama", msg);
+        return { protocols: 0, totalTvl: 0, tvlSource: "chainsSum" as TvlSource };
+      }),
+    ingestEtfSnapshot()
+      .then(() => (recordOk("farside"), true))
+      .catch((e) => {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.warn("[etf ingest]", msg);
+        recordError("farside", msg);
+        return false;
+      }),
+    // "Último bom" do render: market/sentiment deixam de ser fixtures (F0.6).
+    ingestMarketSnapshot()
+      .then((s) => (recordOk("coingecko", s.top.length), true))
+      .catch((e) => {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.warn("[market ingest]", msg);
+        recordError("coingecko", msg);
+        return false;
+      }),
+    ingestSentimentSnapshot()
+      .then(() => (recordOk("binance_rest"), recordOk("alternative"), true))
+      .catch((e) => {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.warn("[sentiment ingest]", msg);
+        recordError("alternative", msg);
         return false;
       }),
   ]);
@@ -54,11 +87,11 @@ export async function refreshHeavySnapshots(): Promise<{
   try {
     const liq = await ingestLiquiditySnapshot();
     liquiditySeriesDays = liq.seriesDays;
+    recordOk("defillama_stables", liq.seriesDays);
   } catch (e) {
-    console.warn(
-      "[liquidity ingest]",
-      e instanceof Error ? e.message : e,
-    );
+    const msg = e instanceof Error ? e.message : String(e);
+    console.warn("[liquidity ingest]", msg);
+    recordError("defillama_stables", msg);
   }
 
   // History after liquidity so stablecoin_supply merge is present / can refresh.
@@ -81,12 +114,17 @@ export async function refreshHeavySnapshots(): Promise<{
     const sec = await ingestSectorsSnapshot();
     sectorsThematic = sec.thematic;
     sectorsHistoryDays = sec.historyDays;
+    recordOk("coingecko", sec.thematic);
   } catch (e) {
-    console.warn(
-      "[sectors ingest]",
-      e instanceof Error ? e.message : e,
-    );
+    const msg = e instanceof Error ? e.message : String(e);
+    console.warn("[sectors ingest]", msg);
+    recordError("coingecko", msg);
   }
+
+  // Persiste o rasto de saúde desta corrida (merge com o ficheiro anterior).
+  await flushHealth().catch((e) =>
+    console.warn("[health]", e instanceof Error ? e.message : e),
+  );
 
   return {
     yieldsPools: yields.count,
@@ -94,6 +132,8 @@ export async function refreshHeavySnapshots(): Promise<{
     totalTvl: defi.totalTvl,
     tvlSource: defi.tvlSource,
     etfOk: etf,
+    marketOk: market,
+    sentimentOk: sentiment,
     historyPoints,
     historyBootstrapped,
     sectorsThematic,
@@ -103,7 +143,7 @@ export async function refreshHeavySnapshots(): Promise<{
 }
 
 async function ingestYields(): Promise<{ count: number }> {
-  const res = await fetch("https://yields.llama.fi/pools", {
+  const res = await fetch(`${http("defillama_yields")}/pools`, {
     cache: "no-store",
     headers: { Accept: "application/json" },
   });

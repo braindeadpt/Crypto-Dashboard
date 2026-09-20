@@ -1,6 +1,7 @@
 import { cachedFetch } from "@/lib/cache";
+import { http } from "@/lib/data/sources";
 
-const FAPI = "https://fapi.binance.com";
+const FAPI = http("binance_rest");
 
 async function binance<T>(path: string): Promise<T> {
   const res = await fetch(`${FAPI}${path}`, {
@@ -58,7 +59,7 @@ export async function fetchKlines(
     60_000,
     async () => {
       const res = await fetch(
-        `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`,
+        `${http("binance_spot")}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`,
         { next: { revalidate: 60 }, headers: { Accept: "application/json" } },
       );
       if (!res.ok) throw new Error(`Binance klines ${res.status}`);

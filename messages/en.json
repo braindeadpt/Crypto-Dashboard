@@ -964,7 +964,17 @@
     "bandNeg": "negative",
     "bandNeutral": "neutral",
     "bandPos": "positive",
-    "bandVeryPos": "very positive"
+    "bandVeryPos": "very positive",
+    "sourcesTitle": "Data sources",
+    "colSourceName": "Source",
+    "colKind": "Type",
+    "colTtl": "Cache",
+    "colKey": "Key",
+    "kind_live": "live on the server",
+    "kind_snapshot": "disk snapshot (ingest)",
+    "kind_browser": "direct browser connection",
+    "keyYes": "yes",
+    "keyNo": "no"
   },
   "corrente": {
     "aria": "Live market current",

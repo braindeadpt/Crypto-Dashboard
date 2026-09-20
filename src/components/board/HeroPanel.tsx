@@ -38,6 +38,7 @@ export function HeroPanel({
   posture,
   vitals,
   snapshotAt,
+  snapshotStale = false,
   readingsAt,
   live,
 }: {
@@ -57,6 +58,8 @@ export function HeroPanel({
   };
   /** CoinGecko snapshot age — seed dos preços e fonte dos vitals (F2). */
   snapshotAt?: string | null;
+  /** Snapshot de disco (>6h) a servir de fallback — marca "desactualizado". */
+  snapshotStale?: boolean;
   /** Idade das três leituras — input mais velho do bundle (F2). */
   readingsAt?: string | null;
   /** Estado do ticker live — quando "live", a tape mostra o último tick. */
@@ -235,7 +238,7 @@ export function HeroPanel({
         {(snapshotAt || live) && (
           <div className="flex items-center justify-between gap-3 border-t border-line px-1 py-1.5">
             <span className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-faint">
-              CoinGecko <DataAge at={snapshotAt} />
+              CoinGecko <DataAge at={snapshotAt} stale={snapshotStale} />
             </span>
             {live?.connection === "live" && live.lastUpdate != null && (
               <span className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-accent">

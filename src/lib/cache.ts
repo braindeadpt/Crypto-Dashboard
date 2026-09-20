@@ -12,6 +12,60 @@ type CacheEntry<T> = { data: T; expires: number };
 
 const memory = new Map<string, CacheEntry<unknown>>();
 
+/* ------------------------------------------------------------------ */
+/* Circuit-breaker por fonte (prefixo da chave = host/família).        */
+/* 3 falhas 429/5xx seguidas abrem o circuito durante 5 min: serve-se   */
+/* o último valor bom sem bater à rede; sem stale, falha como antes.   */
+/* ------------------------------------------------------------------ */
+
+const BREAKER_THRESHOLD = 3;
+const BREAKER_OPEN_MS = 300_000;
+
+type BreakerState = { failures: number; openUntil: number };
+const breakers = new Map<string, BreakerState>();
+
+/** 429 e 5xx contam para o circuito; erros de rede/parse também (upstream morto). */
+function countsTowardBreaker(err: unknown): boolean {
+  if (err instanceof Error) {
+    if (/\b(429|5\d{2})\b/.test(err.message)) return true;
+    // fetch falhou sem resposta (DNS, timeout, reset)
+    if (/fetch failed|network|timeout|abort/i.test(err.message)) return true;
+  }
+  return false;
+}
+
+export function breakerState(prefix: string): BreakerState {
+  return breakers.get(prefix) ?? { failures: 0, openUntil: 0 };
+}
+
+function noteSourceSuccess(prefix: string) {
+  breakers.delete(prefix);
+}
+
+function noteSourceFailure(prefix: string, err: unknown) {
+  if (!countsTowardBreaker(err)) return;
+  const cur = breakerState(prefix);
+  const failures = cur.failures + 1;
+  breakers.set(prefix, {
+    failures,
+    openUntil: failures >= BREAKER_THRESHOLD ? Date.now() + BREAKER_OPEN_MS : 0,
+  });
+}
+
+function isBreakerOpen(prefix: string): boolean {
+  const b = breakers.get(prefix);
+  if (!b || b.openUntil === 0) return false;
+  if (b.openUntil > Date.now()) return true;
+  // Janela fechou — half-open: deixa passar um pedido real.
+  breakers.delete(prefix);
+  return false;
+}
+
+/** Só para testes. */
+export function _resetBreakers() {
+  breakers.clear();
+}
+
 /**
  * TTL cache com *stale-while-error*.
  *
@@ -34,17 +88,37 @@ export async function cachedFetch<T>(
     return hit.data;
   }
 
+  const sourceKey = key.split(":")[0] ?? "data";
+
+  // Circuito aberto: não bater à rede — serve o stale ou propaga a falha.
+  if (isBreakerOpen(sourceKey)) {
+    if (hit) return hit.data;
+    throw new Error(`circuit-breaker aberto para ${sourceKey}`);
+  }
+
   const revalidateSec = Math.max(30, Math.round(ttlMs / 1000));
   const cached = unstable_cache(fetcher, [key], {
     revalidate: revalidateSec,
-    tags: [key.split(":")[0] ?? "data"],
+    tags: [sourceKey],
   });
 
   try {
-    const data = await cached();
+    // Fora do servidor Next (scripts, testes) não há incrementalCache —
+    // corre o fetcher directamente, a camada de memória continua a valer.
+    const data = await cached().catch((err: unknown) => {
+      if (
+        err instanceof Error &&
+        err.message.includes("incrementalCache missing")
+      ) {
+        return fetcher() as Promise<T>;
+      }
+      throw err;
+    });
     memory.set(key, { data, expires: Date.now() + ttlMs });
+    noteSourceSuccess(sourceKey);
     return data;
   } catch (err) {
+    noteSourceFailure(sourceKey, err);
     if (hit) {
       // Prolonga a validade do valor antigo para não martelar a fonte a cada
       // pedido enquanto ela estiver a recusar.

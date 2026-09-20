@@ -1,16 +1,18 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { writeFile, mkdir } from "node:fs/promises";
-import path from "node:path";
 import { parseFarsideTable, type EtfAssetFlows, type EtfSnapshot } from "../src/lib/data/etf";
 import { refreshHeavySnapshots } from "../src/lib/data/refreshHeavy";
+import { flushHealth, recordOk } from "../src/lib/data/health";
+import { writeSnapshot } from "../src/lib/data/snapshotStore";
+import { http } from "../src/lib/data/sources";
 
 const execFileAsync = promisify(execFile);
 
+const FARSIDE = http("farside");
 const PAGES = [
-  { asset: "BTC" as const, url: "https://farside.co.uk/btc/", marker: "IBIT" },
-  { asset: "ETH" as const, url: "https://farside.co.uk/eth/", marker: "ETHA" },
-  { asset: "SOL" as const, url: "https://farside.co.uk/sol/", marker: "FSOL" },
+  { asset: "BTC" as const, url: `${FARSIDE}/btc/`, marker: "IBIT" },
+  { asset: "ETH" as const, url: `${FARSIDE}/eth/`, marker: "ETHA" },
+  { asset: "SOL" as const, url: `${FARSIDE}/sol/`, marker: "FSOL" },
 ];
 
 const UA =
@@ -132,13 +134,9 @@ async function seedEtfViaCurl(): Promise<boolean> {
       source: "farside.co.uk (curl seed script)",
     } as EtfSnapshot & { source: string };
 
-    const dir = path.join(process.cwd(), "data", "snapshots");
-    await mkdir(dir, { recursive: true });
-    await writeFile(
-      path.join(dir, "etf.json"),
-      JSON.stringify({ ...snap, source: "farside.co.uk (curl seed script)" }, null, 0),
-      "utf8",
-    );
+    await writeSnapshot("etf", snap, "farside.co.uk (curl seed script)");
+    recordOk("farside");
+    await flushHealth();
     console.log("ETF snapshot seeded via curl");
     return true;
   } catch (e) {

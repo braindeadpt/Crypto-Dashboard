@@ -5,16 +5,21 @@ export const runtime = "nodejs";
 export const maxDuration = 120;
 
 /**
- * Heavy DefiLlama ingest (yields + protocols). Call from cron / manual.
- * Protect with CRON_SECRET when set: Authorization: Bearer <secret>
+ * Heavy DefiLlama ingest (yields + protocols). Só POST.
+ * CRON_SECRET obrigatório: Authorization: Bearer <secret>.
  */
 export async function POST(req: Request) {
+  // CRON_SECRET é obrigatório — sem ele a rota recusa-se (F0.7).
   const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-    }
+  if (!secret) {
+    return NextResponse.json(
+      { error: "CRON_SECRET não configurado no servidor" },
+      { status: 503 },
+    );
+  }
+  const auth = req.headers.get("authorization");
+  if (auth !== `Bearer ${secret}`) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
   try {
@@ -26,8 +31,4 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
-}
-
-export async function GET(req: Request) {
-  return POST(req);
 }

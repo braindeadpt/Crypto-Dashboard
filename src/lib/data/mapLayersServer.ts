@@ -1,6 +1,7 @@
 import { cachedFetch } from "@/lib/cache";
 import { buildSectorTagMap, type MapLayers } from "@/lib/data/mapLayers";
 import { fetchSectorsSnapshot } from "@/lib/data/sectors";
+import { http } from "@/lib/data/sources";
 
 /**
  * Fetch das camadas do mapa (R4) — servidor apenas. UMA chamada a
@@ -8,7 +9,7 @@ import { fetchSectorsSnapshot } from "@/lib/data/sectors";
  * perpétuos; os sectores vêm do snapshot em disco (sem rede no render).
  */
 
-const FAPI = "https://fapi.binance.com";
+const FAPI = http("binance_rest");
 
 type PremiumIndexRow = {
   symbol: string;

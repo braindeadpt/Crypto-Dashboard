@@ -3,6 +3,7 @@ import {
   readSnapshot,
   writeSnapshot,
 } from "@/lib/data/snapshotStore";
+import { http } from "@/lib/data/sources";
 
 export type EtfDailyFlow = {
   date: string;
@@ -41,14 +42,16 @@ export type EtfSnapshot = {
   updatedAt: string;
 };
 
+const FARSIDE = http("farside");
+
 const PAGES: {
   asset: "BTC" | "ETH" | "SOL";
   url: string;
   marker: string;
 }[] = [
-  { asset: "BTC", url: "https://farside.co.uk/btc/", marker: "IBIT" },
-  { asset: "ETH", url: "https://farside.co.uk/eth/", marker: "ETHA" },
-  { asset: "SOL", url: "https://farside.co.uk/sol/", marker: "FSOL" },
+  { asset: "BTC", url: `${FARSIDE}/btc/`, marker: "IBIT" },
+  { asset: "ETH", url: `${FARSIDE}/eth/`, marker: "ETHA" },
+  { asset: "SOL", url: `${FARSIDE}/sol/`, marker: "FSOL" },
 ];
 
 const UA =
