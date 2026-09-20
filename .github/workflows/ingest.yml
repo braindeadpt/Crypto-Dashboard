@@ -62,7 +62,7 @@ jobs:
             echo "No snapshot changes — sources returned identical data."
             exit 0
           fi
-          git commit -m "data: snapshot ingest $(date -u +%Y-%m-%dT%H:%MZ) [skip ci]"
+          git commit -m "data: snapshot ingest $(date -u +%Y-%m-%dT%H:%MZ)"
           # master may have moved while we ran; never lose the day's data.
           for i in 1 2 3; do
             git pull --rebase origin master && git push origin HEAD:master && exit 0
